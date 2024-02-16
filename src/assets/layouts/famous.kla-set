@@ -1,0 +1,11 @@
+{
+    "name": "Famous Latin Layouts",
+    "layouts": [
+        "standard.qwerty",
+        "standard.simplifiedDvorak",
+        "standard.colemak",
+        "standard.workman",
+        "standard.norman",
+        "european.colemak_dh"
+    ]
+}

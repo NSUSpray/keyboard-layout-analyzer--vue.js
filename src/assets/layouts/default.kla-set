@@ -1,0 +1,11 @@
+{
+    "name": "Default",
+    "layouts": [
+        "standard.qwerty",
+        "european.azerty",
+        "standard.simplifiedDvorak",
+        "standard.programmerDvorak",
+        "standard.colemak",
+        "european.colemak_dh"
+    ]
+}

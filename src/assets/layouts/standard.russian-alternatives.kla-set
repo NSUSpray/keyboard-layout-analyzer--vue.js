@@ -1,0 +1,11 @@
+{
+    "name": "Russian Layouts",
+    "layouts": [
+        "standard.russian",
+        "standard.russian_typewriter",
+        "standard.russiannm",
+        "standard.russian_diktor",
+        "standard.russian_zubachev",
+        "standard.russian_yvam-told-2"
+    ]
+}
