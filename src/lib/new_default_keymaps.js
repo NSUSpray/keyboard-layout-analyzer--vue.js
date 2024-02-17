@@ -1,24 +1,49 @@
-const keyMaps = {
+const PIXELS_PER_KEY = 50
+
+const defaultKeyMaps = {
   standard: [
-    ["00\n29","01\n02","02\n03","03\n04","04\n05","05\n06","06\n07","07\n08","08\n09","09\n0A","10\n0B","11\n0C","12\n0D",{w:2},"13\n0E"],
-    [{w:1.5},"14\n0F","15\n10","16\n11","17\n12","18\n13","19\n14","20\n15","21\n16","22\n17","23\n18","24\n19","25\n1A","26\n1B",{w:1.5},"27\n2B"],
-    [{w:1.5,w2:1.75,l:true},"28\n3A",{x:0.25},"29\n1E","30\n1F","31\n20","32\n21","33\n22","34\n23","35\n24","36\n25","37\n26","38\n27","39\n28",{w:2.25},"40\n1C"],
-    [{w:2.25},"41\n2A","42\n2C","43\n2D","44\n2E","45\n2F","46\n30","47\n31","48\n32","49\n33","50\n34","51\n35",{w:2.75},"52\n36"],
-    [{w:1.25},"53\n1D",{w:1.25},"54\nE0 5B",{w:1.25},"55\n38",{w:6.25},"56\n39",{w:1.25},"57\nE0 38",{w:1.25},"58\nE0 5C",{w:1.25},"59\nE0 5D",{w:1.25},"60\nE0 1D"]
+    ["00\n29","01\n02","02\n03","03\n04","04\n05","05\n06","06\n07","07\n08",
+      "08\n09","09\n0A","10\n0B","11\n0C","12\n0D",{w:2},"13\n0E"],
+    [{w:1.5},"14\n0F","15\n10","16\n11","17\n12","18\n13","19\n14","20\n15",
+      "21\n16","22\n17","23\n18","24\n19","25\n1A","26\n1B",{w:1.5},"27\n2B"],
+    [{w:1.5,w2:1.75,l:true},"28\n3A",{x:0.25},"29\n1E","30\n1F","31\n20",
+      "32\n21","33\n22","34\n23","35\n24","36\n25","37\n26","38\n27","39\n28",
+      {w:2.25},"40\n1C"],
+    [{w:2.25},"41\n2A","42\n2C","43\n2D","44\n2E","45\n2F","46\n30","47\n31",
+      "48\n32","49\n33","50\n34","51\n35",{w:2.75},"52\n36"],
+    [{w:1.25},"53\n1D",{w:1.25},"54\nE0 5B",{w:1.25},"55\n38",{w:6.25},
+      "56\n39",{w:1.25},"57\nE0 38",{w:1.25},"58\nE0 5C",{w:1.25},"59\nE0 5D",
+      {w:1.25},"60\nE0 1D"]
   ],
   european: [
-    ["00\n29","01\n02","02\n03","03\n04","04\n05","05\n06","06\n07","07\n08","08\n09","09\n0A","10\n0B","11\n0C","12\n0D",{w:2},"13\n0E"],
-    [{w:1.5},"14\n0F","15\n10","16\n11","17\n12","18\n13","19\n14","20\n15","21\n16","22\n17","23\n18","24\n19","25\n1A","26\n1B",{x:0.25,w:1.25,h:2,w2:1.5,h2:1,x2:-0.25},"27\n1C"],
-    [{w:1.5,w2:1.75,l:true},"28\n3A",{x:0.25},"29\n1E","30\n1F","31\n20","32\n21","33\n22","34\n23","35\n24","36\n25","37\n26","38\n27","39\n28","40\n2B"],
-    [{w:1.25},"41\n2A","42\n56","43\n2C","44\n2D","45\n2E","46\n2F","47\n30","48\n31","49\n32","50\n33","51\n34","52\n35",{w:2.75},"53\n36"],
-    [{w:1.25},"54\n1D",{w:1.25},"55\nE0 5B",{w:1.25},"56\n38",{w:6.25},"57\n39",{w:1.25},"58\nE0 38",{w:1.25},"59\nE0 5C",{w:1.25},"60\nE0 5D",{w:1.25},"61\nE0 1D"]
+    ["00\n29","01\n02","02\n03","03\n04","04\n05","05\n06","06\n07","07\n08",
+      "08\n09","09\n0A","10\n0B","11\n0C","12\n0D",{w:2},"13\n0E"],
+    [{w:1.5},"14\n0F","15\n10","16\n11","17\n12","18\n13","19\n14","20\n15",
+      "21\n16","22\n17","23\n18","24\n19","25\n1A","26\n1B",
+      {x:0.25,w:1.25,h:2,w2:1.5,h2:1,x2:-0.25},"27\n1C"],
+    [{w:1.5,w2:1.75,l:true},"28\n3A",{x:0.25},"29\n1E","30\n1F","31\n20",
+      "32\n21","33\n22","34\n23","35\n24","36\n25","37\n26","38\n27","39\n28",
+      "40\n2B"],
+    [{w:1.25},"41\n2A","42\n56","43\n2C","44\n2D","45\n2E","46\n2F","47\n30",
+      "48\n31","49\n32","50\n33","51\n34","52\n35",{w:2.75},"53\n36"],
+    [{w:1.25},"54\n1D",{w:1.25},"55\nE0 5B",{w:1.25},"56\n38",{w:6.25},
+      "57\n39",{w:1.25},"58\nE0 38",{w:1.25},"59\nE0 5C",{w:1.25},"60\nE0 5D",
+      {w:1.25},"61\nE0 1D"]
   ],
   european_ss: [
-    ["00\n29","01\n02","02\n03","03\n04","04\n05","05\n06","06\n07","07\n08","08\n09","09\n0A","10\n0B","11\n0C","12\n0D",{w:2},""],
-    [{w:1.5},"14\n0F","15\n10","16\n11","17\n12","18\n13","19\n14","20\n15","21\n16","22\n17","23\n18","24\n19","25\n1A","26\n1B",{x:0.25,w:1.25,h:2,w2:1.5,h2:1,x2:-0.25},"27\n1C"],
-    [{w:1.5,w2:1.75,l:true},"28\n3A",{x:0.25},"29\n1E","30\n1F","31\n20","32\n21","33\n22","34\n23","35\n24","36\n25","37\n26","38\n27","39\n28","40\n2B"],
-    [{w:1.25},"41\n2A","42\n56","43\n2C","44\n2D","45\n2E","46\n2F","47\n30","48\n31","49\n32","50\n33","51\n34","52\n35",{w:2.75},"53\n36"],
-    [{w:1.25},"54\n1D",{w:1.25},"55\nE0 5B",{w:1.25},"56\n38",{w:3},"13\n0E",{w:3.25},"57\n39",{w:1.25},"58\nE0 38",{w:1.25},"59\nE0 5C",{w:1.25},"60\nE0 5D",{w:1.25},"61\nE0 1D"]
+    ["00\n29","01\n02","02\n03","03\n04","04\n05","05\n06","06\n07","07\n08",
+      "08\n09","09\n0A","10\n0B","11\n0C","12\n0D",{w:2},""],
+    [{w:1.5},"14\n0F","15\n10","16\n11","17\n12","18\n13","19\n14","20\n15",
+      "21\n16","22\n17","23\n18","24\n19","25\n1A","26\n1B",
+      {x:0.25,w:1.25,h:2,w2:1.5,h2:1,x2:-0.25},"27\n1C"],
+    [{w:1.5,w2:1.75,l:true},"28\n3A",{x:0.25},"29\n1E","30\n1F","31\n20",
+      "32\n21","33\n22","34\n23","35\n24","36\n25","37\n26","38\n27","39\n28",
+      "40\n2B"],
+    [{w:1.25},"41\n2A","42\n56","43\n2C","44\n2D","45\n2E","46\n2F","47\n30",
+      "48\n31","49\n32","50\n33","51\n34","52\n35",{w:2.75},"53\n36"],
+    [{w:1.25},"54\n1D",{w:1.25},"55\nE0 5B",{w:1.25},"56\n38",{w:3},"13\n0E",
+      {w:3.25},"57\n39",{w:1.25},"58\nE0 38",{w:1.25},"59\nE0 5C",{w:1.25},
+      "60\nE0 5D",{w:1.25},"61\nE0 1D"]
   ],
   ergodox: [
     [{x:3.5},"03\n04",{x:10.5},"10\n09"],
@@ -50,55 +75,65 @@ const keyMaps = {
   ]
 }
 
-const defaultKeyMaps = {}
-const pixelsPerKey = 50
+function readIdScan(item) {
+  const idScan = item.match(
+    /(?<=^|\n)(\d\d)\n(?:.*?\n)?(E0 )?([\dA-F]{2})(?=$|\n)/si
+  )
+  if (!idScan) return null
+  const keyId = parseInt(idScan[1])
+  const extraScan = idScan[2] === 'E0 '
+  const scan = parseInt(idScan[3], 16) * (extraScan? -1 : 1)
+  return [keyId, scan]
+}
 
-function kleToKla(kbtype) {
-  const rows = keyMaps[kbtype]
-  const keyMap = { width: 754, height: 252 }
-  let x, y = 0, w = 1, w2 = 1, h = 1
-  let idScan, id, extraScan, scan
+function makeKeyData(scan, x, y, w, h, w2, h2) {
+  let keyData = { x, y, w: Math.min(w, w2), h: Math.min(h, h2), scan }
+  for (const k of 'xywh') keyData[k] = keyData[k] * PIXELS_PER_KEY + 0.5
+  return keyData
+}
+
+function kleToKla([kbtype, rows]) {
+  const keyMap = { width: 0, height: 0 }
+  let x, y = 0
+  let [w, h, w2, h2] = [1, 1, 1, 1]
+  let idScan, keyId, scan
+
   for (const row of rows) {
-    x = 0
-    for (const item of row) {
-      switch (typeof item) {
-        case 'string':
-          idScan = item.match(
-            /(?<=^|\n)(\d\d)\n(?:.*?\n)?(E0 )?([\dA-F]{2})(?=$|\n)/si
-          )
-          if (idScan) {
-            id = parseInt(idScan[1])
-            extraScan = idScan[2] === 'E0 '
-            scan = parseInt(idScan[3], 16) * (extraScan? -1 : 1)
-            keyMap[id] = { x: x, y: y, w: Math.min(w, w2), h: h, scan: scan }
-            for (const key of 'xywh')
-              keyMap[id][key] = keyMap[id][key] * pixelsPerKey + 0.5
+    let x = 0
+
+    for (const item of row) switch (typeof item) {
+
+      case 'string':
+        if (idScan = readIdScan(item)) {
+          [keyId, scan] = idScan
+          keyMap[keyId] = makeKeyData(scan, x, y, w, h, w2, h2)
+        }
+        x += Math.max(w, w2)
+        w = h = w2 = h2 = 1
+        break
+
+      default: // object
+        for (const [key, value] of Object.entries(item))
+          switch (key) {
+            case 'w': w = w2 = value; break
+            case 'w2': w2 = value; break
+            case 'h': h = h2 = value; break
+            case 'h2': h2 = value; break
           }
-          x += Math.max(w, w2) 
-          w = 1; w2 = 1; h = 1
-          break
-        default: // object
-          for (const [key, value] of Object.entries(item))
-            switch (key) {
-              case 'w':
-                w = value
-                w2 = value
-                break
-              case 'w2':
-                w2 = value
-                break
-              case 'h':
-                h = value
-                break
-            }
-      }
+
     }
-    y += h
+
+    y += Math.max(h, h2)
     h = 1
+    keyMap.width = Math.max(keyMap.width, x)
   }
+
+  keyMap.width = keyMap.width * PIXELS_PER_KEY + 4
+  keyMap.height = y * PIXELS_PER_KEY + 2
   defaultKeyMaps[kbtype] = keyMap
 }
 
-Object.keys(keyMaps).forEach(kleToKla)
+/* convert keyMap from KLE to KLA */
+Object.entries(defaultKeyMaps).forEach(kleToKla)
 
 export default defaultKeyMaps
