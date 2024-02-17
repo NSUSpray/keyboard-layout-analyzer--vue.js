@@ -46,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <svg :width="keyMap.width" :height="keyMap.height">
+  <svg :viewBox="`0 0 ${keyMap.width} ${keyMap.height}`">
     <g v-for="key, id of mapKeys"
         :transform="`translate(${ key.x }, ${ key.y })`"
         :set="{ top, bottom, altGr, shilftAltGr, fingerClass } = keyData(id)">
@@ -64,6 +64,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
+svg { width: 100%; }
+
 rect {
   stroke: var(--black-blue);
   stroke-width: 1.25;

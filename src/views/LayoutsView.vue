@@ -109,7 +109,7 @@ watch(current, (_, prevVal) => last = prevVal)
 
 <style scoped>
 #keyboard {
-/*  flex-basis: 754px;*/
+  flex-basis: 754px;
 /*  height: 252px;*/
   margin-left: auto;
   margin-right: auto;
