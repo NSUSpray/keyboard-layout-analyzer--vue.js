@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 
 import { useLayoutStore } from '@/stores/layouts'
-import { label } from '../lib/keyset'
+import { label } from '../lib/keysets'
 
 const props = defineProps({ name: Number })
 const layout = useLayoutStore().layouts[props.name]

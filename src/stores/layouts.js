@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-import { defaultKeySets } from '../lib/keyset'
+import { defaultKeySets } from '../lib/keysets'
 import defaultKeyMaps from '../lib/new_default_keymaps'
 
 const keySetToLayout = keySet =>

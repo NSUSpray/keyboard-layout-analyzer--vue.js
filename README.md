@@ -2,9 +2,10 @@
 
 Under development. See the working Angular.js version here https://github.com/NSUSpray/keyboard-layout-analyzer
 
-## Recommended IDE Setup
+## Dependencies
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+* [vue-three-shortkey](https://www.npmjs.com/package/vue-three-shortkey) — add keyboard shortcuts to many UI elements
+* [kle-serial](https://github.com/ijprest/kle-serial) — de-serialize [Keyboard Layout Editor](http://www.keyboard-layout-editor.com/) keymaps
 
 ## Customize configuration
 
