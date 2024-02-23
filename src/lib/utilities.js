@@ -157,3 +157,15 @@ function rowFirstLastUpdate(wrapperSelector) {
     })
   }))
 }
+
+export function dropUntil(xs, regex) {
+  const i = xs.findIndex(x => regex.test(x))
+  return (i === -1)? [] : xs.slice(i)
+}
+
+const objectM = (method, f, obj) =>
+  Object.fromEntries(Object.entries(obj)[method](f))
+
+export function objectMap(f, obj) { return objectM('map', f, obj) }
+
+export function objectFilter(f, obj) { return objectM('filter', f, obj) }

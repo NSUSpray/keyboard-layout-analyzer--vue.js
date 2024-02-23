@@ -1,16 +1,16 @@
 <script setup>
 import { ref, watch } from 'vue'
 
+import DropButton from '../components/DropButton.vue'
 import Jumbotron from '../components/Jumbotron.vue'
 import KeyboardEditor from '../components/KeyboardEditor.vue'
-import DropButton from '../components/DropButton.vue'
 import Select from '../components/Select.vue'
 
-import { useLayoutStore } from '@/stores/layouts'
+import useLayoutStore from '@/stores/layouts'
 
 import { kbtype } from '../lib/constants'
+import layoutList from '../lib/layout-list'
 import { shortTitle } from '../lib/utilities'
-import layoutList from '../lib/layout_list'
 
 
 const keySets = useLayoutStore().keySets

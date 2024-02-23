@@ -1,17 +1,16 @@
 <script setup>
 import { onMounted } from 'vue'
 
-import { useLayoutStore } from '@/stores/layouts'
-import { label } from '../lib/keysets'
+import { label } from '../lib/default-key-sets'
+import { objectFilter } from '../lib/utilities'
+import useLayoutStore from '@/stores/layouts'
 
 const props = defineProps({ name: Number })
 const layout = useLayoutStore().layouts[props.name]
 const keyMap = layout.keyMap
 const setKeys = layout.keySet.keys
 
-const mapKeys = Object.keys(keyMap)
-    .filter(id => id >= '0' && id <= '99')
-    .map(id => keyMap[id])
+const keyMapKeys = objectFilter(([key, _]) => key >= '0' && key <= '99', keyMap)
 
 const fingerClass = {
   1: 'left-pinky',
@@ -26,8 +25,8 @@ const fingerClass = {
   10: 'right-pinky',
 }
 
-function keyData(id) {
-  let { primary, shift, altGr, shiftAltGr, finger } = setKeys[id];
+function keyData(index) {
+  let { primary, shift, altGr, shiftAltGr, finger } = setKeys[index];
   [primary, shift, altGr, shiftAltGr] = [primary, shift, altGr, shiftAltGr]
       .map(code => code && label(code))
   return {
@@ -38,6 +37,13 @@ function keyData(id) {
   }
 }
 
+function path(key) {
+  const coords = key.coords.map(([x, y]) => [x - key.x + 0.5, y - key.y + 0.5])
+  let result = 'M ' + coords[0].join(' ')
+  result += coords.slice(1).map(([x, y]) => `L ${x} ${y}`).join(' ')
+  return result + ' Z'
+}
+
 onMounted(() => {
   for (const keyClass of Object.values(fingerClass))
     for (const key of document.getElementsByClassName(keyClass))
@@ -46,17 +52,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <svg :viewBox="`0 0 ${keyMap.width} ${keyMap.height}`">
-    <g v-for="key, id of mapKeys"
+  <svg :viewBox="`0 0 ${ keyMap.width } ${ keyMap.height }`">
+    <g v-for="(key, index) of keyMapKeys"
         :transform="`translate(${ key.x }, ${ key.y })`"
-        :set="{ top, bottom, altGr, shilftAltGr, fingerClass } = keyData(id)">
-      <rect :class="fingerClass" :width="key.w" :height="key.h" />
-      <g transform="translate(6, 15)">
+        :set="{ top, bottom, altGr, shiftAltGr, fingerClass } = keyData(index)">
+      <path v-if="key.coords" :class="fingerClass" :d="path(key)" />
+      <rect v-else :class="fingerClass" :width="key.w" :height="key.h" />
+      <g transform="translate(6, 15)" :set="right =
+          { transform: `translate(${ key.w - 12 })`, 'text-anchor': 'end' }">
         <text>{{ top }}</text>
-        <text class="alt-gr">{{ shiftAltGr }}</text>
-        <g transform="translate(0, 29)">
+        <text v-bind="right">{{ shiftAltGr }}</text>
+        <g :transform="`translate(0, ${ key.h - 21 })`">
           <text>{{ bottom }}</text>
-          <text class="alt-gr">{{ altGr }}</text>
+          <text v-bind="right">{{ altGr }}</text>
         </g>
       </g>
     </g>
@@ -66,27 +74,23 @@ onMounted(() => {
 <style scoped>
 svg { width: 100%; }
 
-rect {
+rect, path {
   stroke: var(--black-blue);
   stroke-width: 1.25;
   cursor: pointer;
 }
-rect:hover {
+:is(rect, path):hover {
   stroke: var(--dark-gray);
   filter: brightness(93%) saturate(250%);
 }
 
 text { pointer-events: none }
-text.alt-gr {
-  text-anchor: end;
-  transform: translateX(38px);
-}
 
 
 
 @media print {
 
-  rect { fill: none !important; }
+  rect, path { fill: none !important; }
 
 }
 </style>
