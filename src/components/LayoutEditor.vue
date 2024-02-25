@@ -25,6 +25,16 @@ const fingerClass = {
   10: 'right-pinky',
 }
 
+const editorSize = {
+  width: keyMap.width,
+  height: keyMap.height,
+  viewBox: `0 0 ${ keyMap.width } ${ keyMap.height }`
+}
+
+const transform = key =>
+  (key.a? `rotate(${ key.a } ${ key.rx } ${ key.ry }) ` : '')
+    + `translate(${ key.x }, ${ key.y })`
+
 function keyData(index) {
   let { primary, shift, altGr, shiftAltGr, finger } = setKeys[index];
   [primary, shift, altGr, shiftAltGr] = [primary, shift, altGr, shiftAltGr]
@@ -52,9 +62,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <svg :viewBox="`0 0 ${ keyMap.width } ${ keyMap.height }`">
+  <svg v-bind="editorSize">
     <g v-for="(key, index) of keyMapKeys"
-        :transform="`translate(${ key.x }, ${ key.y })`"
+        :transform="transform(key)"
         :set="{ top, bottom, altGr, shiftAltGr, fingerClass } = keyData(index)">
       <path v-if="key.coords" :class="fingerClass" :d="path(key)" />
       <rect v-else :class="fingerClass" :width="key.w" :height="key.h" />
@@ -72,7 +82,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-svg { width: 100%; }
+svg { max-width: 100%; }
 
 rect, path {
   stroke: var(--black-blue);

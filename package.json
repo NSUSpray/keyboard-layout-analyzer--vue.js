@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ijprest/kle-serial": "^0.15.1",
+    "@ijprest/kle-serial": "github:kevin-wells/kle-serial",
     "@turf/bbox": "^6.5.0",
     "@turf/union": "^6.5.0",
     "pinia": "^2.1.7",

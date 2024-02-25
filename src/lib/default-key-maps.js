@@ -31,9 +31,18 @@ function findIndexAndScanCode(labels) {
   return [index, scanCode]
 }
 
-function posAndSizeOf
-    ({ x, y, width: w, height: h, x2, y2, width2: w2, height2: h2, stepped }) {
-  let coordsObject = {}
+function posAndSizeOf({
+  x, y, width: w, height: h,
+  x2, y2, width2: w2, height2: h2,
+  rotation_angle: a, rotation_x: rx, rotation_y: ry,
+  stepped
+}) {
+  let rotationObj = {}
+  if (a) {
+    ;[rx, ry] = [rx, ry].map(i => i * normKeySize)
+    rotationObj = { a, rx, ry }
+  }
+  let coordsObj = {}
   if (!stepped) {
     const rect = (x, y, w, h) =>
       polygon([[[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]]])
@@ -44,11 +53,11 @@ function posAndSizeOf
       let maxX, maxY
       ;[x, y, maxX, maxY] = bbox(poly)
       ;[w, h] = [maxX - x, maxY - y]
-      coordsObject = { coords: coords.map(xy => xy.map(i => i * normKeySize)) }
+      coordsObj = { coords: coords.map(xy => xy.map(i => i * normKeySize)) }
     }
   }
   ;[x, y, w, h] = [x, y, w, h].map(i => i * normKeySize)
-  return { x: x + shift, y: y + shift, w, h, ...coordsObject }
+  return { x: x + shift, y: y + shift, w, h, ...rotationObj, ...coordsObj }
 }
 
 function sized(keyMap) {
@@ -65,14 +74,12 @@ function sized(keyMap) {
 function kleToKla([kbtype, rows]) {
   const keyMap = {}
   const keys = Serial.deserialize(rows).keys
-  let indexAndScanCode, index, scanCode
+  let index, scanCode
   for (const key of keys) {
-    indexAndScanCode = findIndexAndScanCode(key.labels)
-    ;[index, scanCode] = indexAndScanCode
+    ;[index, scanCode] = findIndexAndScanCode(key.labels)
     keyMap[index] = posAndSizeOf(key)
-    if (!isNaN(scanCode)) keyMap[index].scanCode = scanCode
+    if (!isNaN(scanCode)) keyMap[index].scan = scanCode
   }
-  console.log(sized(keyMap).width, sized(keyMap).height)
   return [kbtype, sized(keyMap)]
 }
 

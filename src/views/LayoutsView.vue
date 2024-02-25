@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 
 import DropButton from '../components/DropButton.vue'
 import Jumbotron from '../components/Jumbotron.vue'
-import KeyboardEditor from '../components/KeyboardEditor.vue'
+import LayoutEditor from '../components/LayoutEditor.vue'
 import Select from '../components/Select.vue'
 
 import useLayoutStore from '@/stores/layouts'
@@ -38,7 +38,9 @@ watch(current, (_, prevVal) => last = prevVal)
 
   <form id="editor">
     <fieldset id="keyboard">
-      <KeyboardEditor v-for="i of Array(1).keys()" :name="i" />
+      <template v-for="(keySet, index) of keySets" :key="keySet.tag">
+        <LayoutEditor v-show="index === current" :name="index" />
+      </template>
     </fieldset>
     <fieldset>
       <label>Name</label>
@@ -109,8 +111,8 @@ watch(current, (_, prevVal) => last = prevVal)
 
 <style scoped>
 #keyboard {
-  flex-basis: 754px;
-/*  height: 252px;*/
+/*  flex-basis: 754px;*/
+  height: 252px;
   margin-left: auto;
   margin-right: auto;
 }
