@@ -1,11 +1,11 @@
 import { Serial } from '@ijprest/kle-serial'
 import bbox from '@turf/bbox'
-import { polygon, multiPolygon } from '@turf/helpers'
+import { polygon } from '@turf/helpers'
 import { getCoords } from '@turf/invariant'
 import union from '@turf/union'
 
 import kleKeyMaps from './kle-key-maps'
-import { dropUntil, objectMap } from './utilities'
+import { dropUntil, objectMap, rotate } from './utilities'
 
 // in pixels
 const normKeySize = 50
@@ -37,11 +37,7 @@ function posAndSizeOf({
   rotation_angle: a, rotation_x: rx, rotation_y: ry,
   stepped
 }) {
-  let rotationObj = {}
-  if (a) {
-    ;[rx, ry] = [rx, ry].map(i => i * normKeySize)
-    rotationObj = { a, rx, ry }
-  }
+  const rotationObj = a? { a, rx: rx * normKeySize, ry: ry * normKeySize } : {}
   let coordsObj = {}
   if (!stepped) {
     const rect = (x, y, w, h) =>
@@ -50,9 +46,9 @@ function posAndSizeOf({
     const poly = union(r1, r2)
     const coords = getCoords(poly)[0].slice(0, -1)
     if (coords.length !== 4) {  // not rectangle
-      let maxX, maxY
-      ;[x, y, maxX, maxY] = bbox(poly)
-      ;[w, h] = [maxX - x, maxY - y]
+      let xw, yh
+      ;[x, y, xw, yh] = bbox(poly)
+      ;[w, h] = [xw - x, yh - y]
       coordsObj = { coords: coords.map(xy => xy.map(i => i * normKeySize)) }
     }
   }
@@ -60,27 +56,39 @@ function posAndSizeOf({
   return { x: x + shift, y: y + shift, w, h, ...rotationObj, ...coordsObj }
 }
 
-function sized(keyMap) {
-  function sizeBy([xy, wh]) {
-    const values = Object.values(keyMap)
-    return Math.max(...values.map(key => key[xy] + key[wh]))
-      - Math.min(...values.map(key => key[xy]))
+function adjustBoundingBox(
+  { x, y, w, h, a, rx, ry, coords }, { minX, minY, maxX, maxY }
+) {
+  let xw, yh
+  if (a) {
+    coords ??= [[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]]
+    coords = coords.map(coord => rotate(coord, a, [rx, ry]))
+    const poly = polygon([coords])
+    ;[x, y, xw, yh] = bbox(poly)
+  } else [xw, yh] = [x + w, y + h]
+  return {
+    minX: Math.min(minX, x),
+    minY: Math.min(minY, y),
+    maxX: Math.max(maxX, xw),
+    maxY: Math.max(maxY, yh)
   }
-  return { ...keyMap,
-    width: sizeBy('xw') + paddingX,
-    height: sizeBy('yh') + paddingY }
 }
 
 function kleToKla([kbtype, rows]) {
   const keyMap = {}
   const keys = Serial.deserialize(rows).keys
-  let index, scanCode
+  let index, scanCode, posAndSize,
+    bBox = { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity }
   for (const key of keys) {
     ;[index, scanCode] = findIndexAndScanCode(key.labels)
-    keyMap[index] = posAndSizeOf(key)
+    posAndSize = posAndSizeOf(key)
+    keyMap[index] = posAndSize
     if (!isNaN(scanCode)) keyMap[index].scan = scanCode
+    bBox = adjustBoundingBox(posAndSize, bBox)
   }
-  return [kbtype, sized(keyMap)]
+  keyMap.width = bBox.maxX - bBox.minX + paddingX
+  keyMap.height = bBox.maxY - bBox.minY + paddingY
+  return [kbtype, keyMap]
 }
 
 const defaultKeyMaps = objectMap(kleToKla, kleKeyMaps)

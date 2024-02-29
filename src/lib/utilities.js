@@ -83,7 +83,7 @@ function makeTitle(keySets, index) {
 }
 
 /**
- * Make label if it doesn't exist.
+ * Make label if it doesn’t exist.
  * @param {Array} keySets Key sets.
  * @param {Number} index Uses in default value if no letter group is found.
  * @return {String} Label.
@@ -158,6 +158,13 @@ function rowFirstLastUpdate(wrapperSelector) {
   }))
 }
 
+/**
+ * Drop the initial elements of a given array until an element matching a
+ * given regular expression is found.
+ * @param {Array[String]} xs Processed array of strings.
+ * @param {RegExp} regex Expression which you want to drop array elements.
+ * @return {Array[String]} New filtered array.
+ */
 export function dropUntil(xs, regex) {
   const i = xs.findIndex(x => regex.test(x))
   return (i === -1)? [] : xs.slice(i)
@@ -166,6 +173,37 @@ export function dropUntil(xs, regex) {
 const objectM = (method, f, obj) =>
   Object.fromEntries(Object.entries(obj)[method](f))
 
+/**
+ * Apply the function to all values of a given object.
+ * @param {Function} f Function to apply.
+ * @param {Object} obj Processed object.
+ * @return {Object} New mapped object.
+ */
 export function objectMap(f, obj) { return objectM('map', f, obj) }
 
+/**
+ * Filter the object where a given predicate function returns ‘true’.
+ * @param {Function} f Predicate.
+ * @param {Object} obj Processed object.
+ * @return {Object} New filtered object.
+ */
 export function objectFilter(f, obj) { return objectM('filter', f, obj) }
+
+/**
+ * Rotate the point around a given pivot by a given angle.
+ * @param {Array[Number]} point Point coordinates.
+ * @param {Number} theta Rotate angle in degrees.
+ * @param {Array[Number]} pivot Pivot point coordinates.
+ * @return {Array[Number]} Rotated point coordinates.
+ */
+export function rotate(point, theta, pivot) {
+  theta *= Math.PI / 180
+  const sin = Math.sin(theta)
+  const cos = Math.cos(theta)
+  const dx = point[0] - pivot[0]
+  const dy = point[1] - pivot[1]
+  return [
+    pivot[0] + dx * cos - dy * sin,
+    pivot[1] + dx * sin + dy * cos
+  ]
+}

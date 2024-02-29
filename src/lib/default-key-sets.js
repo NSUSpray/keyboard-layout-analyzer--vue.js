@@ -54,5 +54,5 @@ export function label(code) {
   const labels = { 8: '⌫', 9: '⭾ Tab', 13: '↩', 16: 'LShift', '-16': 'RShift',
       17: 'Ctrl', 18: 'Alt', '-18': 'Alt Gr', 20: '⮸', 27: 'Esc', 32: 'Space',
       '-91': 'Win', '-93': '▤', 127: '⌦', 160: '⍽' }
-  return labels[code] || String.fromCharCode(code)
+  return labels[code] ?? String.fromCharCode(code)
 }

@@ -50,6 +50,7 @@ watch(current, (_, prevVal) => last = prevVal)
             title="Change to convert keyboard type" />
       </div>
     </fieldset>
+    <fieldset id="smog"></fieldset>
     <fieldset>
       <label>Author</label>
       <div class="controls">{{ keySets[current].author }}
@@ -110,11 +111,25 @@ watch(current, (_, prevVal) => last = prevVal)
 </template>
 
 <style scoped>
+#editor {
+  --keyboard-height: min(var(--content-width) * 252 / 754, 252px);
+  position: relative;
+}
+
 #keyboard {
-/*  flex-basis: 754px;*/
-  height: 252px;
+  height: var(--keyboard-height);
   margin-left: auto;
   margin-right: auto;
+}
+#keyboard > * { z-index: -1; }
+#keyboard:hover > * { z-index: 0; }
+#smog {
+  position: absolute;
+  top: var(--keyboard-height);
+  width: 100%;
+  height: 202px;
+  background: radial-gradient(closest-side, var(--light-gray) 20%, transparent);
+  z-index: -1;
 }
 
 #name, #presets {

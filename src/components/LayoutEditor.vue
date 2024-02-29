@@ -25,19 +25,22 @@ const fingerClass = {
   10: 'right-pinky',
 }
 
-const editorSize = {
-  width: keyMap.width,
-  height: keyMap.height,
-  viewBox: `0 0 ${ keyMap.width } ${ keyMap.height }`
-}
+const editorSize = (() => {
+  const width = Math.max(keyMap.width, 754)
+  const x = (keyMap.width - width) / 2
+  return {
+    width: width,
+    viewBox: `${ x } 0 ${ width } ${ keyMap.height }`
+  }
+})()
 
 const transform = key =>
-  (key.a? `rotate(${ key.a } ${ key.rx } ${ key.ry }) ` : '')
-    + `translate(${ key.x }, ${ key.y })`
+    (key.a? `rotate(${ key.a } ${ key.rx } ${ key.ry }) ` : '')
+        + `translate(${ key.x }, ${ key.y })`
 
 function keyData(index) {
-  let { primary, shift, altGr, shiftAltGr, finger } = setKeys[index];
-  [primary, shift, altGr, shiftAltGr] = [primary, shift, altGr, shiftAltGr]
+  let { primary, shift, altGr, shiftAltGr, finger } = setKeys[index]
+  ;[primary, shift, altGr, shiftAltGr] = [primary, shift, altGr, shiftAltGr]
       .map(code => code && label(code))
   return {
     top: shift ?? primary,
@@ -47,12 +50,8 @@ function keyData(index) {
   }
 }
 
-function path(key) {
-  const coords = key.coords.map(([x, y]) => [x - key.x + 0.5, y - key.y + 0.5])
-  let result = 'M ' + coords[0].join(' ')
-  result += coords.slice(1).map(([x, y]) => `L ${x} ${y}`).join(' ')
-  return result + ' Z'
-}
+const points = key =>
+    key.coords.map(([x, y]) => (x - key.x + 0.5) + ',' + (y - key.y + 0.5)).join(' ')
 
 onMounted(() => {
   for (const keyClass of Object.values(fingerClass))
@@ -66,7 +65,7 @@ onMounted(() => {
     <g v-for="(key, index) of keyMapKeys"
         :transform="transform(key)"
         :set="{ top, bottom, altGr, shiftAltGr, fingerClass } = keyData(index)">
-      <path v-if="key.coords" :class="fingerClass" :d="path(key)" />
+      <polygon v-if="key.coords" :class="fingerClass" :points="points(key)" />
       <rect v-else :class="fingerClass" :width="key.w" :height="key.h" />
       <g transform="translate(6, 15)" :set="right =
           { transform: `translate(${ key.w - 12 })`, 'text-anchor': 'end' }">
@@ -84,12 +83,12 @@ onMounted(() => {
 <style scoped>
 svg { max-width: 100%; }
 
-rect, path {
+rect, polygon {
   stroke: var(--black-blue);
   stroke-width: 1.25;
   cursor: pointer;
 }
-:is(rect, path):hover {
+:is(rect, polygon):hover {
   stroke: var(--dark-gray);
   filter: brightness(93%) saturate(250%);
 }
@@ -100,7 +99,7 @@ text { pointer-events: none }
 
 @media print {
 
-  rect, path { fill: none !important; }
+  rect, polygon { fill: none !important; }
 
 }
 </style>
