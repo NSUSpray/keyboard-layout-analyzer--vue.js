@@ -51,7 +51,7 @@
         <li><a href='https://stevep99.github.io/keyboard-layout-analyzer/'>Parent KLA</a>
             by SteveP</li>
         <li><a href='https://klanext.keyboard-design.com/'>KLAnext</a>
-            by Den & Ian</li>
+            by Den &amp; Ian</li>
       </ul>
     </section>
     <section>

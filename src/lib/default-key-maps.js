@@ -13,6 +13,14 @@ const shift = 0.5
 const paddingX = 4
 const paddingY = 2
 
+const indexPattern = /^\d\d$/
+const scanCodePattern = /^(E0 )?[0-9A-F]{2}$/i
+const centersPattern = /^\d(\.\d+)?( \d(\.\d+)?)?(;\d(\.\d+)?( \d(\.\d+)?)?)?$/
+
+const escapeLineFeeds = rows => rows.map(row => row.map(elem =>
+  (typeof elem === 'string')? elem.replaceAll('\n', '\0') : elem
+))
+
 function scanCodeFrom(scanCodeString) {
   const extraAndBase = scanCodeString.split(' ')
   const hasExtra = extraAndBase.length === 2
@@ -20,15 +28,31 @@ function scanCodeFrom(scanCodeString) {
   return (hasExtra? -1 : 1) * parseInt(scanCodeString, 16)
 }
 
-function findIndexAndScanCode(labels) {
-  labels = dropUntil(labels, /^\d\d$/)
-  if (!labels.length) return [NaN, NaN]
-  const index = parseInt(labels[0])
-  const scanCodeString =
-    labels.slice(1).find(x => /^(E0 )?[0-9A-F]{2}$/i.test(x))
-  if (!scanCodeString) return [index, NaN]
-  const scanCode = scanCodeFrom(scanCodeString)
-  return [index, scanCode]
+const centersFrom = centersString =>
+  centersString.split(';').map(
+    cs => cs.split(' ').map(xy => (parseFloat(xy) + 0.5) * normKeySize)
+  )
+
+function readKeyDataFrom(labels) {
+  let result = { index: NaN, scanCode: NaN, centers: [[]] }
+  labels = labels[0].split('\0')  // ‘de-escape’
+
+  labels = dropUntil(labels, indexPattern)
+  if (!labels.length /* no index */) return result
+  result.index = parseInt(labels[0])
+
+  const labelsStartingFromScanCode =
+    dropUntil(labels.slice(1), scanCodePattern)
+  if (labelsStartingFromScanCode.length /* has scan code */) {
+    result.scanCode = scanCodeFrom(labelsStartingFromScanCode[0])
+    labels = labelsStartingFromScanCode
+  }
+
+  const labelsStartingFromCenters = dropUntil(labels.slice(1), centersPattern)
+  if (labelsStartingFromCenters.length /* has centers */)
+    result.centers = centersFrom(labelsStartingFromCenters[0])
+
+  return result
 }
 
 function posAndSizeOf({
@@ -56,6 +80,17 @@ function posAndSizeOf({
   return { x: x + shift, y: y + shift, w, h, ...rotationObj, ...coordsObj }
 }
 
+function makeCentersObj(centers, posAndSize) {
+  centers = centers.map(
+    ([x, y]) => [x ?? posAndSize.w / 2, y ?? posAndSize.h / 2]
+  )
+  const centersObj = {}
+  for (const [j, center] of centers.entries())
+    for (const [i, xy] of ['x', 'y'].entries())
+      centersObj['c' + xy + (j? j + 1 : '')] = posAndSize[xy] + center[i]
+  return centersObj
+}
+
 function adjustBoundingBox(
   { x, y, w, h, a, rx, ry, coords }, { minX, minY, maxX, maxY }
 ) {
@@ -76,14 +111,16 @@ function adjustBoundingBox(
 
 function kleToKla([kbtype, rows]) {
   const keyMap = {}
-  const keys = Serial.deserialize(rows).keys
-  let index, scanCode, posAndSize,
+  const keys = Serial.deserialize(escapeLineFeeds(rows)).keys
+  let index, scanCode, centers,
+    posAndSize, scanCodeObj, centersObj,
     bBox = { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity }
   for (const key of keys) {
-    ;[index, scanCode] = findIndexAndScanCode(key.labels)
+    ({ index, scanCode, centers } = readKeyDataFrom(key.labels))
     posAndSize = posAndSizeOf(key)
-    keyMap[index] = posAndSize
-    if (!isNaN(scanCode)) keyMap[index].scan = scanCode
+    scanCodeObj = isNaN(scanCode)? {} : { scan: scanCode }
+    centersObj = makeCentersObj(centers, posAndSize)
+    keyMap[index] = { ...posAndSize, ...scanCodeObj, ...centersObj }
     bBox = adjustBoundingBox(posAndSize, bBox)
   }
   keyMap.width = bBox.maxX - bBox.minX + paddingX

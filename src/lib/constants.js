@@ -32,3 +32,16 @@ export const finger = {
   RIGHT_PINKY: 10,
   BOTH_THUMBS: 11,
 }*/
+
+export const fingerClassOf = {
+  1: 'left-pinky',
+  2: 'left-ring',
+  3: 'left-middle',
+  4: 'left-index',
+  5: 'left-thumb',
+  6: 'right-thumb',
+  7: 'right-index',
+  8: 'right-middle',
+  9: 'right-ring',
+  10: 'right-pinky',
+}

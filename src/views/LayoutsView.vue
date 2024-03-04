@@ -53,8 +53,9 @@ watch(current, (_, prevVal) => last = prevVal)
     <fieldset id="smog"></fieldset>
     <fieldset>
       <label>Author</label>
-      <div class="controls">{{ keySets[current].author }}
-        <a id="more-info" :href="keySets[current].moreInfoUrl"
+      <div class="controls" :set="moreInfoUrl = keySets[current].moreInfoUrl">
+        {{ keySets[current].author }}
+        <a v-if="moreInfoUrl" id="more-info" :href="moreInfoUrl"
             :title="keySets[current].moreInfoText">More Info</a>
       </div>
     </fieldset>
