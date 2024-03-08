@@ -10,8 +10,9 @@ import useLayoutStore from '@/stores/layouts'
 
 import { kbtype } from '../lib/constants'
 import layoutList from '../lib/layout-list'
-import { shortTitle } from '../lib/utilities'
+import { processEventHandler, shortTitle } from '../lib/utilities'
 
+const ignoreValue = 0
 
 const keySets = useLayoutStore().keySets
 const current = ref(0)
@@ -21,11 +22,34 @@ function prev() {
   const len = keySets.length
   current.value = (current.value + len - 1) % len
 }
+
 function next() {
   const len = keySets.length
   current.value = (current.value + 1) % len
 }
 
+const copyJson = processEventHandler(async (fingering=false) => {
+  let keySet = keySets[current.value]
+  if (fingering) {
+    keySet = JSON.parse(JSON.stringify(keySet))
+    keySet.label = keySet.author = keySet.moreInfoUrl = keySet.moreInfoText
+        = ignoreValue
+    keySet.keys.forEach(key =>
+      key.primary = key.shift = key.altGr = key.shiftAltGr = ignoreValue
+    )
+  }
+  const keySetJson = JSON.stringify(keySet, null, 4)
+  navigator.clipboard.writeText(keySetJson)
+})
+
+const copyAllJson = processEventHandler(async () => {
+  const keySetsJson = JSON.stringify
+    ({ name: '' /* TODO */, layouts: keySets }, null, 4)
+  navigator.clipboard.writeText(keySetsJson)
+})
+
+function showImportDialog() {}
+function exportJson() {}
 
 let last = 1
 watch(current, (_, prevVal) => last = prevVal)
@@ -84,14 +108,17 @@ watch(current, (_, prevVal) => last = prevVal)
     <fieldset>
       <label>Load/Save Data</label>
       <div class="controls">
-        <DropButton @click="" value="Copy" title="Copy this layout to clipboard"
-            v_shortkey="['ctrl', 'c']">
-          <a title="Copy finger zones and positions">Copy Fingering</a>
-          <a title="Copy the whole set">Copy All Layouts</a>
+        <DropButton @click="copyJson" value="Copy"
+            title="Copy this layout to clipboard" v_shortkey="['ctrl', 'c']">
+          <a @click="copyJson($event, fingering=true)"
+              title="Copy finger zones and positions">Copy Fingering</a>
+          <a @click="copyAllJson" title="Copy the whole set">Copy All Layouts</a>
         </DropButton>
-        <button type="button" @click="" title="Load some layout/fingering/set here"
+        <button type="button" @click="showImportDialog"
+            title="Load some layout/fingering/set here"
             v-shortkey="['ctrl', 'v']">Paste</button>
-        <DropButton @click="" value="Export" title="Save this layout to file">
+        <DropButton @click="exportJson" value="Export"
+            title="Save this layout to file">
           <a title="Save finger zones and positions">Export Fingering</a>
           <a title="Save the whole set to single file">Export All Layouts</a>
         </DropButton>
@@ -99,7 +126,8 @@ watch(current, (_, prevVal) => last = prevVal)
     </fieldset>
     <fieldset>
       <div class="controls">
-        <Select id="presets" :options="layoutList" v-model="preset">Select Preset</Select>
+        <Select id="presets" :options="layoutList" v-model="preset">
+          Select Preset</Select>
         <DropButton @click="" value="Load"
             title="Load preset in place of current layout or whole set"
             v_shortkey="['enter']" :disabled="!preset">
@@ -129,7 +157,8 @@ watch(current, (_, prevVal) => last = prevVal)
   top: var(--keyboard-height);
   width: 100%;
   height: 202px;
-  background: radial-gradient(closest-side, var(--light-gray) 20%, transparent);
+  background:
+    radial-gradient(closest-side, var(--light-gray) 20%, transparent);
   z-index: -1;
 }
 

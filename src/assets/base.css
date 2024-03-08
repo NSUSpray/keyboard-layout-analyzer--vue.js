@@ -86,7 +86,9 @@
   --light-gray: #DDD;  /* body bg */
   --light-light-gray: #E0E0E0;  /* footer border */
 
-  --light-bright-blue: /* focus border */
+  --light-bright-blue:
+    oklch(70% 32% 249);
+  --light-bright-blue-translucent: /* focus border */
     oklch(70% 32% 249 / 0.8);
   --bright-blue: /* a */
     oklch(60% 35% 249) /*#0088CC*/ ;

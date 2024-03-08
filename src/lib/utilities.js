@@ -170,24 +170,24 @@ export function dropUntil(xs, regex) {
   return (i === -1)? [] : xs.slice(i)
 }
 
-const objectM = (method, f, obj) =>
-  Object.fromEntries(Object.entries(obj)[method](f))
+const objectM = (method, func, obj) =>
+  Object.fromEntries(Object.entries(obj)[method](func))
 
 /**
  * Apply the function to all values of a given object.
- * @param {Function} f Function to apply.
+ * @param {Function} func Function to apply.
  * @param {Object} obj Processed object.
  * @return {Object} New mapped object.
  */
-export function objectMap(f, obj) { return objectM('map', f, obj) }
+export function objectMap(func, obj) { return objectM('map', func, obj) }
 
 /**
  * Filter the object where a given predicate function returns ‘true’.
- * @param {Function} f Predicate.
+ * @param {Function} func Predicate.
  * @param {Object} obj Processed object.
  * @return {Object} New filtered object.
  */
-export function objectFilter(f, obj) { return objectM('filter', f, obj) }
+export function objectFilter(func, obj) { return objectM('filter', func, obj) }
 
 /**
  * Rotate the point around a given pivot by a given angle.
@@ -206,4 +206,27 @@ export function rotate(point, theta, pivot) {
     pivot[0] + dx * cos - dy * sin,
     pivot[1] + dx * sin + dy * cos
   ]
+}
+
+export function processEventHandler
+    (func, errorHandler, processClass='in-process', transitionTime=250) {
+  const lag = 35
+  return async (event, ...args) => {
+    const target = event.target
+    const time = Date.now()
+    target.classList.add(processClass)
+    const disabled = target.getAttribute('disabled')
+    if (!disabled) target.setAttribute('disabled', '')
+    try { return await func(...args) }
+    catch (e) { if (errorHandler) errorHandler(e); else throw e }
+    finally {
+      setTimeout(() => {
+          target.classList.remove(processClass)
+          if (!disabled) target.removeAttribute('disabled')
+          if (target.parentElement.classList.contains('drop-button-menu'))
+            target.blur()
+        }, Math.max(0, transitionTime - Date.now() + time + lag)
+      )
+    }
+  }
 }

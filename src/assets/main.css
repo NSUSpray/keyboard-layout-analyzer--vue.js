@@ -38,8 +38,12 @@ button, .btn {
   cursor: pointer;
   transition: 0.25s;
 }
-:is(button, .btn):is(:hover, [disabled]) {
-  background-color: var(--light-blue);
+:is(button, .btn):is(:hover, [disabled])
+  { background-color: var(--light-blue); }
+:is(button, .btn):is(.in-process),
+    :is(button, .btn):has(.in-process) {
+  background-color: var(--light-bright-blue);
+  opacity: 1.0;
 }
 :is(button, .btn).large {
   padding:
@@ -62,16 +66,15 @@ button, .btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-.button-group :is(button, .btn):not(:first-child)[disabled] {
-  border-color: var(--light-light-blue);
-}
+.button-group :is(button, .btn):not(:first-child)[disabled]
+  { border-color: var(--light-light-blue); }
 input, textarea {
   transition:
     border linear 0.2s,
     box-shadow linear 0.2s;
 }
 :is(input, textarea):focus {
-  border-color: var(--light-bright-blue);
+  border-color: var(--light-bright-blue-translucent);
   box-shadow: var(--bright-glow);
   outline: 0;
 }
@@ -106,9 +109,8 @@ fieldset {
   padding: 0;
   border: none;
 }
-fieldset.row-first:not(:has(label)) {
-  margin-left: var(--aside-width);
-}
+fieldset.row-first:not(:has(label))
+  { margin-left: var(--aside-width); }
 fieldset > label {
   margin: var(--narrow-margin) 0;
   padding-right: var(--narrow-padding);
@@ -131,9 +133,8 @@ fieldset > label.row-last {
   display: flex;
   flex-wrap: wrap;
 }
-.controls > :not(:last-child) {
-  margin-right: calc(var(--thin-margin) * 2);
-}
+.controls > :not(:last-child)
+  { margin-right: calc(var(--thin-margin) * 2); }
 
 hr { border: 1px solid var(--dark-dark-blue); }
 

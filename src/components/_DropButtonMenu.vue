@@ -1,16 +1,18 @@
 <script setup>
-import { useSlots } from 'vue'
+import { onMounted, ref } from 'vue'
 
-const items = useSlots().default?.()[0].children
+const menu = ref(null)
 
-items?.forEach(item => {
-  item.props ??= {}
-  item.props.tabindex = 0
+onMounted(() => {
+  /* fix focusing by Tab key */
+  const items = menu.value.querySelectorAll('a')
+  items?.forEach(item => !item.hasAttribute('href')?
+      item.setAttribute('href', 'javascript:;') : null)
 })
 </script>
 
 <template>
-  <div class="drop-button-menu"><slot /></div>
+  <div ref="menu" class="drop-button-menu"><slot /></div>
 </template>
 
 <style>
@@ -33,9 +35,8 @@ items?.forEach(item => {
   left: auto;
   right: 0;
 }
-:is(:hover, :focus):not([disabled]) > .drop-button-menu,
-    .drop-button-menu:hover,
-    .drop-button-menu:has(:focus) {
+:is(:hover, :focus):not([disabled]) > .drop-button-menu:not(:has(.in-process)),
+    .drop-button-menu:is(:hover, :has(:focus)):not(:has(.in-process)) {
   visibility: initial;
   opacity: 1;
 }
