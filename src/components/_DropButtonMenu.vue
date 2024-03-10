@@ -3,12 +3,6 @@ import { onMounted, ref } from 'vue'
 
 const menu = ref(null)
 
-onMounted(() => {
-  /* fix focusing by Tab key */
-  const items = menu.value.querySelectorAll('a')
-  items?.forEach(item => !item.hasAttribute('href')?
-      item.setAttribute('href', 'javascript:;') : null)
-})
 </script>
 
 <template>

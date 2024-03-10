@@ -1,19 +1,28 @@
 <script setup>
-  import { onBeforeMount, onMounted, onUpdated, onUnmounted, watch } from 'vue'
-  import { RouterView, useRoute } from 'vue-router'
+import { onBeforeMount, onMounted, onUpdated, onUnmounted, watch } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
 
-  import RouterLink from './components/RouterLink.vue'
+import RouterLink from './components/RouterLink.vue'
 
-  import { rowFirstLast } from './lib/utilities.js'
+import { rowFirstLast, setDummyHrefAttribute } from './lib/utilities.js'
 
 
-  const rowFirstLastUpdate = rowFirstLast('form, fieldset, footer')
+const rowFirstLastUpdate = rowFirstLast('form, fieldset, footer')
 
-  onBeforeMount(() => window.addEventListener('resize', rowFirstLastUpdate))
-  onMounted(() => setInterval(rowFirstLastUpdate, 3000))
-  onUpdated(rowFirstLastUpdate)
-  onUnmounted(() => window.removeEventListener('resize', rowFirstLastUpdate))
-  watch(useRoute(), rowFirstLastUpdate)
+onBeforeMount(() => {
+  window.addEventListener('resize', rowFirstLastUpdate)
+  document.addEventListener('DOMContentLoaded', setDummyHrefAttribute)
+})
+
+onMounted(() => setInterval(rowFirstLastUpdate, 3000))
+onUpdated(rowFirstLastUpdate)
+
+onUnmounted(() => {
+  window.removeEventListener('resize', rowFirstLastUpdate)
+  document.removeEventListener('DOMContentLoaded', setDummyHrefAttribute)
+})
+
+watch(useRoute(), rowFirstLastUpdate)
 </script>
 
 <template>

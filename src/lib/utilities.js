@@ -58,6 +58,13 @@ export function rowFirstLast(wrapperSelector) {
   return () => rowFirstLastUpdate(wrapperSelector)
 }
 
+export function setDummyHrefAttribute() {
+  document.querySelectorAll('a')?.forEach(
+    item => !item.hasAttribute('href')?
+      item.setAttribute('href', 'javascript:;') : null
+  )
+}
+
 /*export function chainCalls(...args) {
   if (args.length > 0 && typeof args[0] === 'function') {
     return args[0](() => chainCalls.apply(null, args.slice(1)))
