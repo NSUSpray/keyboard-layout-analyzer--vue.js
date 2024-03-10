@@ -124,6 +124,8 @@
   --bright-glow:
     0 1px 1px oklch(0 0 0 / 7.5%) inset,
     0 0 8px oklch(70% 32% 249 / 60%);
+
+  --transition-duration: 0.25s;
 }
 
 html { font-size: 15px; }

@@ -216,8 +216,10 @@ export function rotate(point, theta, pivot) {
 }
 
 export function processEventHandler
-    (func, errorHandler, processClass='in-process', transitionTime=250) {
-  const lag = 35
+    (func, errorHandler, processClass='in-process') {
+  const rootStyle = getComputedStyle(document.documentElement)
+  const transitionDuration =
+    parseFloat(rootStyle.getPropertyValue('--transition-duration')) * 1000
   return async (event, ...args) => {
     const target = event.target
     const time = Date.now()
@@ -230,9 +232,7 @@ export function processEventHandler
       setTimeout(() => {
           target.classList.remove(processClass)
           if (!disabled) target.removeAttribute('disabled')
-          if (target.parentElement.classList.contains('drop-button-menu'))
-            target.blur()
-        }, Math.max(0, transitionTime - Date.now() + time + lag)
+        }, Math.max(0, transitionDuration - Date.now() + time)
       )
     }
   }

@@ -36,7 +36,7 @@ button, .btn {
   color: white;
   background-color: var(--blue);
   cursor: pointer;
-  transition: 0.25s;
+  transition-duration: var(--transition-duration);
 }
 :is(button, .btn):is(:hover, [disabled])
   { background-color: var(--light-blue); }
