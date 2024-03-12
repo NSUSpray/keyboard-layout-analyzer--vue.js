@@ -10,7 +10,8 @@ import useLayoutStore from '@/stores/layouts'
 
 import { kbtype } from '../lib/constants'
 import layoutList from '../lib/layout-list'
-import { processEventHandler, shortTitle } from '../lib/utilities'
+import { downloadJson, processEventHandler, shortTitle }
+    from '../lib/utilities'
 
 const ignoreValue = 0
 
@@ -28,16 +29,19 @@ function next() {
   current.value = (current.value + 1) % len
 }
 
+function keepOnlyFingering(keySet) {
+  keySet = JSON.parse(JSON.stringify(keySet))
+  keySet.label = keySet.author = keySet.moreInfoUrl = keySet.moreInfoText
+      = ignoreValue
+  keySet.keys.forEach(key =>
+    key.primary = key.shift = key.altGr = key.shiftAltGr = ignoreValue
+  )
+  return keySet
+}
+
 const copyJson = processEventHandler(async (fingering=false) => {
   let keySet = keySets[current.value]
-  if (fingering) {
-    keySet = JSON.parse(JSON.stringify(keySet))
-    keySet.label = keySet.author = keySet.moreInfoUrl = keySet.moreInfoText
-        = ignoreValue
-    keySet.keys.forEach(key =>
-      key.primary = key.shift = key.altGr = key.shiftAltGr = ignoreValue
-    )
-  }
+  if (fingering) keySet = keepOnlyFingering(keySet)
   const keySetJson = JSON.stringify(keySet, null, 4)
   navigator.clipboard.writeText(keySetJson)
 })
@@ -49,7 +53,18 @@ const copyAllJson = processEventHandler(async () => {
 })
 
 function showImportDialog() {}
-function exportJson() {}
+
+function exportJson(event, fingering=false) {
+  let keySet = keySets[current.value]
+  const filename = `${keySet.keyboardType.trim()}.${keySet.label.trim()}`
+      .toLowerCase().replace(/\s/g, '-')
+      + '.kla-' + (fingering? 'fingering' : 'layout')
+  if (fingering) keySet = keepOnlyFingering(keySet)
+  downloadJson(keySet, filename)
+}
+
+const exportAllJson = () =>
+  downloadJson({ name: '' /* TODO */, layouts: keySets }, 'layouts.kla-set')
 
 let last = 1
 watch(current, (_, prevVal) => last = prevVal)
@@ -119,8 +134,10 @@ watch(current, (_, prevVal) => last = prevVal)
             v-shortkey="['ctrl', 'v']">Paste</button>
         <DropButton @click="exportJson" value="Export"
             title="Save this layout to file">
-          <a title="Save finger zones and positions">Export Fingering</a>
-          <a title="Save the whole set to single file">Export All Layouts</a>
+          <a @click="exportJson($event, fingering=true)"
+              title="Save finger zones and positions">Export Fingering</a>
+          <a @click="exportAllJson"
+              title="Save the whole set to single file">Export All Layouts</a>
         </DropButton>
       </div>
     </fieldset>

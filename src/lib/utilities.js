@@ -237,3 +237,16 @@ export function processEventHandler
     }
   }
 }
+
+export function downloadJson(data, filename) {
+  const json = JSON.stringify(data)
+  const blob = new Blob([json], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.setAttribute('download', filename)
+  link.href = url
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
