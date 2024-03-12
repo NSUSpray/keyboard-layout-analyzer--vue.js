@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 
 const menu = ref(null)
+const isFadeOut = ref(false)
 
 function getFadeOutTime() {
   const menuStyle = getComputedStyle(menu.value)
@@ -11,10 +12,10 @@ function getFadeOutTime() {
   return transitionDuration + fadeOutLag
 }
 
-function fadeOut(event, fadeOutTime, fadeOutClass='fade-out') {
-  menu.value.classList.add(fadeOutClass)
+function fadeOut(event, fadeOutTime) {
+  isFadeOut.value = true
   setTimeout(() => event.target.blur(), 1)
-  setTimeout(() => menu.value.classList.remove(fadeOutClass), fadeOutTime)
+  setTimeout(() => isFadeOut.value = false, fadeOutTime)
 }
 
 function fadeOutOnClick(selector) {
@@ -29,7 +30,9 @@ onMounted(() => fadeOutOnClick('a, button, .btn, input'))
 </script>
 
 <template>
-  <div ref="menu" class="drop-button-menu"><slot /></div>
+  <div ref="menu" class="drop-button-menu" :class="{ 'fade-out': isFadeOut }">
+    <slot />
+  </div>
 </template>
 
 <style>
