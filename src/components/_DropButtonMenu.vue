@@ -1,15 +1,13 @@
 <script setup>
 import { onMounted, ref } from 'vue'
+import { transitionDurationOf } from '../lib/utilities'
 
 const menu = ref(null)
 const isFadeOut = ref(false)
 
 function getFadeOutTime() {
-  const menuStyle = getComputedStyle(menu.value)
-  const transitionDuration =
-    parseFloat(menuStyle.getPropertyValue('transition-duration')) * 1000
   const fadeOutLag = 35  // hand-picked value
-  return transitionDuration + fadeOutLag
+  return transitionDurationOf(menu.value) + fadeOutLag
 }
 
 function fadeOut(event, fadeOutTime) {

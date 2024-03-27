@@ -45,3 +45,7 @@ export const fingerClassOf = {
   9: 'right-ring',
   10: 'right-pinky',
 }
+
+export const importFilters =
+  { all: 'All', nonLetters: 'Non-Letters', altGr: '‘Alt Gr’ Layer' }
+export const defaultImportFilter = 'all'

@@ -2,13 +2,14 @@
 import { ref, watch } from 'vue'
 
 import DropButton from '../components/DropButton.vue'
+import ImportDialog from '../components/ImportDialog.vue'
 import Jumbotron from '../components/Jumbotron.vue'
 import LayoutEditor from '../components/LayoutEditor.vue'
 import Select from '../components/Select.vue'
 
 import useLayoutStore from '@/stores/layouts'
 
-import { kbtype } from '../lib/constants'
+import { defaultImportFilter, kbtype } from '../lib/constants'
 import layoutList from '../lib/layout-list'
 import { downloadJson, processEventHandler, shortTitle }
     from '../lib/utilities'
@@ -18,6 +19,8 @@ const ignoreValue = 0
 const keySets = useLayoutStore().keySets
 const current = ref(0)
 const preset = ref('')
+const importDialog = ref(null)
+const importText = ref('')
 
 function prev() {
   const len = keySets.length
@@ -44,15 +47,21 @@ const copyJson = processEventHandler(async (fingering=false) => {
   if (fingering) keySet = keepOnlyFingering(keySet)
   const keySetJson = JSON.stringify(keySet, null, 4)
   navigator.clipboard.writeText(keySetJson)
+  importText.value = keySetJson
 })
 
 const copyAllJson = processEventHandler(async () => {
   const keySetsJson = JSON.stringify
     ({ name: '' /* TODO */, layouts: keySets }, null, 4)
   navigator.clipboard.writeText(keySetsJson)
+  importText.value = keySetsJson
 })
 
-function showImportDialog() {}
+function importJson(value, filter=defaultImportFilter) {
+  console.log(filter)
+  // keySets[current.value] = importText.value = JSON.parse(value)
+  importDialog.value.cancel()
+}
 
 function exportJson(event, fingering=false) {
   let keySet = keySets[current.value]
@@ -84,7 +93,7 @@ watch(current, (_, prevVal) => last = prevVal)
     <fieldset>
       <label>Name</label>
       <div class="controls">
-        <input id="name" v-model="keySets[current].label" />
+        <input type="text" id="name" v-model="keySets[current].label" />
         <Select :options="kbtype" v-model="keySets[current].keyboardType"
             title="Change to convert keyboard type" />
       </div>
@@ -129,7 +138,7 @@ watch(current, (_, prevVal) => last = prevVal)
               title="Copy finger zones and positions">Copy Fingering</a>
           <a @click="copyAllJson" title="Copy the whole set">Copy All Layouts</a>
         </DropButton>
-        <button type="button" @click="showImportDialog"
+        <button type="button" @click="importDialog.show(importText)"
             title="Load some layout/fingering/set here"
             v-shortkey="['ctrl', 'v']">Paste</button>
         <DropButton @click="exportJson" value="Export"
@@ -154,6 +163,8 @@ watch(current, (_, prevVal) => last = prevVal)
       </div>
     </fieldset>
   </form>
+
+  <ImportDialog ref="importDialog" @import="importJson" />
 </template>
 
 <style scoped>

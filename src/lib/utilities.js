@@ -215,11 +215,13 @@ export function rotate(point, theta, pivot) {
   ]
 }
 
+const rootStyle = getComputedStyle(document.documentElement)
+
+const transitionDuration =
+  parseFloat(rootStyle.getPropertyValue('--transition-duration')) * 1000
+
 export function processEventHandler
     (func, errorHandler, processClass='in-process') {
-  const rootStyle = getComputedStyle(document.documentElement)
-  const transitionDuration =
-    parseFloat(rootStyle.getPropertyValue('--transition-duration')) * 1000
   return async (event, ...args) => {
     const target = event.target
     const time = Date.now()
@@ -237,6 +239,10 @@ export function processEventHandler
     }
   }
 }
+
+export const transitionDurationOf = element =>
+  parseFloat(getComputedStyle(element).getPropertyValue('transition-duration'))
+    * 1000
 
 export function downloadJson(data, filename) {
   const json = JSON.stringify(data)

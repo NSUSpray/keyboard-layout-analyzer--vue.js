@@ -84,6 +84,7 @@
   --dark-gray: #666;
   --gray: #888;  /* footer */
   --light-gray: #DDD;  /* body bg */
+  --light-gray-translucent: #DDDC;
   --light-light-gray: #E0E0E0;  /* footer border */
 
   --light-bright-blue:
@@ -95,37 +96,39 @@
   --dark-bright-blue: /* a:hover */
     oklch(43% 25% 249) /*#005580*/;
 
-  --left-pinky:      oklch(94% 24% 175);
-  --left-ring:        oklch(78% 33% 261);
-  --left-middle:   oklch(87% 39% 289);
-  --left-index:     oklch(82% 44% 328);
-  --left-thumb:   oklch(100% 0% 0);
-  --right-thumb: oklch(94% 0% 0);
-  --right-index:   oklch(79% 31% 29);
-  --right-middle: oklch(88% 22% 71);
-  --right-ring:      oklch(98% 31% 119);
-  --right-pinky:   oklch(91% 42% 139);
+  --left-pinky:      oklch(  94% 24% 175);
+  --left-ring:        oklch(  78% 33% 261);
+  --left-middle:   oklch(  87% 39% 289);
+  --left-index:     oklch(  82% 44% 328);
+  --left-thumb:   oklch(100%   0%     0);
+  --right-thumb: oklch(  94%   0%     0);
+  --right-index:   oklch(  79% 31%   29);
+  --right-middle: oklch(  88% 22%   71);
+  --right-ring:      oklch(  98% 31% 119);
+  --right-pinky:   oklch(  91% 42% 139);
 
   --shadow:
     0
     calc(var(--margin) / 2)
     var(--margin)
-    rgba(0, 0, 0, 0.2);
+    oklch(0 0 0 / 0.2);
   --sharp-shadow:
     0
     calc(var(--thin-margin) * 1.5)
     calc(var(--thin-margin) * 3.5)
-    rgba(0, 0, 0, 0.3);
+    oklch(0 0 0 / 0.3);
   --shallow-shadow:
     0
     var(--thin-margin)
     var(--thin-margin)
-    rgba(0, 0, 0, 0.2);
+    oklch(0 0 0 / 0.2);
   --bright-glow:
     0 1px 1px oklch(0 0 0 / 7.5%) inset,
     0 0 8px oklch(70% 32% 249 / 60%);
 
+  --fast-transition-duration: 0.2s;
   --transition-duration: 0.25s;
+  --slow-transition-duration: 0.3s;
 }
 
 html { font-size: 15px; }

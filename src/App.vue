@@ -7,7 +7,9 @@ import RouterLink from './components/RouterLink.vue'
 import { rowFirstLast, setDummyHrefAttribute } from './lib/utilities.js'
 
 
-const rowFirstLastUpdate = rowFirstLast('form, fieldset, footer')
+const rowFirstLastUpdate = rowFirstLast(
+  ':is(form, fieldset, footer):not(dialog *)'
+)
 
 onBeforeMount(() => {
   window.addEventListener('resize', rowFirstLastUpdate)

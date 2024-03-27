@@ -12,6 +12,15 @@ body {
   min-height: calc(100vh - var(--header-height));
 }
 
+/*
+ * block elements
+ */
+
+dialog {
+  border-style: none;
+  color: var(--black-blue);
+}
+
 figure {
   display: flex;
   flex-direction: column;
@@ -23,12 +32,13 @@ figcaption {
   color: var(--dark-gray);
 }
 
+/* form elements */
 button, .btn {
   display: inline-block;
   padding:
     calc(var(--narrow-padding) * 0.8)
     var(--wide-padding);
-  border: 0;
+  border-style: none;
   border-radius: var(--radius);
   line-height: 1.4rem;
   font-family: var(--font-family);
@@ -38,7 +48,7 @@ button, .btn {
   cursor: pointer;
   transition-duration: var(--transition-duration);
 }
-:is(button, .btn):is(:hover, [disabled])
+:is(button, .btn):is(:hover, :focus, [disabled])
   { background-color: var(--light-blue); }
 :is(button, .btn):is(.in-process),
     :is(button, .btn):has(.in-process) {
@@ -55,7 +65,7 @@ button, .btn {
 :is(button, .btn).small {
   padding:
     var(--thin-padding)
-    calc(var(--narrow-padding) * 1.3);
+    calc(var(--narrow-padding) * 1.25);
 }
 .button-group :is(button, .btn):not(:last-child) {
   border-top-right-radius: 0;
@@ -68,24 +78,23 @@ button, .btn {
 }
 .button-group :is(button, .btn):not(:first-child)[disabled]
   { border-color: var(--light-light-blue); }
-input, textarea {
-  transition:
-    border linear 0.2s,
-    box-shadow linear 0.2s;
-}
-:is(input, textarea):focus {
-  border-color: var(--light-bright-blue-translucent);
-  box-shadow: var(--bright-glow);
-  outline: 0;
-}
-input, select {
+input[type="text"], select, textarea {
   margin: var(--thin-margin) 0;
   padding: calc(var(--thin-padding) * 0.8) var(--narrow-padding);
-  border: 2px solid var(--white-blue);
+  border: solid 2px var(--white-blue);
   border-radius: var(--radius);
   font-family: var(--font-family);
   font-size: 1rem;
-  height: 2.2em;
+}
+input[type="text"], select { height: 2.2em; }
+input[type="text"], textarea {
+  transition: border linear, box-shadow linear;
+  transition-duration: var(--fast-transition-duration);
+}
+:is(input[type="text"], textarea):focus {
+  border-color: var(--light-bright-blue-translucent);
+  box-shadow: var(--bright-glow);
+  outline: 0;
 }
 select {
   background-color: white;
@@ -95,6 +104,7 @@ select:invalid { color: var(--light-light-blue); }
 option, optgroup { color: initial; }
 optgroup { font-style: normal; }
 
+/* form and its subsets */
 form {
   display: flex;
   flex-wrap: wrap;
@@ -107,7 +117,7 @@ fieldset {
   align-items: baseline;
   margin: calc(var(--narrow-margin) * 0.75) 0;
   padding: 0;
-  border: none;
+  border-style: none;
 }
 fieldset.row-first:not(:has(label))
   { margin-left: var(--aside-width); }
@@ -120,7 +130,7 @@ fieldset > label {
 }
 fieldset > label::after { content: ':'; }
 fieldset > label.row-last { flex-basis: 100%; }
-fieldset.row-first > label {
+fieldset.row-first > label:not(dialog *) {
   width: var(--aside-width); 
   padding-right: var(--wide-padding);
 }
@@ -134,9 +144,15 @@ fieldset > label.row-last {
   flex-wrap: wrap;
 }
 .controls > :not(:last-child)
-  { margin-right: calc(var(--thin-margin) * 2); }
+  { margin-right: var(--narrow-margin); }
 
-hr { border: 1px solid var(--dark-dark-blue); }
+dialog > :is(h1, h2, h3, h4, h5, h6) {
+  text-align: center;
+  color: white;
+  background-color: var(--blue);
+}
+
+hr { border: solid 1px var(--dark-dark-blue); }
 
 img { margin: calc(1rem / 3) var(--margin); }
 
@@ -162,6 +178,10 @@ td {
 }
 
 ul, ol { padding-left: calc(var(--wide-padding) * 1.25); }
+
+/*
+ * inline elements
+ */
 
 a {
   text-decoration: none;
