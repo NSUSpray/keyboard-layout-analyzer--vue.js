@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { importFilters, defaultImportFilter } from '../lib/constants'
 import { transitionDurationOf } from '../lib/utilities'
 
@@ -13,20 +13,35 @@ const textarea = ref(null)
 const isClosed = ref(true)
 const filter = ref(defaultImportFilter)
 
+let transitionDuration
+
+const focus = (element, timeout) =>
+  setTimeout(() => element.value.focus(), timeout ?? 0)
+
 function show(importText) {
   textarea.value.value = importText
   filter.value = defaultImportFilter
   dialog.value.showModal()
+  textarea.value.scrollTop = 0
   isClosed.value = false
-  ;(importText? importButton : textarea).value.focus()
+  focus(importText? importButton : textarea, transitionDuration)
 }
 
 function cancel(event) {
   isClosed.value = true
-  const transitionDuration = transitionDurationOf(dialog.value)
   setTimeout(() => dialog.value.close(), transitionDuration)
   event.preventDefault()
 }
+
+function onPaste() {
+  const ta = textarea.value
+  const empty = ta.value === ''
+  const selectedAll =
+    ta.selectionStart === 0 && ta.selectionEnd === ta.textLength
+  if (empty || selectedAll) focus(importButton)
+}
+
+onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
 </script>
 
 <template>
@@ -35,7 +50,7 @@ function cancel(event) {
     <button @click="cancel" title="Close" v-shortkey="['Esc']">×</button>
 
     <div>
-      <textarea ref="textarea" @focus="textarea.select" />
+      <textarea ref="textarea" @focus="textarea.select" @paste="onPaste" />
       <p>Paste the text of a previously copied or exported layout/fingering/set
           in the textbox above and press ‘Import’ to load.</p>
     </div>
@@ -91,7 +106,7 @@ h3 + button {
   right: var(--padding);
   width: 1em;
   padding: 0;
-  font-size: 1.75rem;
+  font-size: 1.75rem; /* FIXME */
   color: var(--dark-dark-blue);
   background-color: transparent !important;
 }
