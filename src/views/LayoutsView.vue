@@ -60,7 +60,7 @@ const copyAllJson = processEventHandler(async () => {
 function importJson(value, filter=defaultImportFilter) {
   console.log(filter)
   // keySets[current.value] = importText.value = JSON.parse(value)
-  importDialog.value.cancel()
+  importDialog.value.close()
 }
 
 function exportJson(event, fingering=false) {

@@ -14,7 +14,8 @@ app.use(createPinia())
 app.use(router)
 
 {
-  app.use(shortkey, { prevent: ['input[type="text"]', 'textarea'] })
+  app.use(shortkey,
+    { prevent: ['dialog *', 'input[type="text"]', 'textarea'] })
   const skdir = app.directive('shortkey')
   const beforeMount = skdir.beforeMount
   const updated = skdir.updated

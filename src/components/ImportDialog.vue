@@ -4,7 +4,7 @@ import { importFilters, defaultImportFilter } from '../lib/constants'
 import { transitionDurationOf } from '../lib/utilities'
 
 defineEmits(['import'])
-defineExpose({ cancel, show })
+defineExpose({ close, show })
 
 const dialog = ref(null)
 const importButton = ref(null)
@@ -27,10 +27,10 @@ function show(importText) {
   focus(importText? importButton : textarea, transitionDuration)
 }
 
-function cancel(event) {
+function close(event) {
   isClosed.value = true
   setTimeout(() => dialog.value.close(), transitionDuration)
-  event.preventDefault()
+  event?.preventDefault()
 }
 
 function onPaste() {
@@ -45,9 +45,9 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
 </script>
 
 <template>
-  <dialog ref="dialog" @cancel="cancel" :class="{ closed: isClosed }">
+  <dialog ref="dialog" @cancel="close" :class="{ closed: isClosed }">
     <h3>Import Layouts</h3>
-    <button @click="cancel" title="Close" v-shortkey="['Esc']">×</button>
+    <button @click="close" title="Close" v-shortkey="['Esc']">×</button>
 
     <div>
       <textarea ref="textarea" @focus="textarea.select" @paste="onPaste" />
@@ -68,7 +68,7 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
         <div class="controls">
           <button type="button" ref="importButton"
               @click="$emit('import', textarea.value, filter)">Import</button>
-          <button type="button" @click="cancel">Cancel</button>
+          <button type="button" @click="close">Cancel</button>
         </div>
       </fieldset>
     </form>
