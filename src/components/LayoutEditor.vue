@@ -1,32 +1,34 @@
 <script setup>
-import { onMounted } from 'vue'
+import { computed } from 'vue'
 
 import { fingerClassOf } from '../lib/constants'
 import { label } from '../lib/default-key-sets'
-import { objectFilter } from '../lib/utilities'
-import useLayoutStore from '@/stores/layouts'
+import { addStyle, objectFilter } from '../lib/utilities'
 
-const props = defineProps({ name: Number })
-const layout = useLayoutStore().layouts[props.name]
-const keyMap = layout.keyMap
-const setKeys = layout.keySet.keys
-const keyMapKeys = objectFilter(([key, _]) => key >= '0' && key <= '99', keyMap)
+const props = defineProps({ layout: Object })
+const keySet = computed(() => props.layout.keySet)
 
-const editorSize = (() => {
+const editorSize = computed(() => {
+  const keyMap = props.layout.keyMap
   const width = Math.max(keyMap.width, 754)
   const x = (keyMap.width - width) / 2
   return {
     width: width,
     viewBox: `${ x } 0 ${ width } ${ keyMap.height }`
   }
-})()
+})
+
+const keyMapKeys = computed(() => {
+  const isKeyMapKey = ([key, _]) => key >= '0' && key <= '99'
+  return objectFilter(isKeyMapKey, props.layout.keyMap)
+})
 
 const transform = key =>
     (key.a? `rotate(${ key.a } ${ key.rx } ${ key.ry }) ` : '')
         + `translate(${ key.x }, ${ key.y })`
 
 function keyData(index) {
-  let { primary, shift, altGr, shiftAltGr, finger } = setKeys[index]
+  let { primary, shift, altGr, shiftAltGr, finger } = keySet.value.keys[index]
   ;[primary, shift, altGr, shiftAltGr] = [primary, shift, altGr, shiftAltGr]
       .map(code => code && label(code))
   return {
@@ -42,7 +44,7 @@ const points = key => key.coords
     .join(' ')
 
 const isFingerStart = index => Object
-    .values(layout.keySet.fingerStart)
+    .values(keySet.value.fingerStart)
     .includes(Number(index))
 
 const centersOf = key => Object
@@ -53,22 +55,25 @@ const centersOf = key => Object
       cy: key[k.replace('x', 'y')] - key.y
     }))
 
-onMounted(() => {
-  for (const keyClass of Object.values(fingerClassOf))
-    for (const key of document.getElementsByClassName(keyClass))
-      key.style.fill = `var(--${keyClass})`
-})
+function addKeyFillStyles() {
+  const rule = keyClass => `.${keyClass} > :not(g) { fill: var(--${keyClass}); }`
+  const style = Object.values(fingerClassOf).map(rule).join('\n')
+  addStyle(style)
+}
+
+addKeyFillStyles()
 </script>
 
 <template>
   <svg v-bind="editorSize">
     <g v-for="(key, index) of keyMapKeys"
         :transform="transform(key)"
-        :set="{ top, bottom, altGr, shiftAltGr, fingerClass } = keyData(index)">
-      <polygon v-if="key.coords" :class="fingerClass" :points="points(key)" />
-      <rect v-else :class="fingerClass" :width="key.w" :height="key.h" />
+        :set="{ top, bottom, altGr, shiftAltGr, fingerClass } = keyData(index)"
+        :class="fingerClass">
+      <polygon v-if="key.coords" :points="points(key)" />
+      <rect v-else :width="key.w" :height="key.h" />
       <circle v-if="isFingerStart(index)" v-for="center of centersOf(key)"
-          :class="fingerClass" v-bind="center" r="4" />
+          v-bind="center" r="4" />
       <g transform="translate(6, 15)" :set="right =
           { transform: `translate(${ key.w - 12 })`, 'text-anchor': 'end' }">
         <text>{{ top }}</text>

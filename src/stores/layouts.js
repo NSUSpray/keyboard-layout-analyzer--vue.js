@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import defaultKeyMaps from '../lib/default-key-maps'
 import { defaultKeySets } from '../lib/default-key-sets'
@@ -7,10 +7,10 @@ import { defaultKeySets } from '../lib/default-key-sets'
 const keySetToLayout = keySet =>
   ({ keySet, keyMap: defaultKeyMaps[keySet.keyboardType] })
 
-const useLayoutStore = defineStore('layouts', () => {
-  const layouts = ref(defaultKeySets.map(keySetToLayout))
-  const keySets = computed(() => layouts.value.map(layout => layout.keySet))
-  return { layouts, keySets }
+const useLayoutsStore = defineStore('layouts', () => {
+  const keySets = ref(defaultKeySets)
+  const layouts = computed(() => keySets.value.map(keySetToLayout))
+  return { keySets, layouts }
 })
 
-export default useLayoutStore
+export default useLayoutsStore

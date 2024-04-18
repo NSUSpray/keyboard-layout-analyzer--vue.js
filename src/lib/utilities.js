@@ -256,3 +256,10 @@ export function downloadJson(data, filename) {
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
 }
+
+export function addStyle(style) {
+  const sheet = new CSSStyleSheet()
+  sheet.replaceSync(style)
+  document.adoptedStyleSheets.push(sheet)
+}
+
