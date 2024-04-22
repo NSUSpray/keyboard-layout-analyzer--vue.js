@@ -10,8 +10,9 @@ Under development. See the working Angular.js version here https://github.com/NS
 ## Dependencies
 
 * [vue-three-shortkey](https://www.npmjs.com/package/vue-three-shortkey) — add keyboard shortcuts to many UI elements
-* [kle-serial](https://github.com/ijprest/kle-serial) — de-serialize [Keyboard Layout Editor](http://www.keyboard-layout-editor.com/) keymaps
+* [kle-serial](https://github.com/ijprest/kle-serial) — de-serialize [Keyboard Layout Editor](http://www.keyboard-layout-editor.com/) key maps
 * [Turf.js](https://github.com/Turfjs/turf) ([bbox](https://github.com/Turfjs/turf/tree/master/packages/turf-bbox), [union](https://github.com/Turfjs/turf/tree/master/packages/turf-union)) — draw complex key paths
+* [Zod](https://github.com/colinhacks/zod) — verify the imported layout or set
 
 ## TODO
 

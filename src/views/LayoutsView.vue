@@ -11,6 +11,7 @@ import useLayoutsStore from '@/stores/layouts'
 
 import { defaultImportFilter, kbtype } from '../lib/constants'
 import layoutList from '../lib/layout-list'
+import { layoutSchema, setSchema } from '../lib/schemas'
 import { downloadJson, processEventHandler, shortTitle }
     from '../lib/utilities'
 
@@ -59,9 +60,22 @@ const copyAllJson = processEventHandler(async () => {
 })
 
 function importJson(json, filter=defaultImportFilter) {
-  importText.value = json
-  keySets[current.value] = JSON.parse(json)
-  importDialog.value.close()
+  let object, result
+  try { object = JSON.parse(json) }
+    catch { return console.log('parse fail') }
+  result = layoutSchema.safeParse(object)
+  if (result.success) {
+    importText.value = json
+    keySets[current.value] = result.data
+    return importDialog.value.close()
+  }
+  result = setSchema.safeParse(object)
+  if (result.success) {
+    importText.value = json
+    Object.assign(keySets, result.data.layouts)
+    return importDialog.value.close()
+  }
+  console.log('schema fail')
 }
 
 function exportJson(event, fingering=false) {

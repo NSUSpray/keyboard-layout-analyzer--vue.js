@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { importFilters, defaultImportFilter } from '../lib/constants'
+
+import { defaultImportFilter, importFilters } from '../lib/constants'
 import { transitionDurationOf } from '../lib/utilities'
 
 defineEmits(['import'])
