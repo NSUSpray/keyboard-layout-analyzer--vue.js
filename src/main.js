@@ -15,7 +15,7 @@ app.use(router)
 
 {
   app.use(shortkey,
-    { prevent: ['dialog *', 'input[type="text"]', 'textarea'] })
+    { prevent: ['dialog', 'dialog *', 'input[type="text"]', 'textarea'] })
   const skdir = app.directive('shortkey')
   const beforeMount = skdir.beforeMount
   const updated = skdir.updated

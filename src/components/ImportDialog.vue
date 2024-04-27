@@ -90,8 +90,8 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
           <button type="button" ref="importButton"
               :class="{ warning: confirm }"
               @blur="confirm = false" @click="verifyAndEmit">{{
-                confirm? 'Import in Place of All Current' : 'Import'
-              }}</button>
+            confirm? 'Import in Place of All Current' : 'Import'
+          }}</button>
           <button type="button" @click="close">Cancel</button>
         </div>
       </fieldset>
@@ -102,7 +102,8 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
 <style scoped>
 dialog {
   bottom: 0;
-  max-width: min(100% - var(--content-margin) * 2, 560px);
+  --width: min(100% - var(--content-margin) * 2, 560px);
+  min-width: var(--width); max-width: var(--width);
   padding: 0;
   border-radius: var(--radius);
   box-shadow:

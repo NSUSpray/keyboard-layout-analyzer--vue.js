@@ -68,9 +68,9 @@ button, .btn {
     calc(var(--narrow-padding) * 1.25);
 }
 :is(button, .btn).warning
-  { background-color: var(--orange); }
+  { background-color: var(--warning-color); }
 :is(button, .btn).warning:is(:hover, :focus, [disabled])
-  { background-color: var(--light-orange); }
+  { background-color: var(--warning-hover-color); }
 .button-group :is(button, .btn):not(:last-child) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
