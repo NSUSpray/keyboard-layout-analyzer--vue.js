@@ -12,6 +12,7 @@ const dialog = ref(null)
 const importButton = ref(null)
 const textarea = ref(null)
 
+const confirm = ref(false)
 const filter = ref(defaultImportFilter)
 const isClosed = ref(true)
 
@@ -22,6 +23,7 @@ const focus = (element, timeout) =>
 
 function show(textareaValue) {
   textarea.value.value = textareaValue
+  confirm.value = false
   filter.value = defaultImportFilter
   dialog.value.showModal()
   textarea.value.scrollTop = 0
@@ -38,8 +40,11 @@ function verifyAndEmit() {
   if (result.success)
     return emit('keySet', result.data, json)
   result = setSchema.safeParse(object)
-  if (result.success)
-    return emit('keySet', result.data.layouts, json)
+  if (result.success) {
+    if (confirm.value)
+      emit('keySet', result.data.layouts, json)
+    return confirm.value = !confirm.value
+  }
   console.log('schema fail')
 }
 
@@ -72,7 +77,7 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
     </div>
 
     <form>
-      <fieldset>
+      <fieldset v-show="!confirm">
         <label>Filter</label>
         <div class="controls">
           <label v-for="(label, value) in importFilters">
@@ -80,10 +85,13 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
           </label>
         </div>
       </fieldset>
-      <fieldset>
+      <fieldset id="buttons">
         <div class="controls">
           <button type="button" ref="importButton"
-              @click="verifyAndEmit">Import</button>
+              :class="{ warning: confirm }"
+              @blur="confirm = false" @click="verifyAndEmit">{{
+                confirm? 'Import in Place of All Current' : 'Import'
+              }}</button>
           <button type="button" @click="close">Cancel</button>
         </div>
       </fieldset>
@@ -129,6 +137,7 @@ h3 + button {
 h3 + button:is(:hover, :focus) { color: var(--black-blue); }
 
 fieldset { margin: 0; }
+#buttons { flex-grow: 1; justify-content: flex-end; }
 
 form {
   border-top: solid 1px var(--light-gray);

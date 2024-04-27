@@ -80,6 +80,11 @@
   --black-blue: /* body */
     oklch(36% 10% 249) /*#2C3E50*/;
 
+  --orange: /* warning */
+    oklch(78% 39% 72) /*#F4A425*/;
+  --light-orange:
+    oklch(80% 39% 72) /*#F5B043*/;
+
   --black-gray: #333;  /* a:focus outline */
   --dark-gray: #666;
   --gray: #888;  /* footer */
