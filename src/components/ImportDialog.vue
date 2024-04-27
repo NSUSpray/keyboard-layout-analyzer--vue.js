@@ -15,6 +15,7 @@ const textarea = ref(null)
 const confirm = ref(false)
 const filter = ref(defaultImportFilter)
 const isClosed = ref(true)
+const parseError = ref(null)
 
 let transitionDuration
 
@@ -25,6 +26,7 @@ function show(textareaValue) {
   textarea.value.value = textareaValue
   confirm.value = false
   filter.value = defaultImportFilter
+  parseError.value = null
   dialog.value.showModal()
   textarea.value.scrollTop = 0
   isClosed.value = false
@@ -34,8 +36,9 @@ function show(textareaValue) {
 function verifyAndEmit() {
   const json = textarea.value.value
   let object, result
-  try { object = JSON.parse(json) }
-    catch { return console.log('parse fail') }
+  try { object = JSON.parse(json) } catch {
+    return parseError.value = 'Invalid layout string'
+  }
   result = layoutSchema.safeParse(object)
   if (result.success)
     return emit('keySet', result.data, json)
@@ -45,7 +48,7 @@ function verifyAndEmit() {
       emit('keySet', result.data.layouts, json)
     return confirm.value = !confirm.value
   }
-  console.log('schema fail')
+  parseError.value = 'Layout does not satisfy any possible schema'
 }
 
 function close(event) {
@@ -71,7 +74,11 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
     <button @click="close" title="Close" v-shortkey="['Esc']">×</button>
 
     <div>
-      <textarea ref="textarea" @focus="textarea.select" @paste="onPaste" />
+      <div class="textarea-n-status">
+        <textarea ref="textarea" :class="{ danger: parseError }"
+            @focus="textarea.select(); parseError = null" @paste="onPaste" />
+        <div class="status">{{ parseError }}</div>
+      </div>
       <p>Paste the text of a previously copied or exported layout/fingering/set
           in the textbox above and press ‘Import’ to load.</p>
     </div>
@@ -89,6 +96,7 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
         <div class="controls">
           <button type="button" ref="importButton"
               :class="{ warning: confirm }"
+              :disabled="parseError"
               @blur="confirm = false" @click="verifyAndEmit">{{
             confirm? 'Import in Place of All Current' : 'Import'
           }}</button>
@@ -125,6 +133,8 @@ dialog > * {
 
 dialog > :is(h3 + button, h3) { line-height: 1em; }
 
+.textarea-n-status { position: relative; }
+
 h3 + button {
   position: absolute;
   top: var(--padding);
@@ -144,6 +154,24 @@ form {
   border-top: solid 1px var(--light-gray);
   background-color: var(--wwhite-blue);
 }
+
+.status {
+  position: absolute;
+  right: 0; bottom: 0;
+  margin: var(--thin-margin) 0;
+  padding: 0 var(--thin-padding);
+  border: solid 2px transparent;
+  border-radius: var(--radius) 0;
+  color: white;
+  background-color: var(--white-blue);
+  transition: background-color linear;
+  transition-duration: var(--fast-transition-duration);
+  pointer-events: none;
+}
+.danger + .status
+  { background-color: var(--danger-color); }
+.danger:hover + .status
+  { background-color: var(--danger-hover-color); }
 
 textarea {
   min-width: 100%;

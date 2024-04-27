@@ -84,6 +84,10 @@
     oklch(78% 39% 72) /*#F4A425*/;
   --warning-hover-color:
     oklch(80% 39% 72) /*#F5B043*/;
+  --danger-color:
+    oklch(66% 44% 29) /*#E95D4E*/;
+  --danger-hover-color:
+    oklch(70% 44% 29) /*#ED7669*/;
 
   --black-gray: #333;  /* a:focus outline */
   --dark-gray: #666;

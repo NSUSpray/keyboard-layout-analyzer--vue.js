@@ -100,6 +100,10 @@ input[type="text"], textarea {
   box-shadow: var(--bright-glow);
   outline: 0;
 }
+:is(input[type="text"], textarea).danger
+  { border-color: var(--danger-color); }
+:is(input[type="text"], textarea).danger:is(:hover, :focus, [disabled])
+  { border-color: var(--danger-hover-color); }
 select {
   background-color: white;
   cursor: pointer;
