@@ -2,30 +2,45 @@
 import { onMounted, ref } from 'vue'
 
 import { defaultImportFilter, importFilters } from '../lib/constants'
+import { layoutSchema, setSchema } from '../lib/schemas'
 import { transitionDurationOf } from '../lib/utilities'
 
-defineEmits(['import'])
+const emit = defineEmits(['keySet'])
 defineExpose({ close, show })
 
 const dialog = ref(null)
 const importButton = ref(null)
 const textarea = ref(null)
 
-const isClosed = ref(true)
 const filter = ref(defaultImportFilter)
+const isClosed = ref(true)
 
 let transitionDuration
 
 const focus = (element, timeout) =>
   setTimeout(() => element.value.focus(), timeout ?? 0)
 
-function show(importText) {
-  textarea.value.value = importText
+function show(textareaValue) {
+  textarea.value.value = textareaValue
   filter.value = defaultImportFilter
   dialog.value.showModal()
   textarea.value.scrollTop = 0
   isClosed.value = false
-  focus(importText? importButton : textarea, transitionDuration)
+  focus(textareaValue? importButton : textarea, transitionDuration)
+}
+
+function verifyAndEmit() {
+  const json = textarea.value.value
+  let object, result
+  try { object = JSON.parse(json) }
+    catch { return console.log('parse fail') }
+  result = layoutSchema.safeParse(object)
+  if (result.success)
+    return emit('keySet', result.data, json)
+  result = setSchema.safeParse(object)
+  if (result.success)
+    return emit('keySet', result.data.layouts, json)
+  console.log('schema fail')
 }
 
 function close(event) {
@@ -68,7 +83,7 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
       <fieldset>
         <div class="controls">
           <button type="button" ref="importButton"
-              @click="$emit('import', textarea.value, filter)">Import</button>
+              @click="verifyAndEmit">Import</button>
           <button type="button" @click="close">Cancel</button>
         </div>
       </fieldset>

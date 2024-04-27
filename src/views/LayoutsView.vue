@@ -9,9 +9,8 @@ import Select from '../components/Select.vue'
 
 import useLayoutsStore from '@/stores/layouts'
 
-import { defaultImportFilter, kbtype } from '../lib/constants'
+import { kbtype } from '../lib/constants'
 import layoutList from '../lib/layout-list'
-import { layoutSchema, setSchema } from '../lib/schemas'
 import { downloadJson, processEventHandler, shortTitle }
     from '../lib/utilities'
 
@@ -22,7 +21,7 @@ const keySets = layoutsStore.keySets
 const current = ref(0)
 const preset = ref('')
 const importDialog = ref(null)
-const importText = ref('')
+const clipboardDouble = ref('')
 
 function prev() {
   const len = keySets.length
@@ -49,33 +48,23 @@ const copyJson = processEventHandler(async (fingering=false) => {
   if (fingering) keySet = keepOnlyFingering(keySet)
   const keySetJson = JSON.stringify(keySet, null, 4)
   navigator.clipboard.writeText(keySetJson)
-  importText.value = keySetJson
+  clipboardDouble.value = keySetJson
 })
 
 const copyAllJson = processEventHandler(async () => {
   const keySetsJson = JSON.stringify
     ({ name: '' /* TODO */, layouts: keySets }, null, 4)
   navigator.clipboard.writeText(keySetsJson)
-  importText.value = keySetsJson
+  clipboardDouble.value = keySetsJson
 })
 
-function importJson(json, filter=defaultImportFilter) {
-  let object, result
-  try { object = JSON.parse(json) }
-    catch { return console.log('parse fail') }
-  result = layoutSchema.safeParse(object)
-  if (result.success) {
-    importText.value = json
-    keySets[current.value] = result.data
-    return importDialog.value.close()
-  }
-  result = setSchema.safeParse(object)
-  if (result.success) {
-    importText.value = json
-    Object.assign(keySets, result.data.layouts)
-    return importDialog.value.close()
-  }
-  console.log('schema fail')
+function updateKeySet(object, json) {
+  clipboardDouble.value = json
+  if (Array.isArray(object))
+    Object.assign(keySets, object)
+  else
+    keySets[current.value] = object
+  importDialog.value.close()
 }
 
 function exportJson(event, fingering=false) {
@@ -153,7 +142,7 @@ watch(current, (_, prevVal) => last = prevVal)
               title="Copy finger zones and positions">Copy Fingering</a>
           <a @click="copyAllJson" title="Copy the whole set">Copy All Layouts</a>
         </DropButton>
-        <button type="button" @click="importDialog.show(importText)"
+        <button type="button" @click="importDialog.show(clipboardDouble)"
             title="Load some layout/fingering/set here"
             v-shortkey="['ctrl', 'v']">Paste</button>
         <DropButton @click="exportJson" value="Export"
@@ -179,7 +168,7 @@ watch(current, (_, prevVal) => last = prevVal)
     </fieldset>
   </form>
 
-  <ImportDialog ref="importDialog" @import="importJson" />
+  <ImportDialog ref="importDialog" @keySet="updateKeySet" />
 </template>
 
 <style scoped>
