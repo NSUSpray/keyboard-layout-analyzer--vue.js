@@ -83,6 +83,7 @@ button, .btn {
 .button-group :is(button, .btn):not(:first-child)[disabled]
   { border-color: var(--light-light-blue); }
 input[type="text"], select, textarea {
+  display: block;
   margin: var(--thin-margin) 0;
   padding: calc(var(--thin-padding) * 0.8) var(--narrow-padding);
   border: solid 2px var(--white-blue);

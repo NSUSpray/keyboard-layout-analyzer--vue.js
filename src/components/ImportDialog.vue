@@ -156,9 +156,9 @@ form {
 }
 
 .status {
+  visibility: hidden;
   position: absolute;
   right: 0; bottom: 0;
-  margin: var(--thin-margin) 0;
   padding: 0 var(--thin-padding);
   border: solid 2px transparent;
   border-radius: var(--radius) 0;
@@ -168,8 +168,10 @@ form {
   transition-duration: var(--fast-transition-duration);
   pointer-events: none;
 }
-.danger + .status
-  { background-color: var(--danger-color); }
+.danger + .status {
+  visibility: visible;
+  background-color: var(--danger-color);
+}
 .danger:hover + .status
   { background-color: var(--danger-hover-color); }
 
