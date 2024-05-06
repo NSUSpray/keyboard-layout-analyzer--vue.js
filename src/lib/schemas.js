@@ -20,6 +20,11 @@ const keySchema = z.object({
   shiftAltGr: charCodeSchema,
 })
 
+const keyFingerSchema = z.object({
+  id: keyIdSchema.optional(),
+  finger: z.number().int().min(1).max(10),
+})
+
 export const layoutSchema = z.object({
   label: z.string(),
   author: z.string(),
@@ -29,6 +34,12 @@ export const layoutSchema = z.object({
   keyboardType: z.enum(Object.keys(kbtype)),
   fingerStart: fingerStartSchema,
   keys: keySchema.array(),
+})
+
+export const fingeringSchema = z.object({
+  keyboardType: z.enum(Object.keys(kbtype)),
+  fingerStart: fingerStartSchema,
+  keys: keyFingerSchema.array(),
 })
 
 export const setSchema = z.object({

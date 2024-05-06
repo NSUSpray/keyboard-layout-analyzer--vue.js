@@ -14,8 +14,6 @@ import layoutList from '../lib/layout-list'
 import { downloadJson, processEventHandler, shortTitle }
     from '../lib/utilities'
 
-const IGNORE = 0
-
 const layoutsStore = useLayoutsStore()
 const keySets = layoutsStore.keySets
 const current = ref(0)
@@ -36,9 +34,9 @@ function next() {
 function keepOnlyFingering(keySet) {
   keySet = JSON.parse(JSON.stringify(keySet))
   keySet.label = keySet.author = keySet.moreInfoUrl = keySet.moreInfoText
-      = IGNORE
+      = undefined
   keySet.keys.forEach(key =>
-    key.primary = key.shift = key.altGr = key.shiftAltGr = IGNORE
+    key.primary = key.shift = key.altGr = key.shiftAltGr = undefined
   )
   return keySet
 }
@@ -58,12 +56,22 @@ const copyAllJson = processEventHandler(async () => {
   clipboardDouble.value = keySetsJson
 })
 
-function updateKeySet(object, json) {
+function updateKeySet(type, object, json) {
   clipboardDouble.value = json
-  if (Array.isArray(object))
-    Object.assign(keySets, object)
-  else
-    keySets[current.value] = object
+  switch (type) {
+    case 'keySet':
+      keySets[current.value] = object
+      break
+    case 'fingering':
+      keySets[current.value].fingerStart = object.fingerStart
+      keySets[current.value].keys.map((key, index) =>
+        Object.assign(key, object.keys[index])
+      )
+      break
+    case 'keySets':
+      Object.assign(keySets, object)
+      break
+  }
   importDialog.value.close()
 }
 
@@ -168,7 +176,8 @@ watch(current, (_, prevVal) => last = prevVal)
     </fieldset>
   </form>
 
-  <ImportDialog ref="importDialog" @keySet="updateKeySet" />
+  <ImportDialog ref="importDialog"
+      :keyboardType="keySets[current].keyboardType" @import="updateKeySet" />
 </template>
 
 <style scoped>

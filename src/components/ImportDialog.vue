@@ -2,11 +2,12 @@
 import { onMounted, ref } from 'vue'
 
 import { defaultImportFilter, importFilters } from '../lib/constants'
-import { layoutSchema, setSchema } from '../lib/schemas'
+import { layoutSchema, fingeringSchema, setSchema } from '../lib/schemas'
 import { transitionDurationOf } from '../lib/utilities'
 
-const emit = defineEmits(['keySet'])
+const emit = defineEmits(['import'])
 defineExpose({ close, show })
+const props = defineProps({ keyboardType: String })
 
 const dialog = ref(null)
 const importButton = ref(null)
@@ -15,7 +16,7 @@ const textarea = ref(null)
 const confirm = ref(false)
 const filter = ref(defaultImportFilter)
 const isClosed = ref(true)
-const parseError = ref(null)
+const error = ref(null)
 
 let transitionDuration
 
@@ -26,7 +27,7 @@ function show(textareaValue) {
   textarea.value.value = textareaValue
   confirm.value = false
   filter.value = defaultImportFilter
-  parseError.value = null
+  error.value = null
   dialog.value.showModal()
   textarea.value.scrollTop = 0
   isClosed.value = false
@@ -36,19 +37,30 @@ function show(textareaValue) {
 function verifyAndEmit() {
   const json = textarea.value.value
   let object, result
+
   try { object = JSON.parse(json) } catch {
-    return parseError.value = 'Invalid layout string'
+    return error.value = 'Invalid layout string'
   }
+
   result = layoutSchema.safeParse(object)
   if (result.success)
-    return emit('keySet', result.data, json)
+    return emit('import', 'keySet', result.data, json)
+
+  result = fingeringSchema.safeParse(object)
+  if (result.success) {
+    if (result.data.keyboardType === props.keyboardType)
+      return emit('import', 'fingering', result.data, json)
+    return error.value = 'Fingering keyboard type must match target'
+  }
+
   result = setSchema.safeParse(object)
   if (result.success) {
     if (confirm.value)
-      emit('keySet', result.data.layouts, json)
+      emit('import', 'keySets', result.data.layouts, json)
     return confirm.value = !confirm.value
   }
-  parseError.value = 'Layout does not satisfy any possible schema'
+
+  error.value = 'Layout does not satisfy any possible schema'
 }
 
 function close(event) {
@@ -75,9 +87,9 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
 
     <div>
       <div class="textarea-n-status">
-        <textarea ref="textarea" :class="{ danger: parseError }"
-            @focus="textarea.select(); parseError = null" @paste="onPaste" />
-        <div class="status">{{ parseError }}</div>
+        <textarea ref="textarea" :class="{ danger: error }"
+            @focus="textarea.select(); error = null" @paste="onPaste" />
+        <div class="status">{{ error }}</div>
       </div>
       <p>Paste the text of a previously copied or exported layout/fingering/set
           in the textbox above and press ‘Import’ to load.</p>
@@ -96,7 +108,7 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
         <div class="controls">
           <button type="button" ref="importButton"
               :class="{ warning: confirm }"
-              :disabled="parseError"
+              :disabled="error"
               @blur="confirm = false" @click="verifyAndEmit">{{
             confirm? 'Import in Place of All Current' : 'Import'
           }}</button>
