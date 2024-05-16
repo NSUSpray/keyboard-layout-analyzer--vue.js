@@ -263,3 +263,7 @@ export function addStyle(style) {
   document.adoptedStyleSheets.push(sheet)
 }
 
+export function isLetterCode(charCode) {
+  const char = String.fromCharCode(charCode)
+  return char.toUpperCase() !== char.toLowerCase()
+}

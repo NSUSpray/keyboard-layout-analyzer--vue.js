@@ -43,14 +43,18 @@ function verifyAndEmit() {
   }
 
   result = layoutSchema.safeParse(object)
-  if (result.success)
-    return emit('import', 'keySet', result.data, json)
+  if (result.success) {
+    if (filter.value !== 'all'
+        && result.data.keyboardType !== props.keyboardType)
+      return error.value = 'Layout keyboard type must match target'
+    return emit('import', 'keySet', result.data, json, filter.value)
+  }
 
   result = fingeringSchema.safeParse(object)
   if (result.success) {
-    if (result.data.keyboardType === props.keyboardType)
-      return emit('import', 'fingering', result.data, json)
-    return error.value = 'Fingering keyboard type must match target'
+    if (result.data.keyboardType !== props.keyboardType)
+      return error.value = 'Fingering keyboard type must match target'
+    return emit('import', 'fingering', result.data, json)
   }
 
   result = setSchema.safeParse(object)

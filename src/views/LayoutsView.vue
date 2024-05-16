@@ -11,7 +11,7 @@ import useLayoutsStore from '@/stores/layouts'
 
 import { kbtype } from '../lib/constants'
 import layoutList from '../lib/layout-list'
-import { downloadJson, processEventHandler, shortTitle }
+import { downloadJson, isLetterCode, processEventHandler, shortTitle }
     from '../lib/utilities'
 
 const layoutsStore = useLayoutsStore()
@@ -56,21 +56,35 @@ const copyAllJson = processEventHandler(async () => {
   clipboardDouble.value = keySetsJson
 })
 
-function updateKeySet(type, object, json) {
+function filteredAssign(filterValue, targetKey, sourceKey) {
+  let labels = ['primary', 'shift', 'altGr', 'shiftAltGr']
+  switch (filterValue) {
+    case 'nonLetters':
+      labels = labels.filter(label =>
+        !isLetterCode(targetKey[label]) && !isLetterCode(sourceKey[label])
+      ); break
+    case 'altGr':
+      labels = ['altGr', 'shiftAltGr']; break
+  }
+  labels.forEach(label => targetKey[label] = sourceKey[label])
+}
+
+function updateKeySet(type, object, json, filterValue='all') {
   clipboardDouble.value = json
+  const i = current.value
   switch (type) {
     case 'keySet':
-      keySets[current.value] = object
+      if (filterValue === 'all') { keySets[i] = object; break }
+      keySets[i].keys.forEach
+        ((key, index) => filteredAssign(filterValue, key, object.keys[index]))
       break
     case 'fingering':
-      keySets[current.value].fingerStart = object.fingerStart
-      keySets[current.value].keys.map((key, index) =>
-        Object.assign(key, object.keys[index])
-      )
+      keySets[i].fingerStart = object.fingerStart
+      keySets[i].keys.forEach
+        ((key, index) => Object.assign(key, object.keys[index]))
       break
     case 'keySets':
-      Object.assign(keySets, object)
-      break
+      Object.assign(keySets, object); break
   }
   importDialog.value.close()
 }
