@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 
-import { defaultImportFilter, importFilters } from '../lib/constants'
-import { layoutSchema, fingeringSchema, setSchema } from '../lib/schemas'
+import { defaultImportFilterValue, importFilterValues } from '../lib/constants'
+import { fingeringSchema, layoutSchema, setSchema } from '../lib/schemas'
 import { transitionDurationOf } from '../lib/utilities'
 
 const emit = defineEmits(['import'])
@@ -14,11 +14,9 @@ const importButton = ref(null)
 const textarea = ref(null)
 
 const confirm = ref(false)
-const filter = ref(defaultImportFilter)
+const filter = ref(defaultImportFilterValue)
 const isClosed = ref(true)
 const error = ref(null)
-
-let transitionDuration
 
 const focus = (element, timeout) =>
   setTimeout(() => element.value.focus(), timeout ?? 0)
@@ -26,7 +24,7 @@ const focus = (element, timeout) =>
 function show(textareaValue) {
   textarea.value.value = textareaValue
   confirm.value = false
-  filter.value = defaultImportFilter
+  filter.value = defaultImportFilterValue
   error.value = null
   dialog.value.showModal()
   textarea.value.scrollTop = 0
@@ -34,13 +32,13 @@ function show(textareaValue) {
   focus(textareaValue? importButton : textarea, transitionDuration)
 }
 
+
 function verifyAndEmit() {
   const json = textarea.value.value
   let object, result
 
-  try { object = JSON.parse(json) } catch {
-    return error.value = 'Invalid layout string'
-  }
+  try { object = JSON.parse(json) }
+  catch { return error.value = 'Invalid layout string' }
 
   result = layoutSchema.safeParse(object)
   if (result.success) {
@@ -67,6 +65,7 @@ function verifyAndEmit() {
   error.value = 'Layout does not satisfy any possible schema'
 }
 
+
 function close(event) {
   isClosed.value = true
   setTimeout(() => dialog.value.close(), transitionDuration)
@@ -81,6 +80,7 @@ function onPaste() {
   if (empty || selectedAll) focus(importButton)
 }
 
+let transitionDuration
 onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
 </script>
 
@@ -103,9 +103,9 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
       <fieldset v-show="!confirm">
         <label>Filter</label>
         <div class="controls">
-          <label v-for="(label, value) in importFilters">
-            <input type="radio" name="filter" :value="value" v-model="filter">{{ label }}
-          </label>
+          <label v-for="(label, value) in importFilterValues">
+            <input type="radio" name="filter" :value="value"
+                v-model="filter">{{ label }}</label>
         </div>
       </fieldset>
       <fieldset id="buttons">

@@ -32,7 +32,7 @@ function next() {
 }
 
 function keepOnlyFingering(keySet) {
-  keySet = JSON.parse(JSON.stringify(keySet))
+  keySet = JSON.parse(JSON.stringify(keySet))  // deep copy
   keySet.label = keySet.author = keySet.moreInfoUrl = keySet.moreInfoText
       = undefined
   keySet.keys.forEach(key =>

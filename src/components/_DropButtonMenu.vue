@@ -5,11 +5,6 @@ import { transitionDurationOf } from '../lib/utilities'
 const menu = ref(null)
 const isFadeOut = ref(false)
 
-function getFadeOutTime() {
-  const fadeOutLag = 35  // hand-picked value
-  return transitionDurationOf(menu.value) + fadeOutLag
-}
-
 function fadeOut(event, fadeOutTime) {
   isFadeOut.value = true
   setTimeout(() => event.target.blur(), 1)
@@ -18,7 +13,8 @@ function fadeOut(event, fadeOutTime) {
 
 function fadeOutOnClick(selector) {
   const items = menu.value.querySelectorAll(selector)
-  const fadeOutTime = getFadeOutTime()
+  const fadeOutLag = 35  // hand-picked value
+  const fadeOutTime = transitionDurationOf(menu.value) + fadeOutLag
   items?.forEach(item =>
     item.addEventListener('click', event => fadeOut(event, fadeOutTime))
   )
