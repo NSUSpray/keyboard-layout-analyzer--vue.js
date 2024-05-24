@@ -3,17 +3,17 @@ import { onBeforeMount, onMounted, onUpdated, onUnmounted, watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 
 import RouterLink from './components/RouterLink.vue'
-
+import useLayoutsStore from '@/stores/layouts'
 import { rowFirstLast, setDummyHrefAttribute } from './lib/utilities.js'
-
 
 const rowFirstLastUpdate = rowFirstLast(
   ':is(form, fieldset, footer):not(dialog *)'
 )
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   window.addEventListener('resize', rowFirstLastUpdate)
   document.addEventListener('DOMContentLoaded', setDummyHrefAttribute)
+  await useLayoutsStore().setLayouts()
 })
 
 onMounted(() => setInterval(rowFirstLastUpdate, 3000))

@@ -69,23 +69,27 @@ function filteredAssign(filterValue, targetKey, sourceKey) {
   labels.forEach(label => targetKey[label] = sourceKey[label])
 }
 
-function updateKeySet(type, object, json, filterValue='all') {
-  clipboardDouble.value = json
+function updateKeySet(type, object, filterValue='all') {
   const i = current.value
   switch (type) {
-    case 'keySet':
+    case 'keySet': case 'kla-layout':
       if (filterValue === 'all') { keySets[i] = object; break }
       keySets[i].keys.forEach
         ((key, index) => filteredAssign(filterValue, key, object.keys[index]))
       break
-    case 'fingering':
+    case 'fingering': case 'kla-fingering':
       keySets[i].fingerStart = object.fingerStart
       keySets[i].keys.forEach
         ((key, index) => Object.assign(key, object.keys[index]))
       break
-    case 'keySets':
+    case 'keySets': case 'kla-set':
       Object.assign(keySets, object); break
   }
+}
+
+function onPaste(type, object, json, filterValue='all') {
+  clipboardDouble.value = json
+  updateKeySet(type, object, filterValue)
   importDialog.value.close()
 }
 
@@ -100,6 +104,13 @@ function exportJson(event, fingering=false) {
 
 const exportAllJson = () => downloadJson
   ({ name: '' /* TODO */, layouts: keySets }, 'layouts.kla-set')
+
+async function loadPreset(filterValue='all') {
+  const type = preset.value.split('.').pop()
+  const object = await layoutsStore.fetchKeySet(preset.value)
+  updateKeySet(type, object, filterValue)
+}
+const onLoad = processEventHandler(loadPreset)
 
 let last = 1
 watch(current, (_, prevVal) => last = prevVal)
@@ -180,18 +191,18 @@ watch(current, (_, prevVal) => last = prevVal)
       <div class="controls">
         <Select id="presets" :options="layoutList" v-model="preset">
           Select Preset</Select>
-        <DropButton @click="" value="Load"
+        <DropButton @click="onLoad" value="Load"
             title="Load preset in place of current layout or whole set"
             v_shortkey="['enter']" :disabled="!preset">
-          <a>Load Non-Letters</a>
-          <a>Load ‘Alt Gr’ Layer</a>
+          <a @click="onLoad($event, 'nonLetters')">Load Non-Letters</a>
+          <a @click="onLoad($event, 'altGr')">Load ‘Alt Gr’ Layer</a>
         </DropButton>
       </div>
     </fieldset>
   </form>
 
   <ImportDialog ref="importDialog"
-      :keyboardType="keySets[current].keyboardType" @import="updateKeySet" />
+      :keyboardType="keySets[current].keyboardType" @import="onPaste" />
 </template>
 
 <style scoped>
