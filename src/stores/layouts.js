@@ -10,7 +10,7 @@ const keySetToLayout = keySet =>
 async function fetchKeySet(presetName) {
   let object = defaultKeySets[presetName]
   if (object)
-    object = JSON.parse(JSON.stringify(object))
+    object = structuredClone(object)
   else {
     const response = await fetch('/layouts/' + presetName)
     object = await response.json()

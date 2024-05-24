@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, toRaw, watch } from 'vue'
 
 import DropButton from '../components/DropButton.vue'
 import ImportDialog from '../components/ImportDialog.vue'
@@ -32,9 +32,9 @@ function next() {
 }
 
 function keepOnlyFingering(keySet) {
-  keySet = JSON.parse(JSON.stringify(keySet))  // deep copy
-  keySet.label = keySet.author = keySet.moreInfoUrl = keySet.moreInfoText
-      = undefined
+  keySet = structuredClone(toRaw(keySet))
+  keySet.label = keySet.author = keySet.authorUrl = keySet.moreInfoUrl
+      = keySet.moreInfoText = undefined
   keySet.keys.forEach(key =>
     key.primary = key.shift = key.altGr = key.shiftAltGr = undefined
   )
@@ -83,7 +83,7 @@ function updateKeySet(type, object, filterValue='all') {
         ((key, index) => Object.assign(key, object.keys[index]))
       break
     case 'keySets': case 'kla-set':
-      Object.assign(keySets, object); break
+      Object.assign(keySets, object.layouts); break
   }
 }
 

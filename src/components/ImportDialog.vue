@@ -58,7 +58,7 @@ function verifyAndEmit() {
   result = setSchema.safeParse(object)
   if (result.success) {
     if (confirm.value)
-      emit('import', 'keySets', result.data.layouts, json)
+      emit('import', 'keySets', result.data, json)
     return confirm.value = !confirm.value
   }
 
