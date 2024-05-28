@@ -5,7 +5,7 @@
  *     KLA key index (two decimal digits).
  *    /
  *   dd .. cc -- One or two keystroke point coordinates of the form
- *   .. .. ..    ‘x[ y][;x2[ y2]]’, where x and optional y are components of
+ *   .. .. ..    â€˜x[ y][;x2[ y2]]â€™, where x and optional y are components of
  *   xx .. ..    the first coordinate and the optional components of the second
  *    \          coordinate. Default value is the center of the key.
  *     Scan code (maybe "E0 " + two hexadecimal digits).

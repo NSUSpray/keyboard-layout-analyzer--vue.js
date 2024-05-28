@@ -41,7 +41,7 @@ function keepOnlyFingering(keySet) {
   return keySet
 }
 
-const copyJson = processEventHandler(async (fingering=false) => {
+const copyJson = processEventHandler(async (_, fingering=false) => {
   let keySet = keySets[current.value]
   if (fingering) keySet = keepOnlyFingering(keySet)
   const keySetJson = JSON.stringify(keySet, null, 4)
@@ -93,7 +93,7 @@ function onPaste(type, object, json, filterValue='all') {
   importDialog.value.close()
 }
 
-function exportJson(event, fingering=false) {
+function exportJson(_, fingering=false) {
   let keySet = keySets[current.value]
   const filename = `${keySet.keyboardType.trim()}.${keySet.label.trim()}`
       .toLowerCase().replace(/\s/g, '-')
@@ -105,7 +105,7 @@ function exportJson(event, fingering=false) {
 const exportAllJson = () => downloadJson
   ({ name: '' /* TODO */, layouts: keySets }, 'layouts.kla-set')
 
-async function loadPreset(filterValue='all') {
+async function loadPreset(_, filterValue='all') {
   const type = preset.value.split('.').pop()
   const object = await layoutsStore.fetchKeySet(preset.value)
   updateKeySet(type, object, filterValue)

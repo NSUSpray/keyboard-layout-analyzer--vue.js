@@ -11,29 +11,29 @@ const props = defineProps({
   disabledSeparate: Boolean,
 })
 
-// defineOptions({ inheritAttrs: false })
-
 const attrs = useAttrs()
 const selfToggle = !attrs?.onClick
-const separateToggle = !selfToggle
 const shortkey = props.v_shortkey
   && JSON.parse(props.v_shortkey.replaceAll('\'', '"'))
 </script>
 
 <template>
-  <span v-if="selfToggle" class="button-group">
+  <!--
+    Works correctly only with two separated V-IFs inside DIVs
+    (no v-else, no <template>). Otherwise, any click event will bubble up.
+  -->
+  <div v-if="selfToggle" class="button-group">
     <ToggleButton :title="title" :disabled="disabled">{{ value }}
       <DropButtonMenu><slot /></DropButtonMenu>
     </ToggleButton>
-  </span>
-  <span v-if="separateToggle" class="button-group">
-    <button type="button" @click="attrs.onClick" v-shortkey="shortkey" :title="title" :disabled="disabled">
-      {{ value }}
-    </button>
+  </div>
+  <div v-if="!selfToggle" class="button-group"><!-- separate toggle -->
+    <button type="button" @click="attrs.onClick" v-shortkey="shortkey"
+        :title="title" :disabled="disabled">{{ value }}</button>
     <ToggleButton :disabled="disabled || disabledSeparate">
       <DropButtonMenu><slot /></DropButtonMenu>
     </ToggleButton>
-  </span>
+  </div>
 </template>
 
 <style scoped>

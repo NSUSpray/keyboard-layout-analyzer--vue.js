@@ -1,12 +1,12 @@
 <script setup>
-  import { useSlots } from 'vue'
+import { useSlots } from 'vue'
 
-  defineProps({
-    header: String,
-    runButton: Boolean,
-  })
+defineProps({
+  header: String,
+  runButton: Boolean,
+})
 
-  const lead = useSlots().default?.()[0].children
+const lead = useSlots().default?.()[0].children
 </script>
 
 <template>

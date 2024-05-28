@@ -228,7 +228,7 @@ export function processEventHandler
     target.classList.add(processClass)
     const disabled = target.getAttribute('disabled')
     if (!disabled) target.setAttribute('disabled', '')
-    try { return await func(...args) }
+    try { return await func(event, ...args) }
     catch (e) { if (errorHandler) errorHandler(e); else throw e }
     finally {
       setTimeout(() => {
