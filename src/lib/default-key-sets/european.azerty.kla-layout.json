@@ -1,120 +1,131 @@
 {
-    "label": "QWERTY",
-    "author": "Patrick Gillespie",
-    "authorUrl": "",
+    "label": "AZERTY",
+    "author": "Jean-François Moser",
+    "moreInfoUrl": "http://en.wikipedia.org/wiki/AZERTY",
+    "moreInfoText": "Wikipedia Entry",
     "fingerStart": {
         "1": 29,
         "2": 30,
         "3": 31,
         "4": 32,
-        "5": 66,
-        "6": 75,
+        "5": 57,
+        "6": 57,
         "7": 35,
         "8": 36,
         "9": 37,
         "10": 38,
-        "11": -1,
+        "11": 57,
         "false": -1
     },
-    "keyboardType": "ergodox",
-    "labels": {
-        "8": "Bkspc",
-        "20": "Caps"
-    },
+    "keyboardType": "european",
     "keys": [
         {
-            "primary": 61,
+            "primary": 178,
             "finger": 1,
-            "id": 0,
-            "shift": 43
+            "id": 0
         },
         {
-            "primary": 49,
-            "shift": 33,
+            "primary": 38,
+            "shift": 49,
             "finger": 1,
             "id": 1
         },
         {
-            "primary": 50,
-            "shift": 64,
+            "primary": 233,
+            "shift": 50,
             "finger": 2,
-            "id": 2
+            "id": 2,
+            "altGr": 126
         },
         {
-            "primary": 51,
-            "shift": 35,
+            "primary": 34,
+            "shift": 51,
             "finger": 3,
-            "id": 3
+            "id": 3,
+            "altGr": 35
         },
         {
-            "primary": 52,
-            "shift": 36,
+            "primary": 39,
+            "shift": 52,
             "finger": 4,
-            "id": 4
+            "id": 4,
+            "altGr": 123
         },
         {
-            "primary": 53,
-            "shift": 37,
+            "primary": 40,
+            "shift": 53,
             "finger": 4,
-            "id": 5
-        },
-        {
-            "finger": 4,
-            "id": 6
-        },
-        {
-            "finger": 7,
-            "id": 7
-        },
-        {
-            "primary": 54,
-            "shift": 94,
-            "finger": 7,
-            "id": 8
-        },
-        {
-            "primary": 55,
-            "shift": 38,
-            "finger": 7,
-            "id": 9
-        },
-        {
-            "primary": 56,
-            "shift": 42,
-            "finger": 8,
-            "id": 10
-        },
-        {
-            "primary": 57,
-            "shift": 40,
-            "finger": 9,
-            "id": 11
-        },
-        {
-            "primary": 48,
-            "shift": 41,
-            "finger": 10,
-            "id": 12
+            "id": 5,
+            "altGr": 91
         },
         {
             "primary": 45,
-            "finger": 10,
-            "id": 13,
-            "shift": 95
+            "shift": 54,
+            "finger": 7,
+            "id": 6,
+            "altGr": 124
         },
         {
+            "primary": 232,
+            "shift": 55,
+            "finger": 7,
+            "id": 7,
+            "altGr": 96
+        },
+        {
+            "primary": 95,
+            "shift": 56,
+            "finger": 8,
+            "id": 8,
+            "altGr": 92
+        },
+        {
+            "primary": 231,
+            "shift": 57,
+            "finger": 9,
+            "id": 9,
+            "altGr": 94
+        },
+        {
+            "primary": 224,
+            "shift": 48,
+            "finger": 10,
+            "id": 10,
+            "altGr": 64
+        },
+        {
+            "primary": 41,
+            "shift": 176,
+            "finger": 10,
+            "id": 11,
+            "altGr": 93
+        },
+        {
+            "primary": 61,
+            "shift": 43,
+            "finger": 10,
+            "id": 12,
+            "altGr": 125
+        },
+        {
+            "primary": 8,
+            "finger": 10,
+            "id": 13
+        },
+        {
+            "primary": 9,
             "finger": 1,
             "id": 14
         },
         {
-            "primary": 113,
-            "shift": 81,
+            "primary": 97,
+            "shift": 65,
             "finger": 1,
             "id": 15
         },
         {
-            "primary": 119,
-            "shift": 87,
+            "primary": 122,
+            "shift": 90,
             "finger": 2,
             "id": 16
         },
@@ -122,7 +133,8 @@
             "primary": 101,
             "shift": 69,
             "finger": 3,
-            "id": 17
+            "id": 17,
+            "altGr": 8364
         },
         {
             "primary": 114,
@@ -137,57 +149,61 @@
             "id": 19
         },
         {
-            "finger": 4,
-            "id": 20
-        },
-        {
-            "finger": 7,
-            "id": 21
-        },
-        {
             "primary": 121,
             "shift": 89,
             "finger": 7,
-            "id": 22
+            "id": 20
         },
         {
             "primary": 117,
             "shift": 85,
             "finger": 7,
-            "id": 23
+            "id": 21
         },
         {
             "primary": 105,
             "shift": 73,
             "finger": 8,
-            "id": 24
+            "id": 22
         },
         {
             "primary": 111,
             "shift": 79,
             "finger": 9,
-            "id": 25
+            "id": 23
         },
         {
             "primary": 112,
             "shift": 80,
             "finger": 10,
-            "id": 26
+            "id": 24
         },
         {
-            "primary": 92,
-            "shift": 124,
+            "primary": 94,
+            "shift": 168,
+            "finger": 10,
+            "id": 25
+        },
+        {
+            "primary": 36,
+            "shift": 163,
+            "finger": 10,
+            "id": 26,
+            "altGr": 164
+        },
+        {
+            "primary": 13,
             "finger": 10,
             "id": 27
         },
         {
-            "primary": 8,
+            "primary": 20,
             "finger": 1,
             "id": 28
         },
         {
-            "primary": 97,
-            "shift": 65,
+            "primary": 113,
+            "shift": 81,
             "finger": 1,
             "id": 29
         },
@@ -240,58 +256,62 @@
             "id": 37
         },
         {
-            "primary": 59,
-            "shift": 58,
+            "primary": 109,
+            "shift": 77,
             "finger": 10,
             "id": 38
         },
         {
-            "primary": 39,
+            "primary": 249,
+            "shift": 37,
             "finger": 10,
-            "id": 39,
-            "shift": 34
+            "id": 39
+        },
+        {
+            "primary": 42,
+            "shift": 181,
+            "finger": 10,
+            "id": 40
         },
         {
             "primary": 16,
             "finger": 1,
-            "id": 40
+            "id": 41
         },
         {
-            "primary": 122,
-            "shift": 90,
+            "primary": 60,
+            "shift": 62,
             "finger": 1,
-            "id": 41
+            "id": 42
+        },
+        {
+            "primary": 119,
+            "shift": 87,
+            "finger": 1,
+            "id": 43
         },
         {
             "primary": 120,
             "shift": 88,
             "finger": 2,
-            "id": 42
+            "id": 44
         },
         {
             "primary": 99,
             "shift": 67,
             "finger": 3,
-            "id": 43
+            "id": 45
         },
         {
             "primary": 118,
             "shift": 86,
             "finger": 4,
-            "id": 44
+            "id": 46
         },
         {
             "primary": 98,
             "shift": 66,
             "finger": 4,
-            "id": 45
-        },
-        {
-            "finger": 4,
-            "id": 46
-        },
-        {
-            "finger": 7,
             "id": 47
         },
         {
@@ -301,26 +321,26 @@
             "id": 48
         },
         {
-            "primary": 109,
-            "shift": 77,
+            "primary": 44,
+            "shift": 63,
             "finger": 7,
             "id": 49
         },
         {
-            "primary": 44,
-            "shift": 60,
+            "primary": 59,
+            "shift": 46,
             "finger": 8,
             "id": 50
         },
         {
-            "primary": 46,
-            "shift": 62,
+            "primary": 58,
+            "shift": 47,
             "finger": 9,
             "id": 51
         },
         {
-            "primary": 47,
-            "shift": 63,
+            "primary": 33,
+            "shift": 167,
             "finger": 10,
             "id": 52
         },
@@ -331,106 +351,43 @@
         },
         {
             "primary": 17,
-            "finger": 1,
+            "finger": 5,
             "id": 54
         },
         {
-            "primary": 96,
-            "finger": 1,
-            "id": 55,
-            "shift": 126
-        },
-        {
-            "finger": 2,
-            "id": 56
-        },
-        {
-            "finger": 3,
-            "id": 57
-        },
-        {
-            "finger": 4,
-            "id": 58
-        },
-        {
-            "primary": -18,
-            "finger": 7,
-            "id": 59
-        },
-        {
-            "finger": 8,
-            "id": 60
-        },
-        {
-            "primary": 91,
-            "shift": 123,
-            "finger": 9,
-            "id": 61
-        },
-        {
-            "primary": 93,
-            "shift": 125,
-            "finger": 10,
-            "id": 62
-        },
-        {
-            "primary": 17,
-            "finger": 10,
-            "id": 63
+            "primary": -91,
+            "finger": 5,
+            "id": 55
         },
         {
             "primary": 18,
             "finger": 5,
-            "id": 64
-        },
-        {
-            "finger": 5,
-            "id": 65
+            "id": 56
         },
         {
             "primary": 32,
             "finger": 5,
-            "id": 66
+            "id": 57
         },
         {
-            "primary": 8,
-            "finger": 5,
-            "id": 67
-        },
-        {
-            "finger": 5,
-            "id": 68
-        },
-        {
-            "finger": 5,
-            "id": 69
-        },
-        {
+            "primary": -18,
             "finger": 6,
-            "id": 70
+            "id": 58
         },
         {
-            "primary": 27,
+            "primary": -91,
             "finger": 6,
-            "id": 71
+            "id": 59
         },
         {
+            "primary": -93,
             "finger": 6,
-            "id": 72
+            "id": 60
         },
         {
+            "primary": 17,
             "finger": 6,
-            "id": 73
-        },
-        {
-            "primary": 9,
-            "finger": 6,
-            "id": 74
-        },
-        {
-            "primary": 13,
-            "finger": 6,
-            "id": 75
+            "id": 61
         }
     ]
 }
