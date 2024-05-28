@@ -1,5 +1,5 @@
 <script setup>
-import { ref, toRaw, watch } from 'vue'
+import { computed, ref, toRaw, watch } from 'vue'
 
 import DropButton from '../components/DropButton.vue'
 import ImportDialog from '../components/ImportDialog.vue'
@@ -20,6 +20,8 @@ const current = ref(0)
 const preset = ref('')
 const importDialog = ref(null)
 const clipboardDouble = ref('')
+const isLayoutPreset = computed
+  (() => preset.value.split('.').pop() === 'kla-layout')
 
 function prev() {
   const len = keySets.length
@@ -194,8 +196,10 @@ watch(current, (_, prevVal) => last = prevVal)
         <DropButton @click="onLoad" value="Load"
             title="Load preset in place of current layout or whole set"
             v_shortkey="['enter']" :disabled="!preset">
-          <a @click="onLoad($event, 'nonLetters')">Load Non-Letters</a>
-          <a @click="onLoad($event, 'altGr')">Load ‘Alt Gr’ Layer</a>
+          <a @click="isLayoutPreset && onLoad($event, 'nonLetters')"
+              :disabled="isLayoutPreset? null : true">Load Non-Letters</a>
+          <a @click="isLayoutPreset && onLoad($event, 'altGr')"
+              :disabled="isLayoutPreset? null : true">Load ‘Alt Gr’ Layer</a>
         </DropButton>
       </div>
     </fieldset>
