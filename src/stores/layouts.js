@@ -12,7 +12,7 @@ async function fetchKeySet(presetName) {
   if (object)
     object = structuredClone(object)
   else {
-    const response = await fetch('/layouts/' + presetName)
+    const response = await fetch('/presets/' + presetName)
     object = await response.json()
   }
   if (object.layouts)
