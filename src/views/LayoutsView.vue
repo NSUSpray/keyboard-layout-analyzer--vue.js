@@ -9,10 +9,11 @@ import Select from '../components/Select.vue'
 
 import useLayoutsStore from '@/stores/layouts'
 
+import { downloadJson, processEventHandler } from '../lib/browser'
 import { kbtype } from '../lib/constants'
 import layoutList from '../lib/layout-list'
-import { downloadJson, isLetterCode, processEventHandler, shortTitle }
-    from '../lib/utilities'
+import { shortTitle } from '../lib/title'
+import { isLetterCode } from '../lib/utilities'
 
 const layoutsStore = useLayoutsStore()
 const keySets = layoutsStore.keySets

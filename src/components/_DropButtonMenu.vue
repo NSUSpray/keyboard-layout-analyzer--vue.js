@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { transitionDurationOf } from '../lib/utilities'
+import { transitionDurationOf } from '../lib/browser'
 
 const menu = ref(null)
 const isFadeOut = ref(false)

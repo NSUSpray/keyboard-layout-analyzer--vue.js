@@ -105,16 +105,16 @@
   --dark-bright-blue: /* a:hover */
     oklch(43% 25% 249) /*#005580*/;
 
-  --left-pinky:      oklch(  94% 24% 175);
-  --left-ring:        oklch(  78% 33% 261);
-  --left-middle:   oklch(  87% 39% 289);
-  --left-index:     oklch(  82% 44% 328);
-  --left-thumb:   oklch(100%   0%     0);
-  --right-thumb: oklch(  94%   0%     0);
-  --right-index:   oklch(  79% 31%   29);
-  --right-middle: oklch(  88% 22%   71);
-  --right-ring:      oklch(  98% 31% 119);
-  --right-pinky:   oklch(  91% 42% 139);
+  --leftPinky:   oklch( 94% 24% 175);
+  --leftRing:    oklch( 78% 33% 261);
+  --leftMiddle:  oklch( 87% 39% 289);
+  --leftIndex:   oklch( 82% 44% 328);
+  --leftThumb:   oklch(100%  0%   0);
+  --rightThumb:  oklch( 94%  0%   0);
+  --rightIndex:  oklch( 79% 31%  29);
+  --rightMiddle: oklch( 88% 22%  71);
+  --rightRing:   oklch( 98% 31% 119);
+  --rightPinky:  oklch( 91% 42% 139);
 
   --shadow:
     0

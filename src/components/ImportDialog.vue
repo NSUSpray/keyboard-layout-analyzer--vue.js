@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 
 import { defaultImportFilterValue, importFilterValues } from '../lib/constants'
 import { fingeringSchema, layoutSchema, setSchema } from '../lib/schemas'
-import { transitionDurationOf } from '../lib/utilities'
+import { transitionDurationOf } from '../lib/browser'
 
 const emit = defineEmits(['import'])
 defineExpose({ close, show })

@@ -1,9 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 
-import { fingerClassOf } from '../lib/constants'
+import { addStyle } from '../lib/browser'
+import { fingers } from '../lib/constants'
 import { label } from '../lib/default-key-sets'
-import { addStyle, objectFilter } from '../lib/utilities'
+import { keyByValue, objectFilter } from '../lib/utilities'
 
 const props = defineProps({ layout: Object })
 const keySet = computed(() => props.layout.keySet)
@@ -35,7 +36,7 @@ function keyData(index) {
     top: shift ?? primary,
     bottom: shift && primary,
     altGr, shiftAltGr,
-    fingerClass: fingerClassOf[finger],
+    fingerClass: keyByValue(fingers, finger),
   }
 }
 
@@ -57,7 +58,7 @@ const centersOf = key => Object
 
 function addKeyFillStyles() {
   const rule = keyClass => `.${keyClass} > :not(g) { fill: var(--${keyClass}); }`
-  const style = Object.values(fingerClassOf).map(rule).join('\n')
+  const style = Object.keys(fingers).map(rule).join('\n')
   addStyle(style)
 }
 

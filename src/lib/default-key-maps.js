@@ -21,6 +21,8 @@ const escapeLineFeeds = rows => rows.map(row => row.map(elem =>
   (typeof elem === 'string')? elem.replaceAll('\n', '\0') : elem
 ))
 
+const dropUntilPattern = (xs, regex) => dropUntil(xs, x => regex.test(x))
+
 function scanCodeFrom(scanCodeString) {
   const extraAndBase = scanCodeString.split(' ')
   const hasExtra = extraAndBase.length === 2
@@ -37,18 +39,18 @@ function readKeyDataFrom(labels) {
   let result = { index: NaN, scanCode: NaN, centers: [[]] }
   labels = labels[0].split('\0')  // ‘de-escape’
 
-  labels = dropUntil(labels, indexPattern)
+  labels = dropUntilPattern(labels, indexPattern)
   if (!labels.length /* no index */) return result
   result.index = parseInt(labels[0])
 
   const labelsStartingFromScanCode =
-    dropUntil(labels.slice(1), scanCodePattern)
+    dropUntilPattern(labels.slice(1), scanCodePattern)
   if (labelsStartingFromScanCode.length /* has scan code */) {
     result.scanCode = scanCodeFrom(labelsStartingFromScanCode[0])
     labels = labelsStartingFromScanCode
   }
 
-  const labelsStartingFromCenters = dropUntil(labels.slice(1), centersPattern)
+  const labelsStartingFromCenters = dropUntilPattern(labels.slice(1), centersPattern)
   if (labelsStartingFromCenters.length /* has centers */)
     result.centers = centersFrom(labelsStartingFromCenters[0])
 

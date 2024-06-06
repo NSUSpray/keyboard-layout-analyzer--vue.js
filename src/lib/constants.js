@@ -17,35 +17,23 @@ export const kbtype = {
   LALT: 18,
   RALT: -18,
   MENU: -93,
-}
-
-export const finger = {
-  LEFT_PINKY: 1,
-  LEFT_RING: 2,
-  LEFT_MIDDLE: 3,
-  LEFT_INDEX: 4,
-  LEFT_THUMB: 5,
-  RIGHT_THUMB: 6,
-  RIGHT_INDEX: 7,
-  RIGHT_MIDDLE: 8,
-  RIGHT_RING: 9,
-  RIGHT_PINKY: 10,
-  BOTH_THUMBS: 11,
 }*/
 
-export const fingerClassOf = {
-  1: 'left-pinky',
-  2: 'left-ring',
-  3: 'left-middle',
-  4: 'left-index',
-  5: 'left-thumb',
-  6: 'right-thumb',
-  7: 'right-index',
-  8: 'right-middle',
-  9: 'right-ring',
-  10: 'right-pinky',
+export const fingers = {
+  leftPinky: 1,
+  leftRing: 2,
+  leftMiddle: 3,
+  leftIndex: 4,
+  leftThumb: 5,
+  rightThumb: 6,
+  rightIndex: 7,
+  rightMiddle: 8,
+  rightRing: 9,
+  rightPinky: 10,
+  // bothThumbs: 11,
 }
 
 export const importFilterValues =
   { all: 'All', nonLetters: 'Non-Letters', altGr: '‘Alt Gr’ Layer' }
+
 export const defaultImportFilterValue = 'all'
