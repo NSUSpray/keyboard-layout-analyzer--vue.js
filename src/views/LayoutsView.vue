@@ -108,6 +108,13 @@ function exportJson(_, fingering=false) {
 const exportAllJson = () => downloadJson
   ({ name: '' /* TODO */, layouts: keySets }, 'layouts.kla-set')
 
+const notSameTypeOfFingering = ({ value }) => {
+  const [presetKeyboardType, ...rest] = value.split('.')
+  const presetType = rest.pop()
+  if (presetType !== 'kla-fingering') return false
+  return presetKeyboardType !== keySets[current.value].keyboardType
+}
+
 async function loadPreset(_, filterValue='all') {
   const type = preset.value.split('.').pop()
   const object = await layoutsStore.fetchKeySet(preset.value)
@@ -192,7 +199,8 @@ watch(current, (_, prevVal) => last = prevVal)
     </fieldset>
     <fieldset>
       <div class="controls">
-        <Select id="presets" :options="layoutList" v-model="preset">
+        <Select id="presets" :options="layoutList" v-model="preset"
+            :isOptionDisabled="notSameTypeOfFingering">
           Select Preset</Select>
         <DropButton @click="onLoad" value="Load"
             title="Load preset in place of current layout or whole set"

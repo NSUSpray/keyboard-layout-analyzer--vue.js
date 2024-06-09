@@ -63,7 +63,10 @@ select {
   cursor: pointer;
   &:invalid { color: var(--light-light-blue); }
 }
-option, optgroup { color: initial; }
+option, optgroup {
+  color: initial;
+  [disabled] { color: var(--gray); }
+}
 optgroup { font-style: normal; }
 
 /* form and its subsets */
