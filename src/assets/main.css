@@ -1,4 +1,5 @@
 @import './base.css';
+@import './button.css';
 
 body {
   margin: 0;
@@ -33,55 +34,6 @@ figcaption {
 }
 
 /* form elements */
-button, .btn {
-  display: inline-block;
-  padding:
-    calc(var(--narrow-padding) * 0.8)
-    var(--wide-padding);
-  border-style: none;
-  border-radius: var(--radius);
-  line-height: 1.4rem;
-  font-family: var(--font-family);
-  font-size: 1rem;
-  color: white;
-  background-color: var(--blue);
-  cursor: pointer;
-  transition-duration: var(--transition-duration);
-}
-:is(button, .btn):is(:hover, :focus, [disabled])
-  { background-color: var(--light-blue); }
-:is(button, .btn):is(.in-process),
-    :is(button, .btn):has(.in-process) {
-  background-color: var(--light-bright-blue);
-  opacity: 1.0;
-}
-:is(button, .btn).large {
-  padding:
-    calc(var(--wide-padding) * 0.9)
-    calc(var(--wide-padding) * 1.8);
-  border-radius: var(--large-radius);
-  font-size: 1.25rem;
-}
-:is(button, .btn).small {
-  padding:
-    var(--thin-padding)
-    calc(var(--narrow-padding) * 1.25);
-}
-:is(button, .btn).warning
-  { background-color: var(--warning-color); }
-:is(button, .btn).warning:is(:hover, :focus, [disabled])
-  { background-color: var(--warning-hover-color); }
-.button-group :is(button, .btn):not(:last-child) {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.button-group :is(button, .btn):not(:first-child) {
-  border-left: solid 1px var(--light-blue);
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.button-group :is(button, .btn):not(:first-child)[disabled]
-  { border-color: var(--light-light-blue); }
 input[type="text"], select, textarea {
   display: block;
   margin: var(--thin-margin) 0;
@@ -95,21 +47,22 @@ input[type="text"], select { height: 2.2em; }
 input[type="text"], textarea {
   transition: border linear, box-shadow linear;
   transition-duration: var(--fast-transition-duration);
+  &:focus {
+    border-color: var(--light-bright-blue-translucent);
+    box-shadow: var(--bright-glow);
+    outline: 0;
+  }
+  &.danger {
+    border-color: var(--danger-color);
+    &:hover, &:focus, &[disabled]
+      { border-color: var(--danger-hover-color); }
+  }
 }
-:is(input[type="text"], textarea):focus {
-  border-color: var(--light-bright-blue-translucent);
-  box-shadow: var(--bright-glow);
-  outline: 0;
-}
-:is(input[type="text"], textarea).danger
-  { border-color: var(--danger-color); }
-:is(input[type="text"], textarea).danger:is(:hover, :focus, [disabled])
-  { border-color: var(--danger-hover-color); }
 select {
   background-color: white;
   cursor: pointer;
+  &:invalid { color: var(--light-light-blue); }
 }
-select:invalid { color: var(--light-light-blue); }
 option, optgroup { color: initial; }
 optgroup { font-style: normal; }
 
@@ -127,33 +80,33 @@ fieldset {
   margin: calc(var(--narrow-margin) * 0.75) 0;
   padding: 0;
   border-style: none;
-}
-fieldset.row-first:not(:has(label))
-  { margin-left: var(--aside-width); }
-fieldset > label {
-  margin: var(--narrow-margin) 0;
-  padding-right: var(--narrow-padding);
-  text-align: right;
-  white-space: nowrap;
-/*  min-width: max-content;*/
-}
-fieldset > label::after { content: ':'; }
-fieldset > label.row-last { flex-basis: 100%; }
-fieldset.row-first > label:not(dialog *) {
-  width: var(--aside-width); 
-  padding-right: var(--wide-padding);
-}
-fieldset > label.row-last {
-  margin: 0;
-  padding: 0;
-  text-align: left;
+  &.row-first {
+    &:not(:has(label)) { margin-left: var(--aside-width); }
+    & > label:not(dialog *) {
+      width: var(--aside-width); 
+      padding-right: var(--wide-padding);
+    }
+  }
+  & > label {
+    margin: var(--narrow-margin) 0;
+    padding-right: var(--narrow-padding);
+    text-align: right;
+    white-space: nowrap;
+    /*min-width: max-content;*/
+    &::after { content: ':'; }
+    &.row-last {
+      flex-basis: 100%;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+    }
+  }
 }
 .controls {
   display: flex;
   flex-wrap: wrap;
+  & > :not(:last-child) { margin-right: var(--narrow-margin); }
 }
-.controls > :not(:last-child)
-  { margin-right: var(--narrow-margin); }
 
 dialog > :is(h1, h2, h3, h4, h5, h6) {
   text-align: center;
@@ -175,7 +128,7 @@ th, td {
   padding: calc(var(--thin-padding) * 0.4);
   border-bottom-style: solid;
 }
-table.left-1st :is(th, td):first-child { text-align: left; }
+table.left-first :is(th, td):first-child { text-align: left; }
 th {
   border-width: 2px;
   border-color: var(--dark-dark-blue);

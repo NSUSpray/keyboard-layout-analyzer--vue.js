@@ -44,27 +44,28 @@ onMounted(() => fadeOutOnClick('a, button, .btn, input'))
   visibility: hidden;
   transition-duration: var(--transition-duration);
   opacity: 0;
+  & > * {
+    display: block;
+    padding:
+      calc(var(--thin-padding) * 0.6)
+      var(--wide-padding);
+    color: white;
+  }
+  & > :hover, & > :focus {
+    text-decoration: none;
+    color: white;
+    background-color: var(--dark-blue);
+  }
 }
+
 .button-group:last-child .drop-button-menu {
   left: auto;
   right: 0;
 }
+
 :is(:hover, :focus):not([disabled]) > .drop-button-menu:not(.fade-out),
     .drop-button-menu:is(:hover, :has(:focus)):not(.fade-out) {
   visibility: initial;
   opacity: 1;
-}
-
-.drop-button-menu > * {
-  display: block;
-  padding:
-    calc(var(--thin-padding) * 0.6)
-    var(--wide-padding);
-  color: white;
-}
-.drop-button-menu > :is(:hover, :focus) {
-  text-decoration: none;
-  color: white;
-  background-color: var(--dark-blue);
 }
 </style>

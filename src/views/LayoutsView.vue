@@ -220,9 +220,9 @@ watch(current, (_, prevVal) => last = prevVal)
   height: var(--keyboard-height);
   margin-left: auto;
   margin-right: auto;
+  & > * { z-index: -1; }
+  &:hover > * { z-index: 0; }
 }
-#keyboard > * { z-index: -1; }
-#keyboard:hover > * { z-index: 0; }
 #smog {
   position: absolute;
   top: var(--keyboard-height);
@@ -245,25 +245,22 @@ watch(current, (_, prevVal) => last = prevVal)
   flex-wrap: nowrap;
   padding: var(--padding) 0;
   justify-content: center;
-}
-#layout-switch input { display: none; }
-#layout-switch > * {
-  border: none !important;
-  background-color: var(--dark-blue);
-  transition: none;
-}
-#layout-switch > :is(:hover, :focus) {
-  background-color: var(--bblue);
-}
-#layout-switch label:has(:checked) {
-  color: var(--black-blue);
-  background-color: var(--wwhite-blue);
-  cursor: default;
-}
-
-#layout-switch label {
-  flex-basis: max-content;
-  min-width: 2.2em;
-  white-space: nowrap;
+  & input { display: none; }
+  & > * {
+    border: none !important;
+    background-color: var(--dark-blue);
+    transition: none;
+  }
+  & > :hover, & > :focus { background-color: var(--bblue); }
+  & label {
+    flex-basis: max-content;
+    min-width: 2.2em;
+    white-space: nowrap;
+    &:has(:checked) {
+      color: var(--black-blue);
+      background-color: var(--wwhite-blue);
+      cursor: default;
+    }
+  }
 }
 </style>

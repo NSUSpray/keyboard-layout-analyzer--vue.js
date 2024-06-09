@@ -95,7 +95,7 @@ import Jumbotron from '../components/Jumbotron.vue'
       horizontal and vertical components are appropriately scaled.</li>
   </ul>
   <figure>
-    <table class="left-1st">
+    <table class="left-first">
       <thead>
         <tr><th>Finger</th><th>Effort</th></tr>
       </thead>

@@ -135,19 +135,17 @@ dialog {
     0 0 0 100vw var(--light-gray-translucent);
   transition: opacity linear, bottom ease-out;
   transition-duration: var(--slow-transition-duration);
+  &::backdrop { background-color: transparent; }
+  &.closed {
+    bottom: 178vh;
+    opacity: 0;
+  }
+  & > * {
+    margin: 0;
+    padding: var(--padding);
+    &:is(h3 + button, h3) { line-height: 1em; }
+  }
 }
-dialog::backdrop { background-color: transparent; }
-dialog.closed {
-  bottom: 178vh;
-  opacity: 0;
-}
-
-dialog > * {
-  margin: 0;
-  padding: var(--padding);
-}
-
-dialog > :is(h3 + button, h3) { line-height: 1em; }
 
 .textarea-n-status { position: relative; }
 
@@ -160,8 +158,8 @@ h3 + button {
   font-size: 1.75rem; /* FIXME */
   color: var(--dark-dark-blue);
   background-color: transparent !important;
+  &:hover, &:focus { color: var(--black-blue); }
 }
-h3 + button:is(:hover, :focus) { color: var(--black-blue); }
 
 fieldset { margin: 0; }
 #buttons { flex-grow: 1; justify-content: flex-end; }

@@ -1,0 +1,64 @@
+@import './base.css';
+
+button, .btn {
+  display: inline-block;
+  padding:
+    calc(var(--narrow-padding) * 0.8)
+    var(--wide-padding);
+  border-style: none;
+  border-radius: var(--radius);
+  line-height: 1.4rem;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  color: white;
+  background-color: var(--blue);
+  cursor: pointer;
+  transition-duration: var(--transition-duration);
+
+  &:hover, &:focus, &[disabled]
+    { background-color: var(--light-blue); }
+
+  &.in-process, &:has(.in-process) {
+    background-color: var(--light-bright-blue);
+    opacity: 1.0;
+  }
+
+  &.large {
+    padding:
+      calc(var(--wide-padding) * 0.9)
+      calc(var(--wide-padding) * 1.8);
+    border-radius: var(--large-radius);
+    font-size: 1.25rem;
+  }
+
+  &.small {
+    padding:
+      var(--thin-padding)
+      calc(var(--narrow-padding) * 1.25);
+  }
+
+  &.warning {
+    background-color: var(--warning-color);
+    &:hover, &:focus, &[disabled]
+      { background-color: var(--warning-hover-color); }
+  }
+
+}
+
+
+
+.button-group :is(button, .btn) {
+
+  &:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  &:not(:first-child) {
+    border-left: solid 1px var(--light-blue);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    &[disabled] { border-color: var(--light-light-blue); }
+  }
+
+}

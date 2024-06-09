@@ -27,9 +27,8 @@ const lead = useSlots().default?.()[0].children
   align-items: start;
   gap: var(--margin);
   margin: var(--wide-margin) 0;
+  & > * { margin: 0; }
 }
-
-.jumbotron > * { margin: 0; }
 
 h3 {
   grid-row-start: 2;
@@ -39,8 +38,8 @@ h3 {
 button {
   grid-row-end: span 2;
   box-shadow: var(--shallow-shadow);
+  &:hover, &:focus { box-shadow: none; }
 }
-button:is(:hover, :focus) { box-shadow: none; }
 
 @media (min-width: 1024px) {
   h3 {
