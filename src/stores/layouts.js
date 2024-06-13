@@ -4,8 +4,8 @@ import { computed, ref } from 'vue'
 import defaultKeyMaps from '../lib/default-key-maps'
 import { defaultKeySets } from '../lib/default-key-sets'
 
-const keySetToLayout = keySet =>
-  ({ keySet, keyMap: defaultKeyMaps[keySet.keyboardType] })
+const keySetToKeyMap = keySet => defaultKeyMaps[keySet.keyboardType]
+const keySetToLayout = keySet => ({ keySet, keyMap: keySetToKeyMap(keySet) })
 
 async function fetchKeySet(presetName) {
   let object = defaultKeySets[presetName]
@@ -24,10 +24,11 @@ async function fetchKeySet(presetName) {
 
 const useLayoutsStore = defineStore('layouts', () => {
   const keySets = ref([])
+  const keyMaps = computed(() => keySets.value.map(keySetToKeyMap))
   const layouts = computed(() => keySets.value.map(keySetToLayout))
   const setLayouts = async () =>
     keySets.value = (await fetchKeySet('default.kla-set')).layouts
-  return { fetchKeySet, keySets, layouts, setLayouts }
+  return { fetchKeySet, keyMaps, keySets, layouts, setLayouts }
 })
 
 export default useLayoutsStore

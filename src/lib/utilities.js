@@ -44,11 +44,11 @@ export const objectFilter = (func, obj) => objectM('filter', func, obj)
 
 /**
  * @param {Object} obj Object to find a key by a given value.
- * @param {*} valueToFind
+ * @param {Function} predicate
  * @return {String} Found key.
  */
-export const keyByValue = (obj, valueToFind) =>
-  Object.entries(obj).find(([_, value]) => value === valueToFind)
+export const objectKeyByValue = (obj, predicate) =>
+  Object.entries(obj).find(([_, value]) => predicate(value))?.[0]
 
 
 /**

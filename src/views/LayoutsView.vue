@@ -108,19 +108,18 @@ function exportJson(_, fingering=false) {
 const exportAllJson = () => downloadJson
   ({ name: '' /* TODO */, layouts: keySets }, 'layouts.kla-set')
 
-const notSameTypeOfFingering = ({ value }) => {
+function isNotSameTypeOfFingering({ value }) {
   const [presetKeyboardType, ...rest] = value.split('.')
   const presetType = rest.pop()
   if (presetType !== 'kla-fingering') return false
   return presetKeyboardType !== keySets[current.value].keyboardType
 }
 
-async function loadPreset(_, filterValue='all') {
+const loadPreset = processEventHandler(async (_, filterValue='all') => {
   const type = preset.value.split('.').pop()
   const object = await layoutsStore.fetchKeySet(preset.value)
   updateKeySet(type, object, filterValue)
-}
-const onLoad = processEventHandler(loadPreset)
+})
 
 let last = 1
 watch(current, (_, prevVal) => last = prevVal)
@@ -200,14 +199,14 @@ watch(current, (_, prevVal) => last = prevVal)
     <fieldset>
       <div class="controls">
         <Select id="presets" :options="layoutList" v-model="preset"
-            :isOptionDisabled="notSameTypeOfFingering">
+            :isOptionDisabled="isNotSameTypeOfFingering">
           Select Preset</Select>
-        <DropButton @click="onLoad" value="Load"
+        <DropButton @click="loadPreset" value="Load"
             title="Load preset in place of current layout or whole set"
             v_shortkey="['enter']" :disabled="!preset">
-          <a @click="isLayoutPreset && onLoad($event, 'nonLetters')"
+          <a @click="isLayoutPreset && loadPreset($event, 'nonLetters')"
               :disabled="isLayoutPreset? null : true">Load Non-Letters</a>
-          <a @click="isLayoutPreset && onLoad($event, 'altGr')"
+          <a @click="isLayoutPreset && loadPreset($event, 'altGr')"
               :disabled="isLayoutPreset? null : true">Load ‘Alt Gr’ Layer</a>
         </DropButton>
       </div>

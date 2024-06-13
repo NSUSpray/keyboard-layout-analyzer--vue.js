@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import { addStyle } from '../lib/browser'
 import { fingers } from '../lib/constants'
 import { label } from '../lib/default-key-sets'
-import { keyByValue, objectFilter } from '../lib/utilities'
+import { objectKeyByValue, objectFilter } from '../lib/utilities'
 
 const props = defineProps({ layout: Object })
 const keySet = computed(() => props.layout.keySet)
@@ -20,8 +20,8 @@ const editorSize = computed(() => {
 })
 
 const keyMapKeys = computed(() => {
-  const isKeyMapKey = ([key, _]) => key >= '0' && key <= '99'
-  return objectFilter(isKeyMapKey, props.layout.keyMap)
+  const isKeyMapObjKey = ([oKey, _]) => oKey >= '0' && oKey <= '99'
+  return objectFilter(isKeyMapObjKey, props.layout.keyMap)
 })
 
 const transform = key =>
@@ -36,7 +36,7 @@ function keyData(index) {
     top: shift ?? primary,
     bottom: shift && primary,
     altGr, shiftAltGr,
-    fingerClass: keyByValue(fingers, finger),
+    fingerClass: objectKeyByValue(fingers, f => f === finger),
   }
 }
 
