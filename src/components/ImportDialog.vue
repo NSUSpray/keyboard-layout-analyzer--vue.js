@@ -41,12 +41,8 @@ function verifyAndEmit() {
   catch { return error.value = 'Invalid layout string' }
 
   result = layoutSchema.safeParse(object)
-  if (result.success) {
-    if (filter.value !== 'all'
-        && result.data.keyboardType !== props.keyboardType)
-      return error.value = 'Layout keyboard type must match target'
+  if (result.success)
     return emit('import', 'keySet', result.data, json, filter.value)
-  }
 
   result = fingeringSchema.safeParse(object)
   if (result.success) {

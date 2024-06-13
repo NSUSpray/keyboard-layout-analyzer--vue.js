@@ -11,9 +11,10 @@ import useLayoutsStore from '@/stores/layouts'
 
 import { downloadJson, processEventHandler } from '../lib/browser'
 import { kbtype } from '../lib/constants'
+import defaultKeyMaps from '../lib/default-key-maps'
 import layoutList from '../lib/layout-list'
 import { shortTitle } from '../lib/title'
-import { isLetterCode } from '../lib/utilities'
+import { objectKeyByValue, isLetterCode } from '../lib/utilities'
 
 const layoutsStore = useLayoutsStore()
 const keySets = layoutsStore.keySets
@@ -72,21 +73,28 @@ function filteredAssign(filterValue, targetKey, sourceKey) {
   labels.forEach(label => targetKey[label] = sourceKey[label])
 }
 
-function updateKeySet(type, object, filterValue='all') {
+function updateKeySet(type, src, filterValue='all') {
   const i = current.value
   switch (type) {
     case 'keySet': case 'kla-layout':
-      if (filterValue === 'all') { keySets[i] = object; break }
-      keySets[i].keys.forEach
-        ((key, index) => filteredAssign(filterValue, key, object.keys[index]))
-      break
+      if (filterValue === 'all') return keySets[i] = src
+      const srcKeyMap = defaultKeyMaps[src.keyboardType]
+      const keyMap = layoutsStore.keyMaps[i]
+      function assignByScanCode(srcKey, index) {
+        const scan = srcKeyMap[index].scan
+        const targetIndex =
+          objectKeyByValue(keyMap, k => k.scan === scan)
+        if (targetIndex >= 0)
+          filteredAssign(filterValue, keySets[i].keys[targetIndex], srcKey)
+      }
+      return src.keys.forEach(assignByScanCode)
     case 'fingering': case 'kla-fingering':
-      keySets[i].fingerStart = object.fingerStart
+      keySets[i].fingerStart = src.fingerStart
       keySets[i].keys.forEach
-        ((key, index) => Object.assign(key, object.keys[index]))
+        ((key, index) => Object.assign(key, src.keys[index]))
       break
     case 'keySets': case 'kla-set':
-      Object.assign(keySets, object.layouts); break
+      Object.assign(keySets, src.layouts); break
   }
 }
 
