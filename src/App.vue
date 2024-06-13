@@ -90,7 +90,7 @@ header {
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 2;
+  z-index: 1;
   font-size: var(--header-font-size);
   background-color: var(--dark-dark-blue);
   & * { color: white; }

@@ -35,7 +35,7 @@ onMounted(() => fadeOutOnClick('a, button, .btn, input'))
   left: 0;
   top: calc(100% + var(--thin-padding) * 0.6);
   width: max-content;
-  z-index: 1;
+  z-index: 2;
   padding: var(--thin-padding) 0;
   border-radius: var(--radius);
   text-align: left;

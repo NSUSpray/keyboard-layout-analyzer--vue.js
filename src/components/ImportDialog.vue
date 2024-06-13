@@ -140,12 +140,12 @@ dialog {
     bottom: 178vh;
     opacity: 0;
   }
-  & > * {
+}
+dialog > * {
     margin: 0;
     padding: var(--padding);
     &:is(h3 + button, h3) { line-height: 1em; }
   }
-}
 
 .textarea-n-status { position: relative; }
 
