@@ -10,11 +10,11 @@ import Select from '../components/Select.vue'
 import useLayoutsStore from '@/stores/layouts'
 
 import { downloadJson, processEventHandler } from '../lib/browser'
-import { kbtype } from '../lib/constants'
 import defaultKeyMaps from '../lib/default-key-maps'
+import { filteredAssign, kbtype, keepOnlyFingering } from '../lib/keyboard'
 import layoutList from '../lib/layout-list'
 import { shortTitle } from '../lib/title'
-import { objectKeyByValue, isLetterCode } from '../lib/utilities'
+import { objectKeyByValue } from '../lib/utilities'
 
 
 const layoutsStore = useLayoutsStore()
@@ -44,19 +44,9 @@ function next() {
   vIndex.value = (vIndex.value + 1) % len
 }
 
-function keepOnlyFingering(keySet) {
-  keySet = structuredClone(toRaw(keySet))
-  keySet.label = keySet.author = keySet.authorUrl = keySet.moreInfoUrl
-      = keySet.moreInfoText = undefined
-  keySet.keys.forEach(key =>
-    key.primary = key.shift = key.altGr = key.shiftAltGr = undefined
-  )
-  return keySet
-}
-
 const copyJson = processEventHandler(async (_, fingering=false) => {
   let keySet = vSet.value
-  if (fingering) keySet = keepOnlyFingering(keySet)
+  if (fingering) keySet = keepOnlyFingering(toRaw(keySet))
   const keySetJson = JSON.stringify(keySet, null, 4)
   navigator.clipboard.writeText(keySetJson)
   clipboardDouble.value = keySetJson
@@ -69,17 +59,11 @@ const copyAllJson = processEventHandler(async () => {
   clipboardDouble.value = keySetsJson
 })
 
-function filteredAssign(filterValue, targetKey, sourceKey) {
-  let labels = ['primary', 'shift', 'altGr', 'shiftAltGr']
-  switch (filterValue) {
-    case 'nonLetters':
-      labels = labels.filter(label =>
-        !isLetterCode(targetKey[label]) && !isLetterCode(sourceKey[label])
-      ); break
-    case 'altGr':
-      labels = ['altGr', 'shiftAltGr']; break
-  }
-  labels.forEach(label => targetKey[label] = sourceKey[label])
+const assignByScanCode = (srcKeyMap, filterValue) => (srcKey, index) => {
+  const scan = srcKeyMap[index].scan
+  const targetIndex = objectKeyByValue(vMap.value, k => k.scan === scan)
+  if (targetIndex >= 0)
+    filteredAssign(filterValue, vSet.value.keys[targetIndex], srcKey)
 }
 
 function updateKeySet(type, src, filterValue='all') {
@@ -88,14 +72,8 @@ function updateKeySet(type, src, filterValue='all') {
     case 'keySet': case 'kla-layout':
       if (filterValue === 'all') return keySets[i] = src
       const srcKeyMap = defaultKeyMaps[src.keyboardType]
-      function assignByScanCode(srcKey, index) {
-        const scan = srcKeyMap[index].scan
-        const targetIndex =
-          objectKeyByValue(vMap.value, k => k.scan === scan)
-        if (targetIndex >= 0)
-          filteredAssign(filterValue, keySets[i].keys[targetIndex], srcKey)
-      }
-      return src.keys.forEach(assignByScanCode)
+      const assigner = assignByScanCode(srcKeyMap, filterValue)
+      return src.keys.forEach(assigner)
     case 'fingering': case 'kla-fingering':
       keySets[i].fingerStart = src.fingerStart
       keySets[i].keys.forEach
@@ -117,7 +95,7 @@ function exportJson(_, fingering=false) {
   const filename = `${vType.value.trim()}.${keySet.label.trim()}`
       .toLowerCase().replace(/\s/g, '-')
       + '.kla-' + (fingering? 'fingering' : 'layout')
-  if (fingering) keySet = keepOnlyFingering(keySet)
+  if (fingering) keySet = keepOnlyFingering(toRaw(keySet))
   downloadJson(keySet, filename)
 }
 

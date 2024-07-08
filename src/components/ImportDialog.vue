@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 
-import { defaultImportFilterValue, importFilterValues } from '../lib/constants'
 import { fingeringSchema, layoutSchema, setSchema } from '../lib/schemas'
 import { transitionDurationOf } from '../lib/browser'
 
@@ -17,6 +16,10 @@ const confirm = ref(false)
 const filter = ref(defaultImportFilterValue)
 const isClosed = ref(true)
 const error = ref(null)
+
+const importFilterValues =
+  { all: 'All', nonLetters: 'Non-Letters', altGr: '‘Alt Gr’ Layer' }
+const defaultImportFilterValue = 'all'
 
 const focus = (element, timeout) =>
   setTimeout(() => element.value.focus(), timeout ?? 0)

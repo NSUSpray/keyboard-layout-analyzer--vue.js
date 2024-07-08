@@ -2,8 +2,8 @@
 import { computed } from 'vue'
 
 import { addStyle } from '../lib/browser'
-import { fingers } from '../lib/constants'
 import { label } from '../lib/default-key-sets'
+import { fingers } from '../lib/keyboard'
 import { objectKeyByValue, objectFilter } from '../lib/utilities'
 
 const props = defineProps({ layout: Object })

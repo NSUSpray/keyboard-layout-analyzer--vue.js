@@ -1,4 +1,4 @@
-import { fingers } from './constants'
+import { fingers } from './keyboard'
 import { takeWhile, isLetterCode } from './utilities'
 
 /**

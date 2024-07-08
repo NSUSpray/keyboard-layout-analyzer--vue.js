@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { kbtype } from './constants'
+import { kbtype } from './keyboard'
 
 const keyIdSchema = z.number().int().min(-1).finite()
 
