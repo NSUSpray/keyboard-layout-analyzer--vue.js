@@ -11,11 +11,14 @@ async function fetchKeySet(presetName) {
   let object = defaultKeySets[presetName]
   if (object)
     object = structuredClone(object)
-  else {
+  else try {
     const response = await fetch('/presets/' + presetName)
+    if (!response.ok) throw new Error('Network response was not OK')
     object = await response.json()
+  } catch (error) {
+    console.error('There has been a problem with preset fetching:', error)
   }
-  if (object.layouts)
+  if (object?.layouts)
     for (const [index, maybeName] of object.layouts.entries())
       if (typeof maybeName === 'string')  // it’s name
         object.layouts[index] = await fetchKeySet(maybeName + '.kla-layout')
