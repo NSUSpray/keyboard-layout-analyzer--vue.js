@@ -116,7 +116,7 @@ function exportJson(_, fingering=false) {
 const exportAllJson = () => downloadJson
   ({ name: '' /* TODO */, layouts: keySets }, 'layouts.kla-set')
 
-function isNotSameTypeOfFingering({ value }) {
+function isNotSameTypeOfFingering(value) {
   const [presetKeyboardType, ...rest] = value.split('.')
   const presetType = rest.pop()
   if (presetType !== 'kla-fingering') return false
@@ -130,7 +130,10 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
 })
 
 let last = 1
-watch(current, (_, prevVal) => last = prevVal)
+watch(current, (_, prevVal) => {
+  last = prevVal
+  if (isNotSameTypeOfFingering(preset.value)) preset.value = ''
+})
 </script>
 
 <template>
@@ -207,7 +210,7 @@ watch(current, (_, prevVal) => last = prevVal)
     <fieldset>
       <div class="controls">
         <Select id="presets" :options="layoutList" v-model="preset"
-            :isOptionDisabled="isNotSameTypeOfFingering">
+            :isOptionDisabled="opt => isNotSameTypeOfFingering(opt.value)">
           Select Preset</Select>
         <DropButton @click="loadPreset" value="Load"
             title="Load preset in place of current layout or whole set"

@@ -16,7 +16,7 @@ Under development. See the working Angular.js version here https://github.com/NS
 
 ## TODO
 
-- [ ] import/export/load key sets
+- [x] import/export/load key sets
 - [ ] key editor window
 - [ ] conversions between key maps
 
