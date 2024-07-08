@@ -19,10 +19,6 @@
     "authorUrl": "",
     "moreInfoUrl": "https://github.com/cub-uanic/tmk_keyboard/tree/cub_layout",
     "moreInfoText": "github.com",
-    "labels": {
-        "8": "Bkspc",
-        "20": "Caps"
-    },
     "keys": [
         {
             "primary": 126,

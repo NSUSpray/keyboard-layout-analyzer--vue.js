@@ -17,10 +17,6 @@
         "false": -1
     },
     "keyboardType": "ergodox",
-    "labels": {
-        "8": "Bkspc",
-        "20": "Caps"
-    },
     "keys": [
         {
             "primary": 27,
