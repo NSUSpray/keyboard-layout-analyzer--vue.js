@@ -16,23 +16,32 @@ import layoutList from '../lib/layout-list'
 import { shortTitle } from '../lib/title'
 import { objectKeyByValue, isLetterCode } from '../lib/utilities'
 
+
 const layoutsStore = useLayoutsStore()
 const keySets = layoutsStore.keySets
-const current = ref(0)
+
+// visible layout
+const vIndex = ref(0)
+const vSet = computed(() => keySets[vIndex.value])
+const vMap = computed(() => layoutsStore.keyMaps[vIndex.value])
+const vType = computed(() => vSet.value.keyboardType)
+
 const preset = ref('')
-const importDialog = ref(null)
-const clipboardDouble = ref('')
 const isLayoutPreset = computed
   (() => preset.value.split('.').pop() === 'kla-layout')
 
+const importDialog = ref(null)
+const clipboardDouble = ref('')
+
+
 function prev() {
   const len = keySets.length
-  current.value = (current.value + len - 1) % len
+  vIndex.value = (vIndex.value + len - 1) % len
 }
 
 function next() {
   const len = keySets.length
-  current.value = (current.value + 1) % len
+  vIndex.value = (vIndex.value + 1) % len
 }
 
 function keepOnlyFingering(keySet) {
@@ -46,7 +55,7 @@ function keepOnlyFingering(keySet) {
 }
 
 const copyJson = processEventHandler(async (_, fingering=false) => {
-  let keySet = keySets[current.value]
+  let keySet = vSet.value
   if (fingering) keySet = keepOnlyFingering(keySet)
   const keySetJson = JSON.stringify(keySet, null, 4)
   navigator.clipboard.writeText(keySetJson)
@@ -74,16 +83,15 @@ function filteredAssign(filterValue, targetKey, sourceKey) {
 }
 
 function updateKeySet(type, src, filterValue='all') {
-  const i = current.value
+  const i = vIndex.value
   switch (type) {
     case 'keySet': case 'kla-layout':
       if (filterValue === 'all') return keySets[i] = src
       const srcKeyMap = defaultKeyMaps[src.keyboardType]
-      const keyMap = layoutsStore.keyMaps[i]
       function assignByScanCode(srcKey, index) {
         const scan = srcKeyMap[index].scan
         const targetIndex =
-          objectKeyByValue(keyMap, k => k.scan === scan)
+          objectKeyByValue(vMap.value, k => k.scan === scan)
         if (targetIndex >= 0)
           filteredAssign(filterValue, keySets[i].keys[targetIndex], srcKey)
       }
@@ -105,8 +113,8 @@ function onPaste(type, object, json, filterValue='all') {
 }
 
 function exportJson(_, fingering=false) {
-  let keySet = keySets[current.value]
-  const filename = `${keySet.keyboardType.trim()}.${keySet.label.trim()}`
+  let keySet = vSet.value
+  const filename = `${vType.value.trim()}.${keySet.label.trim()}`
       .toLowerCase().replace(/\s/g, '-')
       + '.kla-' + (fingering? 'fingering' : 'layout')
   if (fingering) keySet = keepOnlyFingering(keySet)
@@ -120,7 +128,7 @@ function isNotSameTypeOfFingering(value) {
   const [presetKeyboardType, ...rest] = value.split('.')
   const presetType = rest.pop()
   if (presetType !== 'kla-fingering') return false
-  return presetKeyboardType !== keySets[current.value].keyboardType
+  return presetKeyboardType !== vType.value
 }
 
 const loadPreset = processEventHandler(async (_, filterValue='all') => {
@@ -129,9 +137,10 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
   updateKeySet(type, object, filterValue)
 })
 
-let last = 1
-watch(current, (_, prevVal) => {
-  last = prevVal
+
+let lastIndex = 1
+watch(vIndex, (_, prevVal) => {
+  lastIndex = prevVal
   if (isNotSameTypeOfFingering(preset.value)) preset.value = ''
 })
 </script>
@@ -144,24 +153,24 @@ watch(current, (_, prevVal) => {
   <form id="editor">
     <fieldset id="keyboard">
       <template v-for="(layout, index) of layoutsStore.layouts" :key="index">
-        <LayoutEditor v-show="index === current" :layout="layout" />
+        <LayoutEditor v-show="index === vIndex" :layout="layout" />
       </template>
     </fieldset>
     <fieldset>
       <label>Name</label>
       <div class="controls">
-        <input type="text" id="name" v-model="keySets[current].label" />
-        <Select :options="kbtype" v-model="keySets[current].keyboardType"
+        <input type="text" id="name" v-model="vSet.label" />
+        <Select :options="kbtype" v-model="vType"
             title="Change to convert keyboard type" />
       </div>
     </fieldset>
     <fieldset id="smog"></fieldset>
     <fieldset>
       <label>Author</label>
-      <div class="controls" :set="moreInfoUrl = keySets[current].moreInfoUrl">
-        {{ keySets[current].author }}
+      <div class="controls" :set="moreInfoUrl = vSet.moreInfoUrl">
+        {{ vSet.author }}
         <a v-if="moreInfoUrl" id="more-info" :href="moreInfoUrl"
-            :title="keySets[current].moreInfoText">More Info</a>
+            :title="vSet.moreInfoText">More Info</a>
       </div>
     </fieldset>
   </form>
@@ -172,7 +181,7 @@ watch(current, (_, prevVal) => {
           :set="short_title = shortTitle(keySets, index)"
           :title="keySet.label===short_title? '' : keySet.label">
         <input type="radio" name="layout-switch" :id="keySet.tag" :value="index"
-            v-model="current">
+            v-model="vIndex">
         {{ short_title }}
       </label>
     </template>
@@ -180,7 +189,7 @@ watch(current, (_, prevVal) => {
         v-shortkey="['arrowleft']">🡠</button>
     <button type="button" class="small" @click="next" title="Next layout"
         v-shortkey="['arrowright']">🡢</button>
-    <button type="button" class="small" @click="current = last"
+    <button type="button" class="small" @click="vIndex = lastIndex"
         title="Toggle recent layouts" v-shortkey="['space']">⭯</button>
   </form>
   <form></form>
@@ -224,8 +233,7 @@ watch(current, (_, prevVal) => {
     </fieldset>
   </form>
 
-  <ImportDialog ref="importDialog"
-      :keyboardType="keySets[current].keyboardType" @import="onPaste" />
+  <ImportDialog ref="importDialog" :keyboardType="vType" @import="onPaste" />
 </template>
 
 <style scoped>
