@@ -5,6 +5,11 @@ import simplifiedDvorak from './standard.simplifiedDvorak.kla-layout.json'
 import programmerDvorak from './standard.programmerDvorak.kla-layout.json'
 import colemak from './standard.colemak.kla-layout.json'
 import colemakDh from './european.colemak_dh.kla-layout.json'
+  import standard from './standard.classical.kla-fingering.json'
+  import european from './european.classical.kla-fingering.json'
+  import european_ss from './european_ss.classical.kla-fingering.json'
+  import matrix from './matrix.classical.kla-fingering.json'
+  import ergodox from './ergodox.classical.kla-fingering.json'
 
 export const defaultKeySets = {
   'default.kla-set': defaultSet,
@@ -14,6 +19,11 @@ export const defaultKeySets = {
   'standard.programmerDvorak.kla-layout': programmerDvorak,
   'standard.colemak.kla-layout': colemak,
   'european.colemak_dh.kla-layout': colemakDh,
+    'standard.classical.kla-fingering': standard,
+    'european.classical.kla-fingering': european,
+    'european_ss.classical.kla-fingering': european_ss,
+    'matrix.classical.kla-fingering': matrix,
+    'ergodox.classical.kla-fingering': ergodox,
 }
 
 export function label(code) {
