@@ -11,7 +11,8 @@ import useLayoutsStore from '@/stores/layouts'
 
 import { downloadJson, processEventHandler } from '../lib/browser'
 import defaultKeyMaps from '../lib/default-key-maps'
-import { filteredAssign, kbtype, keepOnlyFingering } from '../lib/keyboard'
+import { convertType, filteredAssign, kbtype, keepOnlyFingering }
+    from '../lib/keyboard'
 import layoutList from '../lib/layout-list'
 import { shortTitle } from '../lib/title'
 import { objectKeyByValue } from '../lib/utilities'
@@ -42,6 +43,14 @@ function prev() {
 function next() {
   const len = keySets.length
   vIndex.value = (vIndex.value + 1) % len
+}
+
+async function onChangeType(event) {
+  const targetType = event.target.value
+  const defaultPreset = targetType + '.classical.kla-fingering'
+  const defaultSet = await layoutsStore.fetchKeySet(defaultPreset)
+  keySets[vIndex.value] = convertType
+      (toRaw(vSet.value), vMap.value, targetType, defaultSet)
 }
 
 const copyJson = processEventHandler(async (_, fingering=false) => {
@@ -138,7 +147,7 @@ watch(vIndex, (_, prevVal) => {
       <label>Name</label>
       <div class="controls">
         <input type="text" id="name" v-model="vSet.label" />
-        <Select :options="kbtype" v-model="vType"
+        <Select :options="kbtype" v-model="vType" @change="onChangeType"
             title="Change to convert keyboard type" />
       </div>
     </fieldset>

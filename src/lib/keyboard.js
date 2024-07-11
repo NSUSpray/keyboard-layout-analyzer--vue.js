@@ -1,3 +1,5 @@
+import defaultKeyMaps from './default-key-maps'
+import { sameFingerGroup } from './fingers'
 import { isLetterCode } from './utilities'
 
 export const kbtype = {
@@ -21,21 +23,6 @@ export const kbtype = {
   MENU: -93,
 }*/
 
-export const fingers = {
-  none: -1,
-  leftPinky: 1,
-  leftRing: 2,
-  leftMiddle: 3,
-  leftIndex: 4,
-  leftThumb: 5,
-  rightThumb: 6,
-  rightIndex: 7,
-  rightMiddle: 8,
-  rightRing: 9,
-  rightPinky: 10,
-  bothThumbs: 11,
-}
-
 export function keepOnlyFingering(keySet) {
   keySet = structuredClone(keySet)
   keySet.label = keySet.author = keySet.authorUrl = keySet.moreInfoUrl
@@ -57,4 +44,62 @@ export function filteredAssign(filterValue, targetKey, sourceKey) {
       labels = ['altGr', 'shiftAltGr']; break
   }
   labels.forEach(label => targetKey[label] = sourceKey[label])
+}
+
+
+
+const translateId = (map1, map2) => id1 => isNaN(map1[id1].scan)? undefined
+    : Object.keys(map2)
+        .find(id2 => isFinite(id2) && map2[id2].scan === map1[id1].scan)
+
+const fingerStartCanBeArrange = (map1, map2) =>
+    (id1, id2, finger2, defaultFinger2) =>
+        id1 !== undefined
+        && map1[id1].row === map2[id2].row
+        && sameFingerGroup(finger2, defaultFinger2)
+
+// Keep finger and arrange finger start if present.
+// Set the keySet fingers, that in the reference start from id1, onto id2.
+const arrangeFingerStart = keySet => (refFingerStart, id1, id2) =>
+    Object.keys(refFingerStart)
+        .filter(finger => refFingerStart[finger] == id1)
+        .forEach(id1Finger => keySet.fingerStart[id1Finger] = id2)
+
+const idsFrom = keyMap => Object.keys(keyMap).map(Number).filter(isFinite)
+
+/**
+ * Convert layout of a given key set and key map to the target type.
+ * @param {Object} set1 Original key set.
+ * @param {Object} map1 Original key map.
+ * @param {String} type2 Target keyboard type.
+ * @param {Object} defaultSet2 Source of default key data.
+ * @return Result of conversion: key set with the target type.
+ */
+export function convertType(set1, map1, type2, defaultSet2) {
+  // workpieces
+  const set2 = structuredClone(set1)
+      set2.keyboardType = type2
+      set2.fingerStart = defaultSet2.fingerStart
+      set2.keys = []
+  const map2 = defaultKeyMaps[type2]
+  // helpers
+  const translate21 = translateId(map2, map1)
+  const canBeArrange21 = fingerStartCanBeArrange(map1, map2)
+  const arrange21 = arrangeFingerStart(set2)
+  // for all keys of the target key map
+  var id1, srcSet, key2, defaultFinger2
+  for (const id2 of idsFrom(map2)) {
+    id1 = translate21(id2)
+    srcSet = (id1 !== undefined)? set1 : defaultSet2
+    key2 = structuredClone(srcSet.keys[id1 ?? id2]); key2.id = id2
+    // process the fingering
+    defaultFinger2 = defaultSet2.keys[id2].finger
+    if (canBeArrange21(id1, id2, key2.finger, defaultFinger2))
+      arrange21(srcSet.fingerStart, id1, id2)
+      // it already has a suitable finger
+    else
+      key2.finger = defaultFinger2
+    set2.keys.push(key2)
+  }
+  return set2
 }

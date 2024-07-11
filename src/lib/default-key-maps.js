@@ -115,14 +115,15 @@ function kleToKla([kbtype, rows]) {
   const keyMap = {}
   const keys = Serial.deserialize(escapeLineFeeds(rows)).keys
   let index, scanCode, centers,
-    posAndSize, scanCodeObj, centersObj,
+    posAndSize, scanCodeObj, centersObj, row,
     bBox = { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity }
   for (const key of keys) {
     ({ index, scanCode, centers } = readKeyDataFrom(key.labels))
     posAndSize = posAndSizeOf(key)
     scanCodeObj = isNaN(scanCode)? {} : { scan: scanCode }
     centersObj = makeCentersObj(centers, posAndSize)
-    keyMap[index] = { ...posAndSize, ...scanCodeObj, ...centersObj }
+    row = Math.floor(key.y)
+    keyMap[index] = { ...posAndSize, ...scanCodeObj, ...centersObj, row }
     bBox = adjustBoundingBox(posAndSize, bBox)
   }
   keyMap.width = bBox.maxX - bBox.minX + paddingX

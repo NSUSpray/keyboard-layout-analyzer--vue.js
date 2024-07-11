@@ -18,7 +18,7 @@ Under development. See the working Angular.js version here https://github.com/NS
 
 - [x] import/export/load key sets
 - [ ] key editor window
-- [ ] conversions between key maps
+- [x] conversions between key maps
 
 ## Customize configuration
 
