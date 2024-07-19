@@ -3,8 +3,8 @@ import { onBeforeMount, onMounted, onUpdated, onUnmounted, watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 
 import RouterLink from './components/RouterLink.vue'
-import { rowFirstLast, setDummyHrefAttribute } from './lib/browser'
-import useLayoutsStore from '@/stores/layouts'
+import { rowFirstLast, setDummyHrefAttribute } from './lib/browser.js'
+import useLayoutsStore from '@/stores/layouts.js'
 
 const rowFirstLastUpdate = rowFirstLast(
   ':is(form, fieldset, footer):not(dialog *)'
@@ -90,9 +90,9 @@ header {
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 1;
   font-size: var(--header-font-size);
   background-color: var(--dark-dark-blue);
+  z-index: 1;
   & * { color: white; }
   & h1 { display: none; }
   & nav {
@@ -114,7 +114,9 @@ header {
     &.router-link-active { border-color: white; }
     &:hover { background-color: var(--blue); }
     &:focus { background-color: var(--dark-blue); }
-    &:hover, &:focus { text-decoration: none; }
+    &:hover,
+    &:focus
+        { text-decoration: none; }
   }
 }
 
@@ -169,7 +171,9 @@ footer {
 
 @media print {
 
-  header, footer { display: none; }
+  header,
+  footer
+      { display: none; }
 
 }
 
@@ -190,8 +194,8 @@ footer {
       align-items: flex-end;
       margin: 0;
       padding:
-        calc(var(--padding) * 0.8)
-        var(--wide-padding);
+          calc(var(--padding) * 0.8)
+          var(--wide-padding);
       font-size: calc(var(--header-font-size) * 4/3);
       font-weight: 700;
       line-height: initial;

@@ -11,7 +11,7 @@
  *     Scan code (maybe "E0 " + two hexadecimal digits).
  */
 
-const keyMaps = {
+const kleKeyMaps = {
   standard: [
     ["00\n29","01\n02","02\n03","03\n04","04\n05","05\n06","06\n07","07\n08",
       "08\n09","09\n0A","10\n0B","11\n0C","12\n0D",{w:2},"13\n0E\n0"],
@@ -99,4 +99,4 @@ const keyMaps = {
   ]
 }
 
-export default keyMaps
+export default kleKeyMaps

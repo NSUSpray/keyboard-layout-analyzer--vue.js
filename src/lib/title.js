@@ -1,5 +1,5 @@
-import fingers from './fingers'
-import { takeWhile, isLetterCode } from './utilities'
+import Fingers from './fingers.js'
+import { takeWhile, isLetterCode } from './utilities.js'
 
 /**
  * Find the first letter sequence: e. g. QWERTY, or AOEUID for Dvorak.
@@ -29,7 +29,7 @@ function forceLabel({ label, keys, index }, maxGroupLen=6) {
   label = label.trim()
   if (label) return label
   const firstKeyIndex =
-      firstOfLetterKeyGroup(keys, fingers.leftPinky)
+      firstOfLetterKeyGroup(keys, Fingers.LEFT_PINKY)
       ?? firstOfLetterKeyGroup(keys)
   if (!firstKeyIndex) return 'Layout ' + index
   const primaryCodeSlice = keys
@@ -50,8 +50,8 @@ const visualLengthOf = text => text
     .replaceAll(/[WMЩЮЖМШ]/g, '...')
     .replaceAll(/[^ijlI. ᴱˢ]/g, '..').length
 
-function compress(text, level) {
-  switch (level) {
+function compress(text, stage) {
+  switch (stage) {
     case 1:  // trash
       return text.replaceAll(/[^\wа-яёˢᴱᴹ -]/gi, '').replaceAll(/-/g, ' ')
     case 2:  // vowels
@@ -66,6 +66,8 @@ function compress(text, level) {
           .replaceAll(/ /g, '')
     case 6:  // digits
       return text.replaceAll(/(\d)\d+/g, '$1')
+    default:
+      throw new Error('Unknown stage')
   }
 }
 
@@ -81,10 +83,10 @@ export function shortTitle(keySets, index) {
       (maxPaginateLength - 2*switchers.length) / keySets.length
   let title = label + (keyboardTypeToSuffix[keySet.keyboardType] ?? '')
   let compressed
-  for (let level = 1; visualLengthOf(title) > maxTitleLength; ++level) {
-    compressed = compress(title, level)
+  for (let stage = 1; visualLengthOf(title) > maxTitleLength; ++stage) {
+    compressed = compress(title, stage)
     if (compressed) title = compressed.trim()
-    else level = 2
+    else stage = 2
   }
   return title || label.slice(0, 6) + '…'
 }

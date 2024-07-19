@@ -1,13 +1,14 @@
 @import
-  url('http://fonts.googleapis.com/css?family=Lato:400,700,900,400italic')
-  screen and (max-width: 1024px);
+    url('http://fonts.googleapis.com/css?family=Lato:400,700,900,400italic')
+    screen and (max-width: 1024px);
 
 @import url('./adobe-lato.css') print, (min-width: 1024px);
 
 @font-face {
   font-family: 'KLA Symbol';
-  src: url('symbol.woff2') format('woff2'), /* Modern Browsers */
-   url('symbol.otf') format('opentype'); /* Safari, Android, iOS */
+  src:
+      url('symbol.woff2') format('woff2'), /* Modern Browsers */
+      url('symbol.otf') format('opentype'); /* Safari, Android, iOS */
   font-display: auto;
   font-style: normal;
   font-weight: 400;
@@ -39,37 +40,37 @@
   --nav-active-anchor-border-width: 3px;
 
   --font-family:
-    Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif, 'KLA Symbol';
+      Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif, 'KLA Symbol';
 
   --wwhite-blue:  /* layout-switch checked */
-    oklch(95% 1% 249) /*#ECF0F1*/;
+      oklch(95% 1% 249) /*#ECF0F1*/;
   --white-blue: /* input border */
-    oklch(92% 3% 249) /*#DCE4EC*/;
+      oklch(92% 3% 249) /*#DCE4EC*/;
   /*--llight-light-blue:
-    oklch(76% 8% 249);*/
+      oklch(76% 8% 249);*/
   --light-light-blue: /* disabled button */
-    oklch(74% 9% 249) /*#99ACC1*/;
+      oklch(74% 9% 249) /*#99ACC1*/;
   --light-blue: /* button:hover */
-    oklch(65% 15% 249) /*#7593B2*/;
+      oklch(65% 15% 249) /*#7593B2*/;
   --bblue:  /* layout-switcher hover */
-    oklch(61% 15% 249) /*#6486A9*/;
+      oklch(61% 15% 249) /*#6486A9*/;
   --blue: /* header a:hover, button */
-    oklch(57% 15% 249) /*#5D7C9B*/;
+      oklch(57% 15% 249) /*#5D7C9B*/;
   --dark-blue: /* header a:focus */
-    oklch(52% 15% 249) /*#4E6D8C*/;
+      oklch(52% 15% 249) /*#4E6D8C*/;
   --dark-dark-blue: /* header bg */
-    oklch(47% 15% 249) /*#3F5E7D*/;
+      oklch(47% 15% 249) /*#3F5E7D*/;
   --black-blue: /* body */
-    oklch(36% 10% 249) /*#2C3E50*/;
+      oklch(36% 10% 249) /*#2C3E50*/;
 
   --warning-color:
-    oklch(78% 39% 72) /*#F4A425*/;
+      oklch(78% 39% 72) /*#F4A425*/;
   --warning-hover-color:
-    oklch(80% 39% 72) /*#F5B043*/;
+      oklch(80% 39% 72) /*#F5B043*/;
   --danger-color:
-    oklch(66% 44% 29) /*#E95D4E*/;
+      oklch(66% 44% 29) /*#E95D4E*/;
   --danger-hover-color:
-    oklch(70% 44% 29) /*#ED7669*/;
+      oklch(70% 44% 29) /*#ED7669*/;
 
   --black-gray: #333;  /* a:focus outline */
   --dark-gray: #666;
@@ -79,43 +80,43 @@
   --light-light-gray: #E0E0E0;  /* footer border */
 
   --light-bright-blue:
-    oklch(70% 32% 249);
+      oklch(70% 32% 249);
   --light-bright-blue-translucent: /* focus border */
-    oklch(70% 32% 249 / 0.8);
+      oklch(70% 32% 249 / 0.8);
   --bright-blue: /* a */
-    oklch(60% 35% 249) /*#0088CC*/ ;
+      oklch(60% 35% 249) /*#0088CC*/ ;
   --dark-bright-blue: /* a:hover */
-    oklch(43% 25% 249) /*#005580*/;
+      oklch(43% 25% 249) /*#005580*/;
 
-  --leftPinky:   oklch( 94% 24% 175);
-  --leftRing:    oklch( 78% 33% 261);
-  --leftMiddle:  oklch( 87% 39% 289);
-  --leftIndex:   oklch( 82% 44% 328);
-  --leftThumb:   oklch(100%  0%   0);
-  --rightThumb:  oklch( 94%  0%   0);
-  --rightIndex:  oklch( 79% 31%  29);
-  --rightMiddle: oklch( 88% 22%  71);
-  --rightRing:   oklch( 98% 31% 119);
-  --rightPinky:  oklch( 91% 42% 139);
+  --LEFT_PINKY:   oklch( 94% 24% 175);
+  --LEFT_RING:    oklch( 78% 33% 261);
+  --LEFT_MIDDLE:  oklch( 87% 39% 289);
+  --LEFT_INDEX:   oklch( 82% 44% 328);
+  --LEFT_THUMB:   oklch(100%  0%   0);
+  --RIGHT_THUMB:  oklch( 94%  0%   0);
+  --RIGHT_INDEX:  oklch( 79% 31%  29);
+  --RIGHT_MIDDLE: oklch( 88% 22%  71);
+  --RIGHT_RING:   oklch( 98% 31% 119);
+  --RIGHT_PINKY:  oklch( 91% 42% 139);
 
   --shadow:
-    0
-    calc(var(--margin) / 2)
-    var(--margin)
-    oklch(0 0 0 / 0.2);
+      0
+      calc(var(--margin) / 2)
+      var(--margin)
+      oklch(0 0 0 / 0.2);
   --sharp-shadow:
-    0
-    calc(var(--thin-margin) * 1.5)
-    calc(var(--thin-margin) * 3.5)
-    oklch(0 0 0 / 0.3);
+      0
+      calc(var(--thin-margin) * 1.5)
+      calc(var(--thin-margin) * 3.5)
+      oklch(0 0 0 / 0.3);
   --shallow-shadow:
-    0
-    var(--thin-margin)
-    var(--thin-margin)
-    oklch(0 0 0 / 0.2);
+      0
+      var(--thin-margin)
+      var(--thin-margin)
+      oklch(0 0 0 / 0.2);
   --bright-glow:
-    0 1px 1px oklch(0 0 0 / 7.5%) inset,
-    0 0 8px oklch(70% 32% 249 / 60%);
+      0 1px 1px oklch(0 0 0 / 7.5%) inset,
+      0 0 8px oklch(70% 32% 249 / 60%);
 
   --fast-transition-duration: 0.2s;
   --transition-duration: 0.25s;
@@ -131,7 +132,10 @@ body {
   background-color: var(--light-gray);
 }
 
-*, ::before, ::after { box-sizing: border-box; }
+*,
+::before,
+::after
+    { box-sizing: border-box; }
 
 :focus:not(:hover) {
   outline: thin dotted var(--black-gray);
@@ -149,7 +153,7 @@ body {
 
   :root {
     --content-width:
-      calc(100vw - var(--content-margin) * 2 - var(--header-height));
+        calc(100vw - var(--content-margin) * 2 - var(--header-height));
   }
 
 }

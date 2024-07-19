@@ -1,46 +1,46 @@
-const fingers = {
-  none: -1,
-  leftPinky: 1,
-  leftRing: 2,
-  leftMiddle: 3,
-  leftIndex: 4,
-  leftThumb: 5,
-  rightThumb: 6,
-  rightIndex: 7,
-  rightMiddle: 8,
-  rightRing: 9,
-  rightPinky: 10,
-  bothThumbs: 11,
+const Fingers = {
+  NONE: -1,
+  LEFT_PINKY: 1,
+  LEFT_RING: 2,
+  LEFT_MIDDLE: 3,
+  LEFT_INDEX: 4,
+  LEFT_THUMB: 5,
+  RIGHT_THUMB: 6,
+  RIGHT_INDEX: 7,
+  RIGHT_MIDDLE: 8,
+  RIGHT_RING: 9,
+  RIGHT_PINKY: 10,
+  BOTH_THUMBS: 11,
 }
 
 const hands = {
-  none: [fingers.none],
+  none: [Fingers.NONE],
   left: [
-    fingers.leftPinky,
-    fingers.leftRing,
-    fingers.leftMiddle,
-    fingers.leftIndex,
-    fingers.leftThumb,
+    Fingers.LEFT_PINKY,
+    Fingers.LEFT_RING,
+    Fingers.LEFT_MIDDLE,
+    Fingers.LEFT_INDEX,
+    Fingers.LEFT_THUMB,
   ],
   right: [
-    fingers.rightThumb,
-    fingers.rightIndex,
-    fingers.rightMiddle,
-    fingers.rightRing,
-    fingers.rightPinky,
+    Fingers.RIGHT_THUMB,
+    Fingers.RIGHT_INDEX,
+    Fingers.RIGHT_MIDDLE,
+    Fingers.RIGHT_RING,
+    Fingers.RIGHT_PINKY,
   ],
-  both: [fingers.bothThumbs],
+  both: [Fingers.BOTH_THUMBS],
 }
 
 const handOf = finger => Object.entries(hands)
     .find(([hand, fingers]) => fingers.includes(finger))?.[0]
 
 const isThumb = finger =>
-    [fingers.leftThumb, fingers.rightThumb].includes(finger)
+    [Fingers.LEFT_THUMB, Fingers.RIGHT_THUMB].includes(finger)
 
 export const sameFingerGroup = (finger1, finger2) =>
-    ![finger1, finger2].includes(fingers.none)
+    ![finger1, finger2].includes(Fingers.NONE)
     && handOf(finger1) === handOf(finger2)
     && isThumb(finger1) === isThumb(finger2)
 
-export default fingers
+export default Fingers

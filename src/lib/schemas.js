@@ -1,14 +1,12 @@
 import { z } from 'zod'
-import { kbtype } from './keyboard'
+import { keyMapTypes } from './keyboard.js'
 
 const keyIdSchema = z.number().int().min(-1).finite()
-
 const charCodeSchema = z.number().int().finite().optional()
-
 const urlSchema = z.string().url().nullish().or(z.literal(''))
 
 const fingerStartSchema = z.object(Object.fromEntries(
-  [ ...Array(11).keys() ].map( i => [i + 1, keyIdSchema] )
+  Array.from(Array(11).keys(), i => [i + 1, keyIdSchema])
 ))
 
 const keySchema = z.object({
@@ -31,13 +29,13 @@ export const layoutSchema = z.object({
   authorUrl: urlSchema,
   moreInfoUrl: urlSchema,
   moreInfoText: z.string().nullish(),
-  keyboardType: z.enum(Object.keys(kbtype)),
+  keyboardType: z.enum(Object.keys(keyMapTypes)),
   fingerStart: fingerStartSchema,
   keys: keySchema.array(),
 })
 
 export const fingeringSchema = z.object({
-  keyboardType: z.enum(Object.keys(kbtype)),
+  keyboardType: z.enum(Object.keys(keyMapTypes)),
   fingerStart: fingerStartSchema,
   keys: keyFingerSchema.array(),
 })

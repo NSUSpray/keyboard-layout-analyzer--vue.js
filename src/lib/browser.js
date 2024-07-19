@@ -1,4 +1,5 @@
-const [rowFirstClass, rowLastClass] = ['row-first', 'row-last']
+const rowFirstClass = 'row-first'
+const rowLastClass = 'row-last'
 
 /**
  * @param {Object} parent Element within which child elements will be searched.
@@ -11,7 +12,7 @@ function rowFirstLastUpdate(parent) {
   const rect = i => children[i].getBoundingClientRect()
   const hasWrappingAfter = (_, i) => rect(i).bottom <= rect(i + 1).top
   function insertLastFirst(_, i)
-    { addClass(i, rowLastClass); addClass(i + 1, rowFirstClass) }
+      { addClass(i, rowLastClass); addClass(i + 1, rowFirstClass) }
   children.forEach(ch => ch.classList.remove(rowFirstClass, rowLastClass))
   addClass(0, rowFirstClass)
   addClass(-1, rowLastClass)
@@ -23,8 +24,8 @@ function rowFirstLastUpdate(parent) {
  * @param {String} parentSelector CSS selector of the wrapper elements.
  * @return {Function}
  */
-export const rowFirstLast = parentSelector =>
-  () => document.querySelectorAll(parentSelector)?.forEach(rowFirstLastUpdate)
+export const rowFirstLast = parentSelector => () =>
+    document.querySelectorAll(parentSelector)?.forEach(rowFirstLastUpdate)
 
 
 /**
@@ -32,16 +33,16 @@ export const rowFirstLast = parentSelector =>
  * without an href attribute. Reason: every link must behave like a link.
  */
 export const setDummyHrefAttribute = () =>
-  document.querySelectorAll('a')?.forEach(
-    item => !item.hasAttribute('href')?
-      item.setAttribute('href', 'javascript:;') : null
-  )
+    document.querySelectorAll('a')?.forEach(
+      item => !item.hasAttribute('href')?
+          item.setAttribute('href', 'javascript:;') : null
+    )
 
 
 const rootStyle = getComputedStyle(document.documentElement)
 
 const transitionDuration =
-  parseFloat(rootStyle.getPropertyValue('--transition-duration')) * 1000
+    parseFloat(rootStyle.getPropertyValue('--transition-duration')) * 1000
 
 /**
  * Event callback decorator that adds a class to the event target.
@@ -77,8 +78,9 @@ export function processEventHandler
  * @param {Element} element DOM element.
  * @return {Number} Transition duration in seconds.
  */
-export const transitionDurationOf = element => 1000 *
-  parseFloat(getComputedStyle(element).getPropertyValue('transition-duration'))
+export const transitionDurationOf = element =>
+    1000 * parseFloat
+        (getComputedStyle(element).getPropertyValue('transition-duration'))
 
 /**
  * @param {Object} data Object to be downloaded.

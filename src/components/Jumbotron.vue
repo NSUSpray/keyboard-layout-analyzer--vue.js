@@ -12,10 +12,9 @@ const lead = useSlots().default?.()[0].children
 <template>
   <div class="jumbotron">
     <h1 v-if="header">{{ header }}</h1>
-    <button type="button" v-if="runButton" class="large" title="See which layout is best"
-        v-shortkey="['ctrl', 'enter']">
-      Run
-    </button>
+    <button type="button" v-if="runButton" class="large"
+        title="See which layout is best"
+        v-shortkey="['ctrl', 'enter']">Run</button>
     <h3 v-if="lead"><slot /></h3>
   </div>
 </template>
@@ -38,7 +37,9 @@ h3 {
 button {
   grid-row-end: span 2;
   box-shadow: var(--shallow-shadow);
-  &:hover, &:focus { box-shadow: none; }
+  &:hover,
+  &:focus
+      { box-shadow: none; }
 }
 
 @media (min-width: 1024px) {

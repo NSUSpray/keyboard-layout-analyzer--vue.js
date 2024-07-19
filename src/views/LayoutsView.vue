@@ -7,15 +7,14 @@ import Jumbotron from '../components/Jumbotron.vue'
 import LayoutEditor from '../components/LayoutEditor.vue'
 import Select from '../components/Select.vue'
 
-import useLayoutsStore from '@/stores/layouts'
+import useLayoutsStore from '@/stores/layouts.js'
 
-import { downloadJson, processEventHandler } from '../lib/browser'
-import defaultKeyMaps from '../lib/default-key-maps'
-import { convertType, filteredAssign, kbtype, keepOnlyFingering }
-    from '../lib/keyboard'
-import layoutList from '../lib/layout-list'
-import { shortTitle } from '../lib/title'
-import { objectKeyByValue } from '../lib/utilities'
+import { downloadJson, processEventHandler } from '../lib/browser.js'
+import defaultKeyMaps from '../lib/default-key-maps.js'
+import { convertType, filteredAssign, keepOnlyFingering, keyMapTypes } from '../lib/keyboard.js'
+import presetOptions from '../lib/preset-options.js'
+import { shortTitle } from '../lib/title.js'
+import { objectKeyByValue } from '../lib/utilities.js'
 
 
 const layoutsStore = useLayoutsStore()
@@ -29,10 +28,16 @@ const vType = computed(() => vSet.value.keyboardType)
 
 const preset = ref('')
 const isLayoutPreset = computed
-  (() => preset.value.split('.').pop() === 'kla-layout')
+    (() => preset.value.split('.').pop() === 'kla-layout')
 
 const importDialog = ref(null)
 const clipboardDouble = ref('')
+
+let lastIndex = 1
+watch(vIndex, (_, prevVal) => {
+  lastIndex = prevVal
+  if (isNotSameTypeOfFingering(preset.value)) preset.value = ''
+})
 
 
 function prev() {
@@ -63,7 +68,7 @@ const copyJson = processEventHandler(async (_, fingering=false) => {
 
 const copyAllJson = processEventHandler(async () => {
   const keySetsJson = JSON.stringify
-    ({ name: '' /* TODO */, layouts: keySets }, null, 4)
+      ({ name: '' /* TODO */, layouts: keySets }, null, 4)
   navigator.clipboard.writeText(keySetsJson)
   clipboardDouble.value = keySetsJson
 })
@@ -72,7 +77,7 @@ const assignByScanCode = (srcKeyMap, filterValue) => (srcKey, index) => {
   const scan = srcKeyMap[index].scan
   const targetIndex = objectKeyByValue(vMap.value, k => k.scan === scan)
   if (targetIndex >= 0)
-    filteredAssign(filterValue, vSet.value.keys[targetIndex], srcKey)
+      filteredAssign(filterValue, vSet.value.keys[targetIndex], srcKey)
 }
 
 function updateKeySet(type, src, filterValue='all') {
@@ -86,10 +91,12 @@ function updateKeySet(type, src, filterValue='all') {
     case 'fingering': case 'kla-fingering':
       keySets[i].fingerStart = src.fingerStart
       keySets[i].keys.forEach
-        ((key, index) => Object.assign(key, src.keys[index]))
+          ((key, index) => Object.assign(key, src.keys[index]))
       break
     case 'keySets': case 'kla-set':
       Object.assign(keySets, src.layouts); break
+    default:
+      throw new Error('Unknown object type')
   }
 }
 
@@ -109,7 +116,7 @@ function exportJson(_, fingering=false) {
 }
 
 const exportAllJson = () => downloadJson
-  ({ name: '' /* TODO */, layouts: keySets }, 'layouts.kla-set')
+    ({ name: '' /* TODO */, layouts: keySets }, 'layouts.kla-set')
 
 function isNotSameTypeOfFingering(value) {
   const [presetKeyboardType, ...rest] = value.split('.')
@@ -122,13 +129,6 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
   const type = preset.value.split('.').pop()
   const object = await layoutsStore.fetchKeySet(preset.value)
   updateKeySet(type, object, filterValue)
-})
-
-
-let lastIndex = 1
-watch(vIndex, (_, prevVal) => {
-  lastIndex = prevVal
-  if (isNotSameTypeOfFingering(preset.value)) preset.value = ''
 })
 </script>
 
@@ -147,8 +147,8 @@ watch(vIndex, (_, prevVal) => {
       <label>Name</label>
       <div class="controls">
         <input type="text" id="name" v-model="vSet.label" />
-        <Select :options="kbtype" v-model="vType" @change="onChangeType"
-            title="Change to convert keyboard type" />
+        <Select v-model="vType" :options="keyMapTypes"
+            title="Change to convert keyboard type" @change="onChangeType" />
       </div>
     </fieldset>
     <fieldset id="smog"></fieldset>
@@ -167,17 +167,16 @@ watch(vIndex, (_, prevVal) => {
       <label class="btn small" tabindex="0"
           :set="short_title = shortTitle(keySets, index)"
           :title="keySet.label===short_title? '' : keySet.label">
-        <input type="radio" name="layout-switch" :id="keySet.tag" :value="index"
-            v-model="vIndex">
+        <input type="radio" :id="keySet.tag" v-model="vIndex" :value="index">
         {{ short_title }}
       </label>
     </template>
-    <button type="button" class="small" @click="prev" title="Previous layout"
+    <button type="button" class="small" title="Previous layout" @click="prev"
         v-shortkey="['arrowleft']">🡠</button>
-    <button type="button" class="small" @click="next" title="Next layout"
+    <button type="button" class="small" title="Next layout" @click="next"
         v-shortkey="['arrowright']">🡢</button>
-    <button type="button" class="small" @click="vIndex = lastIndex"
-        title="Toggle recent layouts" v-shortkey="['space']">⭯</button>
+    <button type="button" class="small" title="Toggle recent layouts"
+        @click="vIndex = lastIndex" v-shortkey="['space']">⭯</button>
   </form>
   <form></form>
 
@@ -185,36 +184,38 @@ watch(vIndex, (_, prevVal) => {
     <fieldset>
       <label>Load/Save Data</label>
       <div class="controls">
-        <DropButton @click="copyJson" value="Copy"
-            title="Copy this layout to clipboard" v_shortkey="['ctrl', 'c']">
-          <a @click="copyJson($event, fingering=true)"
-              title="Copy finger zones and positions">Copy Fingering</a>
-          <a @click="copyAllJson" title="Copy the whole set">Copy All Layouts</a>
+        <DropButton value="Copy" title="Copy this layout to clipboard"
+            @click="copyJson" v_shortkey="['ctrl', 'c']">
+          <a title="Copy finger zones and positions"
+              @click="copyJson($event, fingering=true)">Copy Fingering</a>
+          <a title="Copy the whole set" @click="copyAllJson">Copy All Layouts</a>
         </DropButton>
-        <button type="button" @click="importDialog.show(clipboardDouble)"
-            title="Load some layout/fingering/set here"
+        <button type="button" title="Load some layout/fingering/set here"
+            @click="importDialog.show(clipboardDouble)"
             v-shortkey="['ctrl', 'v']">Paste</button>
-        <DropButton @click="exportJson" value="Export"
-            title="Save this layout to file">
-          <a @click="exportJson($event, fingering=true)"
-              title="Save finger zones and positions">Export Fingering</a>
-          <a @click="exportAllJson"
-              title="Save the whole set to single file">Export All Layouts</a>
+        <DropButton value="Export" title="Save this layout to file"
+            @click="exportJson">
+          <a title="Save finger zones and positions"
+              @click="exportJson($event, fingering=true)">Export Fingering</a>
+          <a title="Save the whole set to single file"
+              @click="exportAllJson">Export All Layouts</a>
         </DropButton>
       </div>
     </fieldset>
     <fieldset>
       <div class="controls">
-        <Select id="presets" :options="layoutList" v-model="preset"
+        <Select id="presets" :options="presetOptions" v-model="preset"
             :isOptionDisabled="opt => isNotSameTypeOfFingering(opt.value)">
           Select Preset</Select>
-        <DropButton @click="loadPreset" value="Load"
+        <DropButton :disabled="!preset" value="Load"
             title="Load preset in place of current layout or whole set"
-            v_shortkey="['enter']" :disabled="!preset">
-          <a @click="isLayoutPreset && loadPreset($event, 'nonLetters')"
-              :disabled="isLayoutPreset? null : true">Load Non-Letters</a>
-          <a @click="isLayoutPreset && loadPreset($event, 'altGr')"
-              :disabled="isLayoutPreset? null : true">Load ‘Alt Gr’ Layer</a>
+            @click="loadPreset" v_shortkey="['enter']">
+          <a :disabled="isLayoutPreset? null : true"
+              @click="isLayoutPreset && loadPreset($event, 'nonLetters')">
+            Load Non-Letters</a>
+          <a :disabled="isLayoutPreset? null : true"
+              @click="isLayoutPreset && loadPreset($event, 'altGr')">
+            Load ‘Alt Gr’ Layer</a>
         </DropButton>
       </div>
     </fieldset>
@@ -231,8 +232,7 @@ watch(vIndex, (_, prevVal) => {
 
 #keyboard {
   height: var(--keyboard-height);
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline: auto;
   & > * { z-index: -1; }
   &:hover > * { z-index: 0; }
 }
@@ -242,11 +242,12 @@ watch(vIndex, (_, prevVal) => {
   width: 100%;
   height: 202px;
   background:
-    radial-gradient(closest-side, var(--light-gray) 20%, transparent);
+      radial-gradient(closest-side, var(--light-gray) 20%, transparent);
   z-index: -1;
 }
 
-#name, #presets {
+#name,
+#presets {
   flex-basis: 6em;
   min-width: 6em;
   flex-grow: 1;
@@ -264,7 +265,9 @@ watch(vIndex, (_, prevVal) => {
     background-color: var(--dark-blue);
     transition: none;
   }
-  & > :hover, & > :focus { background-color: var(--bblue); }
+  & > :hover,
+  & > :focus
+      { background-color: var(--bblue); }
   & label {
     flex-basis: max-content;
     min-width: 2.2em;

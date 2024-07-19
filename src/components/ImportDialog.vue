@@ -1,12 +1,13 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-
-import { fingeringSchema, layoutSchema, setSchema } from '../lib/schemas'
-import { transitionDurationOf } from '../lib/browser'
+import DropButton from '../components/DropButton.vue'
+import { fingeringSchema, layoutSchema, setSchema } from '../lib/schemas.js'
+import { transitionDurationOf } from '../lib/browser.js'
 
 const emit = defineEmits(['import'])
 defineExpose({ close, show })
 const props = defineProps({ keyboardType: String })
+
 
 const dialog = ref(null)
 const importButton = ref(null)
@@ -20,9 +21,12 @@ const error = ref(null)
 const importFilterValues =
   { all: 'All', nonLetters: 'Non-Letters', altGr: '‘Alt Gr’ Layer' }
 const defaultImportFilterValue = 'all'
+let transitionDuration
+onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
+
 
 const focus = (element, timeout) =>
-  setTimeout(() => element.value.focus(), timeout ?? 0)
+    setTimeout(() => element.value.focus(), timeout ?? 0)
 
 function show(textareaValue) {
   textarea.value.value = textareaValue
@@ -45,19 +49,19 @@ function verifyAndEmit() {
 
   result = layoutSchema.safeParse(object)
   if (result.success)
-    return emit('import', 'keySet', result.data, json, filter.value)
+      return emit('import', 'keySet', result.data, json, filter.value)
 
   result = fingeringSchema.safeParse(object)
   if (result.success) {
     if (result.data.keyboardType !== props.keyboardType)
-      return error.value = 'Fingering keyboard type must match target'
+        return error.value = 'Fingering keyboard type must match target'
     return emit('import', 'fingering', result.data, json)
   }
 
   result = setSchema.safeParse(object)
   if (result.success) {
     if (confirm.value)
-      emit('import', 'keySets', result.data, json)
+        emit('import', 'keySets', result.data, json)
     return confirm.value = !confirm.value
   }
 
@@ -75,18 +79,15 @@ function onPaste() {
   const ta = textarea.value
   const empty = ta.value === ''
   const selectedAll =
-    ta.selectionStart === 0 && ta.selectionEnd === ta.textLength
+      ta.selectionStart === 0 && ta.selectionEnd === ta.textLength
   if (empty || selectedAll) focus(importButton)
 }
-
-let transitionDuration
-onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
 </script>
 
 <template>
-  <dialog ref="dialog" @cancel="close" :class="{ closed: isClosed }">
+  <dialog ref="dialog" :class="{ closed: isClosed }" @cancel="close">
     <h3>Import Layouts</h3>
-    <button @click="close" title="Close" v-shortkey="['Esc']">×</button>
+    <button title="Close" @click="close" v-shortkey="['Esc']">×</button>
 
     <div>
       <div class="textarea-n-status">
@@ -130,8 +131,8 @@ dialog {
   padding: 0;
   border-radius: var(--radius);
   box-shadow:
-    var(--sharp-shadow),
-    0 0 0 100vw var(--light-gray-translucent);
+      var(--sharp-shadow),
+      0 0 0 100vw var(--light-gray-translucent);
   transition: opacity linear, bottom ease-out;
   transition-duration: var(--slow-transition-duration);
   &::backdrop { background-color: transparent; }
@@ -141,10 +142,10 @@ dialog {
   }
 }
 dialog > * {
-    margin: 0;
-    padding: var(--padding);
-    &:is(h3 + button, h3) { line-height: 1em; }
-  }
+  margin: 0;
+  padding: var(--padding);
+  &:is(h3 + button, h3) { line-height: 1em; }
+}
 
 .textarea-n-status { position: relative; }
 
@@ -157,7 +158,9 @@ h3 + button {
   font-size: 1.75rem; /* FIXME */
   color: var(--dark-dark-blue);
   background-color: transparent !important;
-  &:hover, &:focus { color: var(--black-blue); }
+  &:hover,
+  &:focus
+      { color: var(--black-blue); }
 }
 
 fieldset { margin: 0; }
@@ -169,14 +172,14 @@ form {
 }
 
 .status {
-  visibility: hidden;
   position: absolute;
+  visibility: hidden;
   right: 0; bottom: 0;
   padding: 0 var(--thin-padding);
-  border: solid 2px transparent;
-  border-radius: var(--radius) 0;
   color: white;
   background-color: var(--white-blue);
+  border: solid 2px transparent;
+  border-radius: var(--radius) 0;
   transition: background-color linear;
   transition-duration: var(--fast-transition-duration);
   pointer-events: none;
@@ -186,7 +189,7 @@ form {
   background-color: var(--danger-color);
 }
 .danger:hover + .status
-  { background-color: var(--danger-hover-color); }
+    { background-color: var(--danger-hover-color); }
 
 textarea {
   min-width: 100%;

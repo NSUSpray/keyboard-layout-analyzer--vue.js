@@ -1,8 +1,8 @@
-import defaultKeyMaps from './default-key-maps'
-import { sameFingerGroup } from './fingers'
-import { isLetterCode } from './utilities'
+import defaultKeyMaps from './default-key-maps.js'
+import { sameFingerGroup } from './fingers.js'
+import { isLetterCode } from './utilities.js'
 
-export const kbtype = {
+export const keyMapTypes = {
   standard: 'ANSI',
   european: 'ISO',
   european_ss: 'ISO split-space',
@@ -11,7 +11,7 @@ export const kbtype = {
   // custom: 'Custom',
 }
 
-/*export const key = {
+/*export const Keys = {
   BACKSPACE: 8,
   CAPSLOCK: 20,
   LSHIFT: 16,
@@ -42,6 +42,8 @@ export function filteredAssign(filterValue, targetKey, sourceKey) {
       ); break
     case 'altGr':
       labels = ['altGr', 'shiftAltGr']; break
+    default:
+      // keep labels unchanged
   }
   labels.forEach(label => targetKey[label] = sourceKey[label])
 }
@@ -95,10 +97,10 @@ export function convertType(set1, map1, type2, defaultSet2) {
     // process the fingering
     defaultFinger2 = defaultSet2.keys[id2].finger
     if (canBeArrange21(id1, id2, key2.finger, defaultFinger2))
-      arrange21(srcSet.fingerStart, id1, id2)
-      // it already has a suitable finger
+        arrange21(srcSet.fingerStart, id1, id2)
+        // it already has a suitable finger
     else
-      key2.finger = defaultFinger2
+        key2.finger = defaultFinger2
     set2.keys.push(key2)
   }
   return set2

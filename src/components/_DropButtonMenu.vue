@@ -1,9 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { transitionDurationOf } from '../lib/browser'
+import { transitionDurationOf } from '../lib/browser.js'
 
 const menu = ref(null)
 const isFadeOut = ref(false)
+
+onMounted(() => fadeOutOnClick('a, button, .btn, input'))
 
 function fadeOut(event, fadeOutTime) {
   isFadeOut.value = true
@@ -16,11 +18,9 @@ function fadeOutOnClick(selector) {
   const fadeOutLag = 35  // hand-picked value
   const fadeOutTime = transitionDurationOf(menu.value) + fadeOutLag
   items?.forEach(item =>
-    item.addEventListener('click', event => fadeOut(event, fadeOutTime))
+      item.addEventListener('click', event => fadeOut(event, fadeOutTime))
   )
 }
-
-onMounted(() => fadeOutOnClick('a, button, .btn, input'))
 </script>
 
 <template>
@@ -35,23 +35,24 @@ onMounted(() => fadeOutOnClick('a, button, .btn, input'))
   left: 0;
   top: calc(100% + var(--thin-padding) * 0.6);
   width: max-content;
-  z-index: 2;
   padding: var(--thin-padding) 0;
-  border-radius: var(--radius);
   text-align: left;
   background-color: var(--black-blue);
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
-  visibility: hidden;
+  z-index: 2;
   transition-duration: var(--transition-duration);
+  visibility: hidden;
   opacity: 0;
   & > * {
     display: block;
     padding:
-      calc(var(--thin-padding) * 0.6)
-      var(--wide-padding);
+        calc(var(--thin-padding) * 0.6)
+        var(--wide-padding);
     color: white;
   }
-  & > :hover, & > :focus {
+  & > :hover,
+  & > :focus {
     text-decoration: none;
     color: white;
     background-color: var(--dark-blue);

@@ -11,7 +11,7 @@ import colemakDh from './european.colemak_dh.kla-layout.json'
   import matrix from './matrix.classical.kla-fingering.json'
   import ergodox from './ergodox.classical.kla-fingering.json'
 
-export const defaultKeySets = {
+const defaultKeySets = {
   'default.kla-set': defaultSet,
   'standard.qwerty.kla-layout': qwerty,
   'european.azerty.kla-layout': azerty,
@@ -32,3 +32,5 @@ export function label(code) {
       '-91': 'Win', '-93': '▤', 127: '⌦', 160: '⍽' }
   return labels[code] ?? String.fromCharCode(code)
 }
+
+export default defaultKeySets

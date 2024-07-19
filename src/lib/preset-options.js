@@ -1,4 +1,4 @@
-const layouts = {
+const presetOptions = {
   'default.kla-set': 'Default Set',
   'famous.kla-set': 'Famous Latin Layouts',
   'standard.tarmak.kla-set': 'Tarmak Set',
@@ -98,4 +98,4 @@ const layouts = {
   },
 }
 
-export default layouts
+export default presetOptions

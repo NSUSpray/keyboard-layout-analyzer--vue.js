@@ -4,8 +4,8 @@ import { polygon } from '@turf/helpers'
 import { getCoords } from '@turf/invariant'
 import union from '@turf/union'
 
-import kleKeyMaps from './kle-key-maps'
-import { dropUntil, objectMap, rotate } from './utilities'
+import kleKeyMaps from './kle-key-maps.js'
+import { dropUntil, objectMap, rotate } from './utilities.js'
 
 // in pixels
 const normKeySize = 50
@@ -30,10 +30,11 @@ function scanCodeFrom(scanCodeString) {
   return (hasExtra? -1 : 1) * parseInt(scanCodeString, 16)
 }
 
-const centersFrom = centersString =>
-  centersString.split(';').map(
-    cs => cs.split(' ').map(xy => (parseFloat(xy) + 0.5) * normKeySize)
-  )
+function centersFrom(centersString) {
+  const toPixels = unit => (unit + 0.5) * normKeySize
+  const toPos = unitPair => unitPair.split(' ').map(parseFloat).map(toPixels)
+  return centersString.split(';').map(toPos)
+}
 
 function readKeyDataFrom(labels) {
   let result = { index: NaN, scanCode: NaN, centers: [[]] }
@@ -41,18 +42,19 @@ function readKeyDataFrom(labels) {
 
   labels = dropUntilPattern(labels, indexPattern)
   if (!labels.length /* no index */) return result
-  result.index = parseInt(labels[0])
+  result.index = Number(labels[0])
 
   const labelsStartingFromScanCode =
-    dropUntilPattern(labels.slice(1), scanCodePattern)
+      dropUntilPattern(labels.slice(1), scanCodePattern)
   if (labelsStartingFromScanCode.length /* has scan code */) {
     result.scanCode = scanCodeFrom(labelsStartingFromScanCode[0])
     labels = labelsStartingFromScanCode
   }
 
-  const labelsStartingFromCenters = dropUntilPattern(labels.slice(1), centersPattern)
+  const labelsStartingFromCenters =
+      dropUntilPattern(labels.slice(1), centersPattern)
   if (labelsStartingFromCenters.length /* has centers */)
-    result.centers = centersFrom(labelsStartingFromCenters[0])
+      result.centers = centersFrom(labelsStartingFromCenters[0])
 
   return result
 }
@@ -67,7 +69,7 @@ function posAndSizeOf({
   let coordsObj = {}
   if (!stepped) {
     const rect = (x, y, w, h) =>
-      polygon([[[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]]])
+        polygon([[[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]]])
     const r1 = rect(x, y, w, h), r2 = rect(x + x2, y + y2, w2, h2)
     const poly = union(r1, r2)
     const coords = getCoords(poly)[0].slice(0, -1)
@@ -78,7 +80,7 @@ function posAndSizeOf({
       coordsObj = { coords: coords.map(xy => xy.map(i => i * normKeySize)) }
     }
   }
-  ;[x, y, w, h] = [x, y, w, h].map(i => i * normKeySize)
+  ;[x, y, w, h] = Array.from([x, y, w, h], i => i * normKeySize)
   return { x: x + shift, y: y + shift, w, h, ...rotationObj, ...coordsObj }
 }
 
@@ -88,14 +90,13 @@ function makeCentersObj(centers, posAndSize) {
   )
   const centersObj = {}
   for (const [j, center] of centers.entries())
-    for (const [i, xy] of ['x', 'y'].entries())
-      centersObj['c' + xy + (j? j + 1 : '')] = posAndSize[xy] + center[i]
+      for (const [i, xy] of ['x', 'y'].entries())
+          centersObj['c' + xy + (j? j + 1 : '')] = posAndSize[xy] + center[i]
   return centersObj
 }
 
-function adjustBoundingBox(
-  { x, y, w, h, a, rx, ry, coords }, { minX, minY, maxX, maxY }
-) {
+function adjustBoundingBox
+    ({ x, y, w, h, a, rx, ry, coords }, { minX, minY, maxX, maxY }) {
   let xw, yh
   if (a) {
     coords ??= [[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]]
@@ -115,8 +116,9 @@ function kleToKla([kbtype, rows]) {
   const keyMap = {}
   const keys = Serial.deserialize(escapeLineFeeds(rows)).keys
   let index, scanCode, centers,
-    posAndSize, scanCodeObj, centersObj, row,
-    bBox = { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity }
+      posAndSize, scanCodeObj, centersObj, row
+  let bBox =
+      { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity }
   for (const key of keys) {
     ({ index, scanCode, centers } = readKeyDataFrom(key.labels))
     posAndSize = posAndSizeOf(key)

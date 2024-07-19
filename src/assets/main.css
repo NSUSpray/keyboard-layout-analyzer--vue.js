@@ -18,8 +18,8 @@ body {
  */
 
 dialog {
-  border-style: none;
   color: var(--black-blue);
+  border-style: none;
 }
 
 figure {
@@ -34,17 +34,22 @@ figcaption {
 }
 
 /* form elements */
-input[type="text"], select, textarea {
+input[type='text'],
+select,
+textarea {
   display: block;
   margin: var(--thin-margin) 0;
   padding: calc(var(--thin-padding) * 0.8) var(--narrow-padding);
-  border: solid 2px var(--white-blue);
-  border-radius: var(--radius);
   font-family: var(--font-family);
   font-size: 1rem;
+  border: solid 2px var(--white-blue);
+  border-radius: var(--radius);
 }
-input[type="text"], select { height: 2.2em; }
-input[type="text"], textarea {
+input[type='text'],
+select
+    { height: 2.2em; }
+input[type='text'],
+textarea {
   transition: border linear, box-shadow linear;
   transition-duration: var(--fast-transition-duration);
   &:focus {
@@ -54,8 +59,10 @@ input[type="text"], textarea {
   }
   &.danger {
     border-color: var(--danger-color);
-    &:hover, &:focus, &[disabled]
-      { border-color: var(--danger-hover-color); }
+    &:hover,
+    &:focus,
+    &[disabled]
+        { border-color: var(--danger-hover-color); }
   }
 }
 select {
@@ -133,9 +140,9 @@ th, td {
 }
 table.left-first :is(th, td):first-child { text-align: left; }
 th {
+  color: black;
   border-width: 2px;
   border-color: var(--dark-dark-blue);
-  color: black;
 }
 td {
   border-width: 1px;
@@ -153,7 +160,8 @@ a {
   color: var(--bright-blue);
   cursor: pointer;
 }
-a:hover, a:focus {
+a:hover,
+a:focus {
   text-decoration: underline;
   color: var(--dark-bright-blue);
 }
@@ -185,7 +193,8 @@ a:hover, a:focus {
     font-style: normal;
   }
   a[href^='javascript:']::after,
-    a[href^='#']::after { content: ''; }
+  a[href^='#']::after
+      { content: ''; }
 
   abbr[title]::after { content: ' (' attr(title) ')'; }
 

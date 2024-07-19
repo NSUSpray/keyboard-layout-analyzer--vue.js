@@ -24,7 +24,7 @@ export function takeWhile(array, predicate) {
 
 
 const objectM = (method, func, obj) =>
-  Object.fromEntries(Object.entries(obj)[method](func))
+    Object.fromEntries(Object.entries(obj)[method](func))
 
 /**
  * Apply the function to all values of a given object.
@@ -48,7 +48,7 @@ export const objectFilter = (func, obj) => objectM('filter', func, obj)
  * @return {String} Found key.
  */
 export const objectKeyByValue = (obj, predicate) =>
-  Object.entries(obj).find(([_, value]) => predicate(value))?.[0]
+    Object.entries(obj).find(([_, value]) => predicate(value))?.[0]
 
 
 /**

@@ -1,12 +1,12 @@
 <script setup>
 import { computed } from 'vue'
-
-import { addStyle } from '../lib/browser'
+import { addStyle } from '../lib/browser.js'
 import { label } from '../lib/default-key-sets'
-import fingers from '../lib/fingers'
-import { objectKeyByValue, objectFilter } from '../lib/utilities'
+import Fingers from '../lib/fingers.js'
+import { objectKeyByValue, objectFilter } from '../lib/utilities.js'
 
 const props = defineProps({ layout: Object })
+
 const keySet = computed(() => props.layout.keySet)
 
 const editorSize = computed(() => {
@@ -15,7 +15,7 @@ const editorSize = computed(() => {
   const x = (keyMap.width - width) / 2
   return {
     width: width,
-    viewBox: `${ x } 0 ${ width } ${ keyMap.height }`
+    viewBox: `${x} 0 ${width} ${keyMap.height}`
   }
 })
 
@@ -25,8 +25,8 @@ const keyMapKeys = computed(() => {
 })
 
 const transform = key =>
-    (key.a? `rotate(${ key.a } ${ key.rx } ${ key.ry }) ` : '')
-        + `translate(${ key.x }, ${ key.y })`
+    (key.a? `rotate(${key.a} ${key.rx} ${key.ry}) ` : '')
+        + `translate(${key.x}, ${key.y})`
 
 function keyData(index) {
   let { primary, shift, altGr, shiftAltGr, finger } = keySet.value.keys[index]
@@ -36,7 +36,7 @@ function keyData(index) {
     top: shift ?? primary,
     bottom: shift && primary,
     altGr, shiftAltGr,
-    fingerClass: objectKeyByValue(fingers, f => f === finger),
+    fingerClass: objectKeyByValue(Fingers, f => f === finger),
   }
 }
 
@@ -57,8 +57,9 @@ const centersOf = key => Object
     }))
 
 function addKeyFillStyles() {
-  const rule = keyClass => `.${keyClass} > :not(g) { fill: var(--${keyClass}); }`
-  const style = Object.keys(fingers).map(rule).join('\n')
+  const makeRule =
+      keyClass => `.${keyClass} > :not(g) { fill: var(--${keyClass}); }`
+  const style = Object.keys(Fingers).map(makeRule).join('\n')
   addStyle(style)
 }
 
@@ -67,19 +68,21 @@ addKeyFillStyles()
 
 <template>
   <svg v-bind="editorSize">
-    <g v-for="(key, index) of keyMapKeys"
-        :transform="transform(key)"
+    <g v-for="(key, index) of keyMapKeys" :key="index"
         :set="{ top, bottom, altGr, shiftAltGr, fingerClass } = keyData(index)"
-        :class="fingerClass">
+        :class="fingerClass"
+        :transform="transform(key)">
       <polygon v-if="key.coords" :points="points(key)" />
       <rect v-else :width="key.w" :height="key.h" />
-      <circle v-if="isFingerStart(index)" v-for="center of centersOf(key)"
-          v-bind="center" r="4" />
+      <template v-if="isFingerStart(index)">
+        <circle v-for="center of centersOf(key)" :key="center"
+            v-bind="center" r="4" />
+      </template>
       <g transform="translate(6, 15)" :set="right =
-          { transform: `translate(${ key.w - 12 })`, 'text-anchor': 'end' }">
+          { transform: `translate(${key.w - 12})`, 'text-anchor': 'end' }">
         <text>{{ top }}</text>
         <text v-bind="right">{{ shiftAltGr }}</text>
-        <g :transform="`translate(0, ${ key.h - 21 })`">
+        <g :transform="`translate(0, ${key.h - 21})`">
           <text>{{ bottom }}</text>
           <text v-bind="right">{{ altGr }}</text>
         </g>
@@ -93,7 +96,8 @@ svg { max-width: 100%; }
 
 svg > g { cursor: pointer; }
 
-rect, polygon {
+rect,
+polygon {
   stroke: var(--black-blue);
   stroke-width: 1.25;
 }
@@ -114,7 +118,9 @@ text { pointer-events: none; }
 
 @media print {
 
-  rect, polygon { fill: none !important; }
+  rect,
+  polygon
+      { fill: none !important; }
 
 }
 </style>
