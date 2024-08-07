@@ -28,16 +28,22 @@ const transform = key =>
     (key.a? `rotate(${key.a} ${key.rx} ${key.ry}) ` : '')
         + `translate(${key.x}, ${key.y})`
 
+const isBothCases = (bottom, top) =>
+    typeof top === 'string' && typeof bottom === 'string'
+    && (top.toLowerCase() === bottom || bottom.toUpperCase() === top)
+
 function keyData(index) {
   let { primary, shift, altGr, shiftAltGr, finger } = keySet.value.keys[index]
   ;[primary, shift, altGr, shiftAltGr] = [primary, shift, altGr, shiftAltGr]
       .map(code => code && label(code))
-  return {
-    top: shift ?? primary,
-    bottom: shift && primary,
-    altGr, shiftAltGr,
-    fingerClass: objectKeyByValue(Fingers, f => f === finger),
-  }
+  const top = shift ?? primary
+  let bottom = shift && primary
+  if (isBothCases(bottom, top))
+      bottom = undefined
+  if (isBothCases(altGr, shiftAltGr))
+      altGr = shiftAltGr, shiftAltGr = undefined
+  const fingerClass = objectKeyByValue(Fingers, f => f === finger)
+  return { top, bottom, altGr, shiftAltGr, fingerClass }
 }
 
 const points = key => key.coords
