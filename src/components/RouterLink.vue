@@ -12,7 +12,7 @@ const iconTitle = useSlots().default?.()[0].children
 </script>
 
 <template>
-  <RouterLink :to="to" :title="title">
+  <RouterLink :to :title>
     <span class="icon" :title="iconTitle">{{ icon }}</span>
     <span class="label"><slot>{{ title }}</slot></span>
   </RouterLink>

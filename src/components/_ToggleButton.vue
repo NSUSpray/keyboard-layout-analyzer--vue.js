@@ -3,7 +3,7 @@ defineProps({ title: String })
 </script>
 
 <template>
-  <button type="button" class="toggle-button" :title="title"
+  <button type="button" class="toggle-button" :title
       @click="e => e.target.focus()">
     <slot /><span class="caret" />
   </button>

@@ -140,7 +140,7 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
   <form id="editor">
     <fieldset id="keyboard">
       <template v-for="(layout, index) of layoutsStore.layouts" :key="index">
-        <LayoutEditor v-show="index === vIndex" :layout="layout" />
+        <LayoutEditor v-show="index === vIndex" :layout />
       </template>
     </fieldset>
     <fieldset>

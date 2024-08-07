@@ -24,14 +24,14 @@ const main = ref(null)
     (no v-else, no <template>). Otherwise, any click event will bubble up.
   -->
   <div v-if="!onClick" class="button-group">
-    <ToggleButton ref="main" :disabled="disabled" :title="title">{{ value }}
+    <ToggleButton ref="main" :disabled :title>{{ value }}
       <DropButtonMenu><slot /></DropButtonMenu>
     </ToggleButton>
   </div>
   <div v-if="onClick" class="button-group"><!-- separate toggle -->
-    <button type="button" ref="main" :disabled="disabled" :title="title"
+    <button type="button" ref="main" :disabled :title
         @click="onClick" v-shortkey="shortkey">{{ value }}</button>
-    <ToggleButton :disabled="disabled">
+    <ToggleButton :disabled>
       <DropButtonMenu><slot /></DropButtonMenu>
     </ToggleButton>
   </div>
