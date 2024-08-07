@@ -10,28 +10,24 @@ const props = defineProps({ keyboardType: String })
 
 
 const dialog = ref(null)
+const confirmButton = ref(null)
 const importButton = ref(null)
 const textarea = ref(null)
 
 const confirm = ref(false)
-const filter = ref(defaultImportFilterValue)
 const isClosed = ref(true)
 const error = ref(null)
 
-const importFilterValues =
-  { all: 'All', nonLetters: 'Non-Letters', altGr: '‘Alt Gr’ Layer' }
-const defaultImportFilterValue = 'all'
 let transitionDuration
 onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
 
 
-const focus = (element, timeout) =>
-    setTimeout(() => element.value.focus(), timeout ?? 0)
+const focus = (element, timeout=0) =>
+    setTimeout(() => element.value.focus(), timeout)
 
 function show(textareaValue) {
   textarea.value.value = textareaValue
   confirm.value = false
-  filter.value = defaultImportFilterValue
   error.value = null
   dialog.value.showModal()
   textarea.value.scrollTop = 0
@@ -40,7 +36,7 @@ function show(textareaValue) {
 }
 
 
-function verifyAndEmit() {
+function verifyAndEmit(filterValue='all') {
   const json = textarea.value.value
   let object, result
 
@@ -49,7 +45,9 @@ function verifyAndEmit() {
 
   result = layoutSchema.safeParse(object)
   if (result.success)
-      return emit('import', 'keySet', result.data, json, filter.value)
+      return emit('import', 'keySet', result.data, json, filterValue)
+
+  if (filterValue !== 'all') return
 
   result = fingeringSchema.safeParse(object)
   if (result.success) {
@@ -60,9 +58,9 @@ function verifyAndEmit() {
 
   result = setSchema.safeParse(object)
   if (result.success) {
-    if (confirm.value)
-        emit('import', 'keySets', result.data, json)
-    return confirm.value = !confirm.value
+    confirm.value = !confirm.value
+    return confirm.value?
+        focus(confirmButton) : emit('import', 'keySets', result.data, json)
   }
 
   error.value = 'Layout does not satisfy any possible schema'
@@ -87,7 +85,8 @@ function onPaste() {
 <template>
   <dialog ref="dialog" :class="{ closed: isClosed }" @cancel="close">
     <h3>Import Layouts</h3>
-    <button title="Close" @click="close" v-shortkey="['Esc']">×</button>
+    <button type="button" title="Close" @click="close"
+        v-shortkey="['Esc']">×</button>
 
     <div>
       <div class="textarea-n-status">
@@ -99,32 +98,24 @@ function onPaste() {
           in the textbox above and press ‘Import’ to load.</p>
     </div>
 
-    <form>
-      <fieldset v-show="!confirm">
-        <label>Filter</label>
-        <div class="controls">
-          <label v-for="(label, value) in importFilterValues">
-            <input type="radio" name="filter" :value="value"
-                v-model="filter">{{ label }}</label>
-        </div>
-      </fieldset>
-      <fieldset id="buttons">
-        <div class="controls">
-          <button type="button" ref="importButton"
-              :class="{ warning: confirm }"
-              :disabled="error"
-              @blur="confirm = false" @click="verifyAndEmit">{{
-            confirm? 'Import in Place of All Current' : 'Import'
-          }}</button>
-          <button type="button" @click="close">Cancel</button>
-        </div>
-      </fieldset>
-    </form>
+    <div class="controls">
+      <button v-if="confirm" ref="confirmButton" class="warning"
+          @blur="confirm = false" @click="verifyAndEmit()">
+        Import in Place of All Current
+      </button>
+      <DropButton v-else ref="importButton" :disabled="error"
+          value="Import" @click="verifyAndEmit()">
+        <a @click="verifyAndEmit('nonLetters')">Import Non-Letters</a>
+        <a @click="verifyAndEmit('altGr')">Import ‘Alt Gr’ Layer</a>
+      </DropButton>
+      <button type="button" @click="close">Cancel</button>
+    </div>
   </dialog>
 </template>
 
 <style scoped>
 dialog {
+  overflow: visible;
   bottom: 0;
   --width: min(100% - var(--content-margin) * 2, 560px);
   min-width: var(--width); max-width: var(--width);
@@ -145,6 +136,14 @@ dialog > * {
   margin: 0;
   padding: var(--padding);
   &:is(h3 + button, h3) { line-height: 1em; }
+  &:first-child {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+  &:last-child {
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
 }
 
 .textarea-n-status { position: relative; }
@@ -163,10 +162,8 @@ h3 + button {
       { color: var(--black-blue); }
 }
 
-fieldset { margin: 0; }
-#buttons { flex-grow: 1; justify-content: flex-end; }
-
-form {
+.controls {
+  justify-content: flex-end;
   border-top: solid 1px var(--light-gray);
   background-color: var(--wwhite-blue);
 }

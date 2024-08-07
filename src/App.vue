@@ -13,6 +13,7 @@ const rowFirstLastUpdate = rowFirstLast(
 onBeforeMount(() => {
   window.addEventListener('resize', rowFirstLastUpdate)
   document.addEventListener('DOMContentLoaded', setDummyHrefAttribute)
+  document.addEventListener('DOMNodeInserted', setDummyHrefAttribute)
   useLayoutsStore().setLayouts()
 })
 
@@ -26,6 +27,7 @@ onUpdated(rowFirstLastUpdate)
 onUnmounted(() => {
   window.removeEventListener('resize', rowFirstLastUpdate)
   document.removeEventListener('DOMContentLoaded', setDummyHrefAttribute)
+  document.removeEventListener('DOMNodeInserted', setDummyHrefAttribute)
 })
 
 watch(useRoute(), rowFirstLastUpdate)
