@@ -1,6 +1,6 @@
 import defaultKeyMaps from './default-key-maps.js'
-import { sameFingerGroup } from './fingers.js'
-import { isLetterCode } from './utilities.js'
+import Fingers, { sameFingerGroup } from './fingers.js'
+import { isLetterCode, takeWhile } from './utilities.js'
 
 export const keyMapTypes = {
   standard: 'ANSI',
@@ -105,3 +105,48 @@ export function convertType(set1, map1, type2, defaultSet2) {
   }
   return set2
 }
+
+
+
+/**
+ * Find the first letter sequence: e. g. QWERTY, or AOEUID for Dvorak.
+ * @param {Array} keys Keys.
+ * @param {Number} startFinger Start finger.
+ * @param {Number} minGroupLen Minimal length of the key group.
+ * @return {Number} Index of the first key of the found sequence.
+ */
+function firstOfLetterKeyGroup(keys, startFinger, minGroupLen=4) {
+  const satisfiesStartFinger = key =>
+      !startFinger || key.finger === startFinger
+  function startsGroup(key) {
+    const slice = keys.slice(key.id, key.id + minGroupLen)
+    return slice.length === minGroupLen
+        && slice.every(key => isLetterCode(key.primary))
+  }
+  return keys.filter(satisfiesStartFinger).find(startsGroup)?.id
+}
+
+/**
+ * Make label if it doesn’t exist.
+ * @param {Object} keySet Key set.
+ * @param {Number} index Index of layout in key set.
+ * @param {Number} maxGroupLen Maximal length of the generated label.
+ * @return {String} Label.
+ */
+export function forceLabel({ label, keys }, index, maxGroupLen=6) {
+  label = label.trim()
+  if (label) return label
+  const firstKeyIndex =
+      firstOfLetterKeyGroup(keys, Fingers.LEFT_PINKY)
+      ?? firstOfLetterKeyGroup(keys)
+  if (!firstKeyIndex) return 'Layout ' + index
+  const primaryCodeSlice = keys
+      .slice(firstKeyIndex, firstKeyIndex + maxGroupLen)
+      .map(key => key.primary)
+  return takeWhile(primaryCodeSlice, isLetterCode)
+      .map(String.fromCharCode)
+      .join()
+      .toUpperCase()
+}
+
+export const typeSuffixes = { european_ss: 'ˢˢ', matrix: 'ᴹ', ergodox: 'ᴱ' }

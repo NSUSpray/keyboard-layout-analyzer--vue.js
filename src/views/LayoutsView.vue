@@ -5,15 +5,15 @@ import DropButton from '../components/DropButton.vue'
 import ImportDialog from '../components/ImportDialog.vue'
 import Jumbotron from '../components/Jumbotron.vue'
 import LayoutEditor from '../components/LayoutEditor.vue'
+import Paginate from '../components/Paginate.vue'
 import Select from '../components/Select.vue'
 
 import useLayoutsStore from '@/stores/layouts.js'
 
 import { downloadJson, processEventHandler } from '../lib/browser.js'
 import defaultKeyMaps from '../lib/default-key-maps.js'
-import { convertType, filteredAssign, keepOnlyFingering, keyMapTypes } from '../lib/keyboard.js'
+import * as Kb from '../lib/keyboard.js'
 import presetOptions from '../lib/preset-options.js'
-import { shortTitle } from '../lib/title.js'
 import { objectKeyByValue } from '../lib/utilities.js'
 
 
@@ -33,34 +33,28 @@ const isLayoutPreset = computed
 const importDialog = ref(null)
 const clipboardDouble = ref('')
 
-let lastIndex = 1
-watch(vIndex, (_, prevVal) => {
-  lastIndex = prevVal
+watch(vIndex, () => {
   if (isNotSameTypeOfFingering(preset.value)) preset.value = ''
 })
 
-
-function prev() {
-  const len = keySets.length
-  vIndex.value = (vIndex.value + len - 1) % len
-}
-
-function next() {
-  const len = keySets.length
-  vIndex.value = (vIndex.value + 1) % len
-}
 
 async function onChangeType(event) {
   const targetType = event.target.value
   const defaultPreset = targetType + '.classical.kla-fingering'
   const defaultSet = await layoutsStore.fetchKeySet(defaultPreset)
-  keySets[vIndex.value] = convertType
+  keySets[vIndex.value] = Kb.convertType
       (toRaw(vSet.value), vMap.value, targetType, defaultSet)
+}
+
+function paginateLabel(keySet, index) {
+  const label = Kb.forceLabel(keySet, index)
+  const suffix = Kb.typeSuffixes[keySet.keyboardType] ?? ''
+  return label + suffix
 }
 
 const copyJson = processEventHandler(async (_, fingering=false) => {
   let keySet = vSet.value
-  if (fingering) keySet = keepOnlyFingering(toRaw(keySet))
+  if (fingering) keySet = Kb.keepOnlyFingering(toRaw(keySet))
   const keySetJson = JSON.stringify(keySet, null, 4)
   navigator.clipboard.writeText(keySetJson)
   clipboardDouble.value = keySetJson
@@ -77,7 +71,7 @@ const assignByScanCode = (srcKeyMap, filterValue) => (srcKey, index) => {
   const scan = srcKeyMap[index].scan
   const targetIndex = objectKeyByValue(vMap.value, k => k.scan === scan)
   if (targetIndex >= 0)
-      filteredAssign(filterValue, vSet.value.keys[targetIndex], srcKey)
+      Kb.filteredAssign(filterValue, vSet.value.keys[targetIndex], srcKey)
 }
 
 function updateKeySet(type, src, filterValue='all') {
@@ -111,7 +105,7 @@ function exportJson(_, fingering=false) {
   const filename = `${vType.value.trim()}.${keySet.label.trim()}`
       .toLowerCase().replace(/\s/g, '-')
       + '.kla-' + (fingering? 'fingering' : 'layout')
-  if (fingering) keySet = keepOnlyFingering(toRaw(keySet))
+  if (fingering) keySet = Kb.keepOnlyFingering(toRaw(keySet))
   downloadJson(keySet, filename)
 }
 
@@ -147,7 +141,7 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
       <label>Name</label>
       <div class="controls">
         <input type="text" id="name" v-model="vSet.label" />
-        <Select v-model="vType" :options="keyMapTypes"
+        <Select v-model="vType" :options="Kb.keyMapTypes"
             title="Change to convert keyboard type" @change="onChangeType" />
       </div>
     </fieldset>
@@ -162,22 +156,8 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
     </fieldset>
   </form>
 
-  <form id="layout-switch" class="button-group">
-    <template v-for="(keySet, index) of keySets" :key="keySet.tag">
-      <label class="btn small" tabindex="0"
-          :set="short_title = shortTitle(keySets, index)"
-          :title="keySet.label===short_title? '' : keySet.label">
-        <input type="radio" :id="keySet.tag" v-model="vIndex" :value="index">
-        {{ short_title }}
-      </label>
-    </template>
-    <button type="button" class="small" title="Previous layout" @click="prev"
-        v-shortkey="['arrowleft']">🡠</button>
-    <button type="button" class="small" title="Next layout" @click="next"
-        v-shortkey="['arrowright']">🡢</button>
-    <button type="button" class="small" title="Toggle recent layouts"
-        @click="vIndex = lastIndex" v-shortkey="['space']">⭯</button>
-  </form>
+  <Paginate :labels="keySets.map(paginateLabel)" v-model="vIndex"
+      :max-width="118" />
   <form></form>
 
   <form>
@@ -254,29 +234,4 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
 }
 
 #more-info { margin-left: var(--wide-margin); }
-
-#layout-switch {
-  flex-wrap: nowrap;
-  padding: var(--padding) 0;
-  justify-content: center;
-  & input { display: none; }
-  & > * {
-    border: none !important;
-    background-color: var(--dark-blue);
-    transition: none;
-  }
-  & > :hover,
-  & > :focus
-      { background-color: var(--bblue); }
-  & label {
-    flex-basis: max-content;
-    min-width: 2.2em;
-    white-space: nowrap;
-    &:has(:checked) {
-      color: var(--black-blue);
-      background-color: var(--wwhite-blue);
-      cursor: default;
-    }
-  }
-}
 </style>
