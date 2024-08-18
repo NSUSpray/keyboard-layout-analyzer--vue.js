@@ -38,30 +38,34 @@ function fadeOutOnClick(selector) {
 
 <template>
   <!--
-    Works correctly only with two separated V-IFs inside DIVs
-    (no v-else, no <template>). Otherwise, any click event will bubble up.
+    Be careful!
+    Check for unwanted click event bubbling when using v-if and <template>.
   -->
-  <div v-if="!onClick" class="button-group">
-    <button type="button" ref="main" class="toggle" :disabled :title
-        @click="e => e.target.focus()">
-      {{ value }}
-      <div ref="menu" class="menu" :class="{ 'fade-out': isFadeOut }">
-        <slot />
-      </div>
-      <span class="caret" />
-    </button>
-  </div>
-  <!-- separate toggle -->
-  <div v-if="onClick" class="button-group">
-    <button type="button" ref="main" :disabled :title
-        @click="onClick" v-shortkey="shortkey">{{ value }}</button>
-    <button type="button" class="toggle" :disabled
-        @click="e => e.target.focus()">
-      <div ref="menu" class="menu" :class="{ 'fade-out': isFadeOut }">
-        <slot />
-      </div>
-      <span class="caret" />
-    </button>
+  <div class="button-group">
+
+    <template v-if="!onClick">  <!-- self-toggling -->
+      <button type="button" ref="main" class="toggle" :disabled :title
+          @click="e => e.target.focus()">
+        {{ value }}
+        <div ref="menu" class="menu" :class="{ 'fade-out': isFadeOut }">
+          <slot />
+        </div>
+        <span class="caret" />
+      </button>
+    </template>
+
+    <template v-if="onClick">  <!-- separate toggle -->
+      <button type="button" ref="main" :disabled :title
+          @click="onClick" v-shortkey="shortkey">{{ value }}</button>
+      <button type="button" class="toggle" :disabled
+          @click="e => e.target.focus()">
+        <div ref="menu" class="menu" :class="{ 'fade-out': isFadeOut }">
+          <slot />
+        </div>
+        <span class="caret" />
+      </button>
+    </template>
+
   </div>
 </template>
 

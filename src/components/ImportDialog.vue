@@ -100,11 +100,11 @@ function onPaste() {
     </div>
 
     <div class="controls">
-      <button v-if="confirm" ref="confirmButton" class="warning"
+      <button v-show="confirm" ref="confirmButton" class="warning"
           @blur="confirm = false" @click="verifyAndEmit()">
         Import in Place of All Current
       </button>
-      <DropButton v-else ref="importButton" :disabled="error"
+      <DropButton v-show="!confirm" ref="importButton" :disabled="error"
           value="Import" @click="verifyAndEmit()">
         <a @click="verifyAndEmit('nonLetters')">Import Non-Letters</a>
         <a @click="verifyAndEmit('altGr')">Import ‘Alt Gr’ Layer</a>
