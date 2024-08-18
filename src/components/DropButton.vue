@@ -66,10 +66,7 @@ function fadeOutOnClick(selector) {
 </template>
 
 <style scoped>
-.button-group {
-  display: inline-block;
-  position: relative;
-}
+.button-group { position: relative; }
 
 .toggle { cursor: default; }
 .toggle:not(:first-child) {

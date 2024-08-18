@@ -4,7 +4,7 @@ import { computed, ref, toRaw, watch } from 'vue'
 import DropButton from '../components/DropButton.vue'
 import ImportDialog from '../components/ImportDialog.vue'
 import Jumbotron from '../components/Jumbotron.vue'
-import LayoutEditor from '../components/LayoutEditor.vue'
+import Keyboard from '../components/Keyboard.vue'
 import Paginate from '../components/Paginate.vue'
 import Select from '../components/Select.vue'
 
@@ -134,7 +134,7 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
   <form id="editor">
     <fieldset id="keyboard">
       <template v-for="(layout, index) of layoutsStore.layouts" :key="index">
-        <LayoutEditor v-show="index === vIndex" :layout />
+        <Keyboard v-show="index === vIndex" :layout />
       </template>
     </fieldset>
     <fieldset>
@@ -171,7 +171,7 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
           <a title="Copy the whole set" @click="copyAllJson">Copy All Layouts</a>
         </DropButton>
         <button type="button" title="Load some layout/fingering/set here"
-            @click="importDialog.show(clipboardDouble)"
+            @click="importDialog.show(vType, clipboardDouble)"
             v-shortkey="['ctrl', 'v']">Paste</button>
         <DropButton value="Export" title="Save this layout to file"
             @click="exportJson">
@@ -185,7 +185,7 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
     <fieldset>
       <div class="controls">
         <Select id="presets" :options="presetOptions" v-model="preset"
-            :isOptionDisabled="opt => isNotSameTypeOfFingering(opt.value)">
+            :is-option-disabled="opt => isNotSameTypeOfFingering(opt.value)">
           Select Preset</Select>
         <DropButton :disabled="!preset" value="Load"
             title="Load preset in place of current layout or whole set"
@@ -201,7 +201,7 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
     </fieldset>
   </form>
 
-  <ImportDialog ref="importDialog" :keyboardType="vType" @import="onPaste" />
+  <ImportDialog ref="importDialog" @import="onPaste" />
 </template>
 
 <style scoped>

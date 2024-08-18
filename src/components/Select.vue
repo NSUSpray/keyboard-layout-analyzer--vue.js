@@ -1,10 +1,10 @@
 <script setup>
+const selected = defineModel({ type: String })
+
 const props = defineProps({
   options: Object, 
   isOptionDisabled: { type: Function, default: () => false },
 })
-
-const selected = defineModel({ type: String })
 </script>
 
 <template>

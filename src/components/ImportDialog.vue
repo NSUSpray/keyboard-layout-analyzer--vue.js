@@ -6,7 +6,6 @@ import { transitionDurationOf } from '../lib/browser.js'
 
 const emit = defineEmits(['import'])
 defineExpose({ close, show })
-const props = defineProps({ keyboardType: String })
 
 
 const dialog = ref(null)
@@ -18,6 +17,7 @@ const confirm = ref(false)
 const isClosed = ref(true)
 const error = ref(null)
 
+let keyboardType
 let transitionDuration
 onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
 
@@ -25,7 +25,8 @@ onMounted(() => transitionDuration = transitionDurationOf(dialog.value))
 const focus = (element, timeout=0) =>
     setTimeout(() => element.value.focus(), timeout)
 
-function show(textareaValue) {
+function show(kbtype, textareaValue) {
+  keyboardType = kbtype
   textarea.value.value = textareaValue
   confirm.value = false
   error.value = null
@@ -51,7 +52,7 @@ function verifyAndEmit(filterValue='all') {
 
   result = fingeringSchema.safeParse(object)
   if (result.success) {
-    if (result.data.keyboardType !== props.keyboardType)
+    if (result.data.keyboardType !== keyboardType)
         return error.value = 'Fingering keyboard type must match target'
     return emit('import', 'fingering', result.data, json)
   }
