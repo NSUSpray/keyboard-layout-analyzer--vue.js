@@ -1,0 +1,59 @@
+@import './base.css';
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: var(--wide-margin) 0;
+}
+
+fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin: calc(var(--narrow-margin) * 0.75) 0;
+  padding: 0;
+  border-style: none;
+
+  &.row-first {
+    &:not(:has(label)) { margin-left: var(--aside-width); }
+    & > label {
+      width: var(--aside-width); 
+      padding-right: var(--wide-padding);
+    }
+  }
+
+  & > label {
+    margin: var(--narrow-margin) 0;
+    padding-right: var(--narrow-padding);
+    text-align: right;
+    white-space: nowrap;
+    /*min-width: max-content;*/
+    &::after { content: ':'; }
+    &.row-last {
+      flex-basis: 100%;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+    }
+  }
+
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  & > :not(:last-child) { margin-right: var(--narrow-margin); }
+}
+
+
+
+dialog {
+
+  & .controls {
+    justify-content: flex-end;
+    border-top: solid 1px var(--light-gray);
+    background-color: var(--wwhite-blue);
+  }
+  
+}

@@ -120,7 +120,6 @@ dialog {
   bottom: 0;
   --width: min(100% - var(--content-margin) * 2, 560px);
   min-width: var(--width); max-width: var(--width);
-  padding: 0;
   border-radius: var(--radius);
   box-shadow:
       var(--sharp-shadow),
@@ -135,7 +134,6 @@ dialog {
 }
 dialog > * {
   margin: 0;
-  padding: var(--padding);
   &:is(h3 + button, h3) { line-height: 1em; }
   &:first-child {
     border-top-left-radius: inherit;
@@ -161,12 +159,6 @@ h3 + button {
   &:hover,
   &:focus
       { color: var(--black-blue); }
-}
-
-.controls {
-  justify-content: flex-end;
-  border-top: solid 1px var(--light-gray);
-  background-color: var(--wwhite-blue);
 }
 
 .status {

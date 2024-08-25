@@ -1,0 +1,119 @@
+@import './base.css';
+
+button, .btn {
+  display: inline-block;
+  padding:
+      calc(var(--narrow-padding) * 0.8)
+      var(--wide-padding);
+  line-height: 1.4rem;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  color: white;
+  background-color: var(--blue);
+  border-style: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition-duration: var(--transition-duration);
+
+  &:hover,
+  &:focus,
+  &[disabled]
+      { background-color: var(--light-blue); }
+
+  &.in-process,
+  &:has(.in-process) {
+    background-color: var(--light-bright-blue);
+    opacity: 1.0;
+  }
+
+  &.large {
+    padding:
+        calc(var(--wide-padding) * 0.9)
+        calc(var(--wide-padding) * 1.8);
+    font-size: 1.25rem;
+    border-radius: var(--large-radius);
+  }
+
+  &.small {
+    padding:
+        var(--thin-padding)
+        calc(var(--narrow-padding) * 1.25);
+  }
+
+  &.warning {
+    background-color: var(--warning-color);
+    &:hover,
+    &:focus,
+    &[disabled]
+        { background-color: var(--warning-hover-color); }
+  }
+
+  &:is(.button-group *) {
+
+    &:not(:last-child) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &:not(:first-child) {
+      border-left: solid 1px var(--light-blue);
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      &[disabled] { border-color: var(--light-light-blue); }
+    }
+
+  }
+
+}
+
+
+
+input[type='text'],
+select,
+textarea {
+  display: block;
+  margin: var(--thin-margin) 0;
+  padding: calc(var(--thin-padding) * 0.8) var(--narrow-padding);
+  font-family: var(--font-family);
+  font-size: 1rem;
+  border: solid 2px var(--white-blue);
+  border-radius: var(--radius);
+}
+
+input[type='text'],
+select
+    { height: 2.2em; }
+
+input[type='text'],
+textarea {
+  transition: border linear, box-shadow linear;
+  transition-duration: var(--fast-transition-duration);
+
+  &:focus {
+    border-color: var(--light-bright-blue-translucent);
+    box-shadow: var(--bright-glow);
+    outline: 0;
+  }
+
+  &.danger {
+    border-color: var(--danger-color);
+    &:hover,
+    &:focus,
+    &[disabled]
+        { border-color: var(--danger-hover-color); }
+  }
+
+}
+
+select {
+  background-color: white;
+  cursor: pointer;
+  &:invalid { color: var(--light-light-blue); }
+}
+
+option, optgroup {
+  color: initial;
+  &[disabled] { color: var(--gray); }
+}
+
+optgroup { font-style: normal; }

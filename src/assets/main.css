@@ -1,5 +1,6 @@
 @import './base.css';
-@import './button.css';
+@import './form.css';
+@import './inputs.css';
 
 body {
   margin: 0;
@@ -13,15 +14,6 @@ body {
   min-height: calc(100vh - var(--header-height));
 }
 
-/*
- * block elements
- */
-
-dialog {
-  color: var(--black-blue);
-  border-style: none;
-}
-
 figure {
   display: flex;
   flex-direction: column;
@@ -31,97 +23,6 @@ figcaption {
   margin: var(--thin-margin);
   font-size: 0.8rem;
   color: var(--dark-gray);
-}
-
-/* form elements */
-input[type='text'],
-select,
-textarea {
-  display: block;
-  margin: var(--thin-margin) 0;
-  padding: calc(var(--thin-padding) * 0.8) var(--narrow-padding);
-  font-family: var(--font-family);
-  font-size: 1rem;
-  border: solid 2px var(--white-blue);
-  border-radius: var(--radius);
-}
-input[type='text'],
-select
-    { height: 2.2em; }
-input[type='text'],
-textarea {
-  transition: border linear, box-shadow linear;
-  transition-duration: var(--fast-transition-duration);
-  &:focus {
-    border-color: var(--light-bright-blue-translucent);
-    box-shadow: var(--bright-glow);
-    outline: 0;
-  }
-  &.danger {
-    border-color: var(--danger-color);
-    &:hover,
-    &:focus,
-    &[disabled]
-        { border-color: var(--danger-hover-color); }
-  }
-}
-select {
-  background-color: white;
-  cursor: pointer;
-  &:invalid { color: var(--light-light-blue); }
-}
-option, optgroup {
-  color: initial;
-  [disabled] { color: var(--gray); }
-}
-optgroup { font-style: normal; }
-
-/* form and its subsets */
-form {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: var(--wide-margin) 0;
-}
-fieldset {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  margin: calc(var(--narrow-margin) * 0.75) 0;
-  padding: 0;
-  border-style: none;
-  &.row-first {
-    &:not(:has(label)) { margin-left: var(--aside-width); }
-    & > label:not(dialog *) {
-      width: var(--aside-width); 
-      padding-right: var(--wide-padding);
-    }
-  }
-  & > label {
-    margin: var(--narrow-margin) 0;
-    padding-right: var(--narrow-padding);
-    text-align: right;
-    white-space: nowrap;
-    /*min-width: max-content;*/
-    &::after { content: ':'; }
-    &.row-last {
-      flex-basis: 100%;
-      margin: 0;
-      padding: 0;
-      text-align: left;
-    }
-  }
-}
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  & > :not(:last-child) { margin-right: var(--narrow-margin); }
-}
-
-dialog > :is(h1, h2, h3, h4, h5, h6) {
-  text-align: center;
-  color: white;
-  background-color: var(--blue);
 }
 
 hr { border: solid 1px var(--dark-dark-blue); }
@@ -151,10 +52,6 @@ td {
 
 ul, ol { padding-left: calc(var(--wide-padding) * 1.25); }
 
-/*
- * inline elements
- */
-
 a {
   text-decoration: none;
   color: var(--bright-blue);
@@ -164,6 +61,25 @@ a:hover,
 a:focus {
   text-decoration: underline;
   color: var(--dark-bright-blue);
+}
+
+
+
+dialog {
+
+  padding: 0;
+  color: var(--black-blue);
+  border-style: none;
+
+  & > * {
+    padding: var(--padding);
+    &:is(h1, h2, h3, h4, h5, h6) {
+      text-align: center;
+      color: white;
+      background-color: var(--blue);
+    }
+  }
+
 }
 
 
