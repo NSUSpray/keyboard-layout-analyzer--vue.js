@@ -71,10 +71,10 @@ const idsFrom = keyMap => Object.keys(keyMap).map(Number).filter(isFinite)
 
 /**
  * Convert layout of a given key set and key map to the target type.
- * @param {Object} set1 Original key set.
- * @param {Object} map1 Original key map.
- * @param {String} type2 Target keyboard type.
- * @param {Object} defaultSet2 Source of default key data.
+ * @param {Object} set1 - Original key set.
+ * @param {Object} map1 - Original key map.
+ * @param {String} type2 - Target keyboard type.
+ * @param {Object} defaultSet2 - Source of default key data.
  * @return Result of conversion: key set with the target type.
  */
 export function convertType(set1, map1, type2, defaultSet2) {
@@ -110,9 +110,9 @@ export function convertType(set1, map1, type2, defaultSet2) {
 
 /**
  * Find the first letter sequence: e. g. QWERTY, or AOEUID for Dvorak.
- * @param {Array} keys Keys.
- * @param {Number} startFinger Start finger.
- * @param {Number} minGroupLen Minimal length of the key group.
+ * @param {Array} keys - Keys.
+ * @param {Number} startFinger - Start finger.
+ * @param {Number} minGroupLen - Minimal length of the key group.
  * @return {Number} Index of the first key of the found sequence.
  */
 function firstOfLetterKeyGroup(keys, startFinger, minGroupLen=4) {
@@ -128,9 +128,9 @@ function firstOfLetterKeyGroup(keys, startFinger, minGroupLen=4) {
 
 /**
  * Make label if it doesn’t exist.
- * @param {Object} keySet Key set.
- * @param {Number} index Index of layout in key set.
- * @param {Number} maxGroupLen Maximal length of the generated label.
+ * @param {Object} keySet - Key set.
+ * @param {Number} index - Index of layout in key set.
+ * @param {Number} maxGroupLen - Maximal length of the generated label.
  * @return {String} Label.
  */
 export function forceLabel({ label, keys }, index, maxGroupLen=6) {

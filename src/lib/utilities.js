@@ -1,8 +1,9 @@
 /**
  * Drop the initial elements of a given array until an element matching a given
  * predicate is found.
- * @param {Array} array Processed array.
- * @param {Function} predicate Condition which you want to drop array elements.
+ * @param {Array} array - Processed array.
+ * @param {Function} predicate
+ * - Condition which you want to drop array elements.
  * @return {Array}
  */
 export function dropUntil(array, predicate) {
@@ -13,8 +14,8 @@ export function dropUntil(array, predicate) {
 /**
  * Take the initial elements of a given array until an element not matching a
  * given predicate is found.
- * @param {Array} array Processed array.
- * @param {Function} predicate Condition which you want to take array elements.
+ * @param {Array} array - Processed array.
+ * @param {Function} predicate - Condition which you want to take array elements.
  * @return {Array}
  */
 export function takeWhile(array, predicate) {
@@ -28,22 +29,22 @@ const objectM = (method, func, obj) =>
 
 /**
  * Apply the function to all values of a given object.
- * @param {Function} func Function to apply.
- * @param {Object} obj Processed object.
+ * @param {Function} func - Function to apply.
+ * @param {Object} obj - Processed object.
  * @return {Object} New mapped object.
  */
 export const objectMap = (func, obj) => objectM('map', func, obj)
 
 /**
  * Filter the object where a given predicate function returns “true”.
- * @param {Function} func Predicate.
- * @param {Object} obj Processed object.
+ * @param {Function} func - Predicate.
+ * @param {Object} obj - Processed object.
  * @return {Object} New filtered object.
  */
 export const objectFilter = (func, obj) => objectM('filter', func, obj)
 
 /**
- * @param {Object} obj Object to find a key by a given value.
+ * @param {Object} obj - Object to find a key by a given value.
  * @param {Function} predicate
  * @return {String} Found key.
  */
@@ -53,9 +54,9 @@ export const objectKeyByValue = (obj, predicate) =>
 
 /**
  * Rotate the point around a given pivot by a given angle.
- * @param {Array[Number]} point Point coordinates.
- * @param {Number} theta Rotate angle in degrees.
- * @param {Array[Number]} pivot Pivot point coordinates.
+ * @param {Array[Number]} point - Point coordinates.
+ * @param {Number} theta - Rotate angle in degrees.
+ * @param {Array[Number]} pivot - Pivot point coordinates.
  * @return {Array[Number]} Rotated point coordinates.
  */
 export function rotate(point, theta, pivot) {
@@ -72,7 +73,7 @@ export function rotate(point, theta, pivot) {
 
 /**
  * Check that the character code matches the alphabetic character.
- * @param {Number} charCode Character code.
+ * @param {Number} charCode - Character code.
  * @return {Boolean} True if it’s a letter character, otherwise false.
  */
 export function isLetterCode(charCode) {

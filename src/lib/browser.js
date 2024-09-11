@@ -2,7 +2,8 @@ const rowFirstClass = 'row-first'
 const rowLastClass = 'row-last'
 
 /**
- * @param {Object} parent Element within which child elements will be searched.
+ * @param {Object} parent
+ * - Element within which child elements will be searched.
  * @link https://copyprogramming.com/howto/is-it-possible-to-target-the-first-and-the-last-element-per-row-in-a-flex-layout
  */
 function rowFirstLastUpdate(parent) {
@@ -21,7 +22,7 @@ function rowFirstLastUpdate(parent) {
 
 /**
  * Make a function that marks the first/last elements within given wrappers.
- * @param {String} parentSelector CSS selector of the wrapper elements.
+ * @param {String} parentSelector - CSS selector of the wrapper elements.
  * @return {Function}
  */
 export const rowFirstLast = parentSelector => () =>
@@ -46,9 +47,9 @@ const transitionDuration =
 
 /**
  * Event callback decorator that adds a class to the event target.
- * @param {Promise} func Event callback.
+ * @param {Promise} func - Event callback.
  * @param {Function} errorHandler
- * @param {String} processClass Class to be added. Default—“in-process”.
+ * @param {String} processClass - Class to be added. Default—“in-process”.
  * @return {Promise} Decorated event callback.
  */
 export function processEventHandler
@@ -75,7 +76,7 @@ export function processEventHandler
 
 /**
  * Get the value of transition-duration CSS property of a given DOM element.
- * @param {Element} element DOM element.
+ * @param {Element} element - DOM element.
  * @return {Number} Transition duration in seconds.
  */
 export const transitionDurationOf = element =>
@@ -83,8 +84,8 @@ export const transitionDurationOf = element =>
         (getComputedStyle(element).getPropertyValue('transition-duration'))
 
 /**
- * @param {Object} data Object to be downloaded.
- * @param {String} filename Target name for the file to be downloaded.
+ * @param {Object} data - Object to be downloaded.
+ * @param {String} filename - Target name for the file to be downloaded.
  */
 export function downloadJson(data, filename) {
   const json = JSON.stringify(data)
