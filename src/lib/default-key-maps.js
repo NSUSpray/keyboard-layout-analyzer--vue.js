@@ -38,7 +38,7 @@ function centersFrom(centersString) {
 
 function readKeyDataFrom(labels) {
   let result = { index: NaN, scanCode: NaN, centers: [[]] }
-  labels = labels[0].split('\0')  // ‘de-escape’
+  labels = labels[0].split('\0')  // “de-escape”
 
   labels = dropUntilPattern(labels, indexPattern)
   if (!labels.length /* no index */) return result

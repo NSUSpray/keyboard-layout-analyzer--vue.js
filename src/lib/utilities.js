@@ -35,7 +35,7 @@ const objectM = (method, func, obj) =>
 export const objectMap = (func, obj) => objectM('map', func, obj)
 
 /**
- * Filter the object where a given predicate function returns ‘true’.
+ * Filter the object where a given predicate function returns “true”.
  * @param {Function} func Predicate.
  * @param {Object} obj Processed object.
  * @return {Object} New filtered object.

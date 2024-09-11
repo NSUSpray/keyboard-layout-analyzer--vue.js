@@ -48,7 +48,7 @@ const transitionDuration =
  * Event callback decorator that adds a class to the event target.
  * @param {Promise} func Event callback.
  * @param {Function} errorHandler
- * @param {String} processClass Class to be added. Default—‘in-process’.
+ * @param {String} processClass Class to be added. Default—“in-process”.
  * @return {Promise} Decorated event callback.
  */
 export function processEventHandler

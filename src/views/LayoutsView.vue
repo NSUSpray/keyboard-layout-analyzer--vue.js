@@ -195,7 +195,7 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
             Load Non-Letters</a>
           <a :disabled="isLayoutPreset? null : true"
               @click="isLayoutPreset && loadPreset($event, 'altGr')">
-            Load ‘Alt Gr’ Layer</a>
+            Load “Alt Gr” Layer</a>
         </DropButton>
       </div>
     </fieldset>

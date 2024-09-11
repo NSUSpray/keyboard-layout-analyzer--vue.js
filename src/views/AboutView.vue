@@ -80,7 +80,7 @@ import Jumbotron from '../components/Jumbotron.vue'
   <p><strong><u>Fixes:</u></strong> This version of the app applies fixes to
     the algorithm to address all these flaws.</p>
   <ul>
-    <li>The simple distance calculation is replaced by a ‘distance penalty’.</li>
+    <li>The simple distance calculation is replaced by a “distance penalty”.</li>
     <li>The penalty is finger-dependent for actions that require a simple
       inward/outward curling of the finger, for example to reach upward with
       the middle finger from <em>K to I</em> (in Qwerty).</li>
@@ -173,7 +173,7 @@ import Jumbotron from '../components/Jumbotron.vue'
       semi-well-known in the community.</li>
     <li>The Colemak-DH layout variants have been added.</li>
     <li>Number of layouts in the comparison changed from 5 to 6.</li>
-    <li>Removed the generated ‘Personalized Layout’ as I considered it to not
+    <li>Removed the generated “Personalized Layout” as I considered it to not
       really have any value.</li>
     <li>Added support for additional keyboard types.</li>
     <li>Various other input texts have been added, these were obtained from

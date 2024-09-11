@@ -96,7 +96,7 @@ function onPaste() {
         <div class="status">{{ error }}</div>
       </div>
       <p>Paste the text of a previously copied or exported layout/fingering/set
-          in the textbox above and press ‘Import’ to load.</p>
+          in the textbox above and press “Import” to load.</p>
     </div>
 
     <div class="controls">
@@ -107,7 +107,7 @@ function onPaste() {
       <DropButton v-show="!confirm" ref="importButton" :disabled="error"
           value="Import" @click="verifyAndEmit()">
         <a @click="verifyAndEmit('nonLetters')">Import Non-Letters</a>
-        <a @click="verifyAndEmit('altGr')">Import ‘Alt Gr’ Layer</a>
+        <a @click="verifyAndEmit('altGr')">Import “Alt Gr” Layer</a>
       </DropButton>
       <button type="button" @click="close">Cancel</button>
     </div>
