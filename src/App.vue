@@ -18,7 +18,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  setTimeout(rowFirstLastUpdate, 0)
+  setTimeout(rowFirstLastUpdate)
   setInterval(rowFirstLastUpdate, 3000)
 })
 

@@ -22,7 +22,7 @@ onMounted(() => fadeOutOnClick('a, button, .btn, input'))
 
 function fadeOut(event, fadeOutTime) {
   isFadeOut.value = true
-  setTimeout(() => event.target.blur(), 1)
+  setTimeout(() => event.target.blur())
   setTimeout(() => isFadeOut.value = false, fadeOutTime)
 }
 
