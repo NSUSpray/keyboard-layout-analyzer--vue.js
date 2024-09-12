@@ -5,7 +5,7 @@ import { getCoords } from '@turf/invariant'
 import union from '@turf/union'
 
 import kleKeyMaps from './kle-key-maps.js'
-import { dropUntil, objectMap, rotate } from './utilities.js'
+import { dropUntil, mapValues, rotate } from './utilities.js'
 
 // in pixels
 const normKeySize = 50
@@ -112,7 +112,7 @@ function adjustBoundingBox
   }
 }
 
-function kleToKla([kbtype, rows]) {
+function kleToKla(rows) {
   const keyMap = {}
   const keys = Serial.deserialize(escapeLineFeeds(rows)).keys
   let index, scanCode, centers,
@@ -130,9 +130,9 @@ function kleToKla([kbtype, rows]) {
   }
   keyMap.width = bBox.maxX - bBox.minX + paddingX
   keyMap.height = bBox.maxY - bBox.minY + paddingY
-  return [kbtype, keyMap]
+  return keyMap
 }
 
-const defaultKeyMaps = objectMap(kleToKla, kleKeyMaps)
+const defaultKeyMaps = mapValues(kleKeyMaps, kleToKla)
 
 export default defaultKeyMaps

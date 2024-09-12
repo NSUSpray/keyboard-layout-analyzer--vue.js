@@ -24,31 +24,35 @@ export function takeWhile(array, predicate) {
 }
 
 
-const objectM = (method, func, obj) =>
+const objectM = (obj, method, func) =>
     Object.fromEntries(Object.entries(obj)[method](func))
 
 /**
  * Apply the function to all values of a given object.
- * @param {Function} func - Function to apply.
  * @param {Object} obj - Processed object.
+ * @param {Function} func - Function to apply of type
+ * OldValueType -> NewValueType.
  * @return {Object} New mapped object.
  */
-export const objectMap = (func, obj) => objectM('map', func, obj)
+export const mapValues = (obj, func) =>
+    objectM(obj, 'map', ([oKey, value]) => [oKey, func(value)])
 
 /**
  * Flip keys and values of a given object: { a: 1 } → { "1": "a" }
  * @param {Object} obj - Processed object.
  * @return {Object} Flipped object.
  */
-export const objectFlip = obj => objectMap(([key, value]) => [value, key], obj)
+export const objectFlip = obj =>
+    objectM(obj, 'map', ([key, value]) => [value, key])
 
 /**
  * Filter the object where a given predicate function returns “true”.
- * @param {Function} func - Predicate.
  * @param {Object} obj - Processed object.
+ * @param {Function} predicate - Function of type ObjectKeyType -> Boolean.
  * @return {Object} New filtered object.
  */
-export const objectFilter = (func, obj) => objectM('filter', func, obj)
+export const filterByKey = (obj, predicate) =>
+    objectM(obj, 'filter', ([oKey, value]) => predicate(oKey))
 
 /**
  * @param {Object} obj - Object to find a key by a given value.

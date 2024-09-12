@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { addStyle } from '../lib/browser.js'
 import { label } from '../lib/default-key-sets'
 import Fingers from '../lib/fingers.js'
-import { objectKeyByValue, objectFilter } from '../lib/utilities.js'
+import { filterByKey, objectKeyByValue } from '../lib/utilities.js'
 
 defineEmits(['click'])
 const props = defineProps({ layout: Object })
@@ -21,7 +21,7 @@ const editorSize = computed(() => {
 })
 
 const keyMapKeys = computed(() =>
-  objectFilter(([oKey, _]) => oKey >= '0' && oKey <= '99', props.layout.keyMap)
+  filterByKey(props.layout.keyMap, ([oKey, _]) => oKey >= '0' && oKey <= '99')
 )
 
 const transform = key =>
