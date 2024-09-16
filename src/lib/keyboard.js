@@ -89,7 +89,7 @@ export function convertType(set1, map1, type2, defaultSet2) {
   const canBeArrange21 = fingerStartCanBeArrange(map1, map2)
   const arrange21 = arrangeFingerStart(set2)
   // for all keys of the target key map
-  var id1, srcSet, key2, defaultFinger2
+  let id1, srcSet, key2, defaultFinger2
   for (const id2 of idsFrom(map2)) {
     id1 = translate21(id2)
     srcSet = (id1 !== undefined)? set1 : defaultSet2

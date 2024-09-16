@@ -100,8 +100,8 @@ function onPaste() {
     </div>
 
     <div class="controls">
-      <button v-show="confirm" ref="confirmButton" class="warning"
-          @blur="confirm = false" @click="verifyAndEmit()">
+      <button type="button" v-show="confirm" ref="confirmButton"
+          class="warning" @blur="confirm = false" @click="verifyAndEmit()">
         Import in Place of All Current
       </button>
       <DropButton v-show="!confirm" ref="importButton" :disabled="error"

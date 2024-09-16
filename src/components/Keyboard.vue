@@ -19,10 +19,9 @@ const editorSize = computed(() => {
   }
 })
 
-const keyMapKeys = computed(() => {
-  const isKeyMapObjKey = ([oKey, _]) => oKey >= '0' && oKey <= '99'
-  return objectFilter(isKeyMapObjKey, props.layout.keyMap)
-})
+const keyMapKeys = computed(() =>
+  objectFilter(([oKey, _]) => oKey >= '0' && oKey <= '99', props.layout.keyMap)
+)
 
 const transform = key =>
     (key.a? `rotate(${key.a} ${key.rx} ${key.ry}) ` : '')

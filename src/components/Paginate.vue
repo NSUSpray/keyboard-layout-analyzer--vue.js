@@ -62,7 +62,7 @@ function right() {
       <label class="btn small" tabindex="0"
           :set="shortLabel = squeeze(label, maxLabelLength)"
           :title="shortLabel===label? undefined : label">
-        <input type="radio" v-model="choosen" :value="index">
+        <input type="radio" v-model="choosen" :value="index" />
         {{ shortLabel || label.slice(0, 6) + '…' }}
       </label>
     </template>
