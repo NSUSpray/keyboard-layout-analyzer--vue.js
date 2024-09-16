@@ -97,6 +97,8 @@ function close() {
 
 const capsToTitle = caps =>
     caps.replace('_', ' ').replace(/(?<=\w)./g, c => c.toLowerCase())
+
+const fingerLetter = fingerString => fingerString.match(/(?<=_)./)[0]
 </script>
 
 <template>
@@ -109,10 +111,11 @@ const capsToTitle = caps =>
       </label>
     </div>
     <label>Finger for Pressing Key:
-      <select v-model="cFinger" :disabled="isStartOfFinger">
+      <select size="2" v-model="cFinger" :disabled="isStartOfFinger">
         <option v-for="[finger, index] of Object.entries(Fingers)"
-            :key="finger" :value="index">
-          {{ capsToTitle(finger) }}
+            :key="finger" :title="capsToTitle(finger)" :value="index"
+            :class="finger">
+          {{ fingerLetter(finger) }}
         </option>
       </select>
     </label>
@@ -135,7 +138,44 @@ dialog {
 
 label { display: block; }
 
-select { overflow: auto; }
+select {
+  --option-size: calc(1em + 2 * var(--thin-padding));
+  --group-gap: var(--thin-margin);
+  overflow: auto;
+  width: calc(10 * var(--option-size) + var(--group-gap));
+  height: calc(var(--option-size) + 0.2em);
+  padding: 0;
+  border: none;
+  cursor: default;
+  &[disabled] { pointer-events: none; }
+}
+
+option {
+  display: inline-flex;
+  width: var(--option-size);
+  height: var(--option-size);
+  justify-content: center;
+  align-items: center;
+  border: solid 2px transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  :not(.LEFT_THUMB) + & {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  &:has(+ :not(.RIGHT_THUMB)) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  &.LEFT_THUMB,
+  &.RIGHT_THUMB
+      { vertical-align: sub; }
+  &.RIGHT_THUMB { margin-left: var(--group-gap); }
+  &:checked {
+    font-weight: 900;
+    border-color: var(--dark-blue) !important;
+  }
+}
 
 
 
