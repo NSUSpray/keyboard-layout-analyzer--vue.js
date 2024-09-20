@@ -85,6 +85,7 @@ function onPaste() {
 
 <template>
   <dialog ref="dialog" :class="{ closed: isClosed }" @cancel="close">
+    <div class="backdrop" @click="close" /><div class="background-fixer" />
     <h3>Import Layouts</h3>
     <button type="button" title="Close" @click="close"
         v-shortkey="['Esc']">×</button>
@@ -116,49 +117,43 @@ function onPaste() {
 
 <style scoped>
 dialog {
-  overflow: visible;
   bottom: 0;
   --width: min(100% - var(--content-margin) * 2, 560px);
   min-width: var(--width); max-width: var(--width);
   border-radius: var(--radius);
-  box-shadow:
-      var(--sharp-shadow),
-      0 0 0 100vw var(--light-gray-translucent);
   transition: opacity linear, bottom ease-out;
   transition-duration: var(--slow-transition-duration);
-  &::backdrop { background-color: transparent; }
+  &::before /* shadow */ { box-shadow: var(--sharp-shadow); }
   &.closed {
     bottom: 178vh;
     opacity: 0;
   }
 }
-dialog > * {
-  margin: 0;
-  &:is(h3 + button, h3) { line-height: 1em; }
-  &:first-child {
-    border-top-left-radius: inherit;
-    border-top-right-radius: inherit;
-  }
-  &:last-child {
-    border-bottom-left-radius: inherit;
-    border-bottom-right-radius: inherit;
-  }
-}
 
 .textarea-n-status { position: relative; }
 
-h3 + button {
-  position: absolute;
-  top: var(--padding);
-  right: var(--padding);
-  width: 1em;
-  padding: 0;
-  font-size: 1.75rem; /* FIXME */
-  color: var(--dark-dark-blue);
-  background-color: transparent !important;
-  &:hover,
-  &:focus
-      { color: var(--black-blue); }
+h3 {
+  margin: 0;
+  &, & + button { line-height: 1em; }
+  & + button {
+    position: absolute;
+    top: var(--padding);
+    right: var(--padding);
+    width: 1em;
+    padding: 0;
+    font-size: 1.75rem; /* FIXME */
+    color: var(--dark-dark-blue);
+    background-color: transparent !important;
+    &:hover,
+    &:focus
+        { color: var(--black-blue); }
+  }
+}
+
+textarea {
+  min-width: 100%;
+  max-width: 100%;
+  height: 8em;
 }
 
 .status {
@@ -180,10 +175,4 @@ h3 + button {
 }
 .danger:hover + .status
     { background-color: var(--danger-hover-color); }
-
-textarea {
-  min-width: 100%;
-  max-width: 100%;
-  height: 8em;
-}
 </style>

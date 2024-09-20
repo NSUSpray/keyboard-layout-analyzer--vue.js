@@ -121,6 +121,7 @@ const capsToTitle = caps =>
 dialog {
   /* TODO? delete --huge-radius */
   border-radius: var(--large-radius);
+  &::before /* shadow */ { box-shadow: var(--shadow); }
 }
 
 label { display: block; }
