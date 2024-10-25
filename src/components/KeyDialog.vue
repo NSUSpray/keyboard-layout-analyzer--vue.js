@@ -56,7 +56,11 @@ const keySetCode = repr =>
     (repr.length === 1)? repr.charCodeAt() : codeFor[repr]
 
 
+const closeOnClickout = event =>
+    event.composedPath().includes(dialog.value)? null : close()
+
 function show(index) {
+  if (dialog.value.open) close()
   const key = keySet.value.keys[index]
   for (const oKey in cValues)
       cValues[oKey].value = inputRepr(key[oKey])
@@ -64,14 +68,17 @@ function show(index) {
   lastStartOfFinger = keySet.value.fingerStart[key.finger]
   isStartOfFinger.value = wasStartOfFinger.value =
       lastStartOfFinger == index
-  // activate watchers AFTER ref values have been set
-      setTimeout(() => cId = key.id)
-  dialog.value.showModal()
+  setTimeout(() => {  // AFTER ref values have been set
+    cId = key.id  // activate watchers
+    document.addEventListener('click', closeOnClickout)
+  })
+  dialog.value.show()
 }
 
 function close() {
   cId = undefined
   dialog.value.close()
+  document.removeEventListener('click', closeOnClickout)
 }
 
 const capsToTitle = caps =>
