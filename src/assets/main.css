@@ -87,6 +87,7 @@ dialog {
   padding: 0;
   color: var(--black-blue);
   border-style: none;
+  z-index: 2;
   &::before /* shadow */ {
     content: '';
     position: absolute;

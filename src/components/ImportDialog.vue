@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import DropButton from '../components/DropButton.vue'
+import DropButton from './DropButton.vue'
 import { fingeringSchema, layoutSchema, setSchema } from '../lib/schemas.js'
 import { transitionDurationOf } from '../lib/browser.js'
 
@@ -71,7 +71,7 @@ function verifyAndEmit(filterValue='all') {
 function close(event) {
   isClosed.value = true
   setTimeout(() => dialog.value.close(), transitionDuration)
-  event?.preventDefault()
+  event?.preventDefault()  // prevent immediate dialog.value.close()
 }
 
 function onPaste() {
