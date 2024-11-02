@@ -34,7 +34,7 @@
   --huge-radius: 1rem;
 
   --content-margin: var(--wide-margin);
-  --content-width: calc(100vw - var(--content-margin) * 2);
+  --content-width: calc(100% - var(--content-margin) * 2);
   --aside-width: calc(var(--content-width) * 9/47);
   
   --nav-active-anchor-border-width: 3px;
@@ -165,7 +165,7 @@ body {
 
   :root {
     --content-width:
-        calc(100vw - var(--content-margin) * 2 - var(--header-height));
+        calc(100% - var(--content-margin) * 2 - var(--header-height));
   }
 
 }

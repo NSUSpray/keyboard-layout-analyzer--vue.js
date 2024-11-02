@@ -40,6 +40,12 @@ watch(vIndex, () => {
 })
 
 
+function showKeyDialog(index) {
+  const isLeftSideKey = vMap.value[index].cx < vMap.value.width / 2
+  const position = isLeftSideKey? 'right' : 'left'
+  keyDialog.value.show(index, position)
+}
+
 async function onChangeType(event) {
   const targetType = event.target.value
   const defaultPreset = targetType + '.classical.kla-fingering'
@@ -136,9 +142,10 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
   <form id="editor">
     <fieldset id="keyboard">
       <template v-for="(layout, index) of layoutsStore.layouts" :key="index">
-        <Keyboard v-show="index === vIndex" :layout
-            @click="id => keyDialog.show(id)" />
+        <Keyboard v-show="index === vIndex" :layout @click="showKeyDialog" />
       </template>
+      <div id="smog"></div>
+      <KeyDialog ref="keyDialog" v-model="vSet" />
     </fieldset>
     <fieldset>
       <label>Name</label>
@@ -148,7 +155,6 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
             title="Change to convert keyboard type" @change="onChangeType" />
       </div>
     </fieldset>
-    <fieldset id="smog"></fieldset>
     <fieldset>
       <label>Author</label>
       <div class="controls" :set="moreInfoUrl = vSet.moreInfoUrl">
@@ -157,7 +163,6 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
             :title="vSet.moreInfoText">More Info</a>
       </div>
     </fieldset>
-    <KeyDialog ref="keyDialog" v-model="vSet" />
   </form>
 
   <Paginate :labels="keySets.map(paginateLabel)" v-model="vIndex"
@@ -215,19 +220,21 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
 }
 
 #keyboard {
+  position: relative;
   height: var(--keyboard-height);
+  flex-grow: 0;
   margin-inline: auto;
   & > * { z-index: -1; }
   &:hover > * { z-index: 0; }
 }
 #smog {
   position: absolute;
-  top: var(--keyboard-height);
+  top: 100%;
   width: 100%;
   height: 202px;
   background:
       radial-gradient(closest-side, var(--light-gray) 20%, transparent);
-  z-index: -1;
+  z-index: -1 !important;
 }
 
 #name,

@@ -27,6 +27,7 @@ for (const cValue of Object.values(cValues)) {
 }
 const cFinger = ref(Fingers.LEFT_INDEX)
 const isStartOfFinger = ref(false)  // start position of finger
+let cPosition
 
 const wasStartOfFinger = ref(false)
 let lastStartOfFinger, cId
@@ -67,7 +68,7 @@ const keySetCode = repr =>
 const closeOnClickout = event =>
     event.composedPath().includes(dialog.value)? null : close()
 
-function show(index) {
+function show(index, position) {
   if (dialog.value.open) close()
   const key = keySet.value.keys[index]
   for (const oKey in cValues)
@@ -76,6 +77,7 @@ function show(index) {
   lastStartOfFinger = keySet.value.fingerStart[key.finger]
   isStartOfFinger.value = wasStartOfFinger.value =
       lastStartOfFinger == index
+  cPosition = position
   setTimeout(() => {  // AFTER ref values have been set
     cId = key.id  // activate watchers
     document.addEventListener('click', closeOnClickout)
@@ -94,7 +96,7 @@ const capsToTitle = caps =>
 </script>
 
 <template>
-  <dialog ref="dialog" @cancel="close">
+  <dialog ref="dialog" :class="cPosition" @cancel="close">
     <div>
       <label v-for="[key, cValue] of Object.entries(cValues)" :key>
         {{ cValue.label }}:
@@ -121,11 +123,26 @@ const capsToTitle = caps =>
 <style scoped>
 dialog {
   /* TODO? delete --huge-radius */
-  border-radius: var(--large-radius);
+  --border-radius: var(--large-radius);
+  top: calc(100% + var(--narrow-margin) * 0.75);
+  border-radius: var(--border-radius);
   &::before /* shadow */ { box-shadow: var(--shadow); }
 }
 
 label { display: block; }
 
 select { overflow: auto; }
+
+
+
+@media (min-width: 1024px) or (orientation: landscape) {
+
+  dialog {
+    top: calc(-2*var(--border-radius));
+    --position-margin: calc(50% + 25px + var(--wide-margin));
+    &.left { margin-right: var(--position-margin); }
+    &.right { margin-left: var(--position-margin); }
+  }
+
+}
 </style>
