@@ -1,5 +1,4 @@
 const Fingers = {
-  NONE: -1,
   LEFT_PINKY: 1,
   LEFT_RING: 2,
   LEFT_MIDDLE: 3,
@@ -10,11 +9,9 @@ const Fingers = {
   RIGHT_MIDDLE: 8,
   RIGHT_RING: 9,
   RIGHT_PINKY: 10,
-  BOTH_THUMBS: 11,
 }
 
 const hands = {
-  none: [Fingers.NONE],
   left: [
     Fingers.LEFT_PINKY,
     Fingers.LEFT_RING,
@@ -29,7 +26,6 @@ const hands = {
     Fingers.RIGHT_RING,
     Fingers.RIGHT_PINKY,
   ],
-  both: [Fingers.BOTH_THUMBS],
 }
 
 const handOf = finger => Object.entries(hands)
@@ -39,8 +35,7 @@ const isThumb = finger =>
     [Fingers.LEFT_THUMB, Fingers.RIGHT_THUMB].includes(finger)
 
 export const sameFingerGroup = (finger1, finger2) =>
-    ![finger1, finger2].includes(Fingers.NONE)
-    && handOf(finger1) === handOf(finger2)
+    handOf(finger1) === handOf(finger2)
     && isThumb(finger1) === isThumb(finger2)
 
 export default Fingers
