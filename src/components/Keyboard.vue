@@ -5,6 +5,7 @@ import { label } from '../lib/default-key-sets'
 import Fingers from '../lib/fingers.js'
 import { objectKeyByValue, objectFilter } from '../lib/utilities.js'
 
+defineEmits(['click'])
 const props = defineProps({ layout: Object })
 
 const keySet = computed(() => props.layout.keySet)
@@ -76,7 +77,8 @@ addKeyFillStyles()
     <g v-for="(key, index) of keyMapKeys" :key="index"
         :set="{ top, bottom, altGr, shiftAltGr, fingerClass } = keyData(index)"
         :class="fingerClass"
-        :transform="transform(key)">
+        :transform="transform(key)"
+        @click="$emit('click', index)">
       <polygon v-if="key.coords" :points="points(key)" />
       <rect v-else :width="key.w" :height="key.h" />
       <template v-if="isFingerStart(index)">

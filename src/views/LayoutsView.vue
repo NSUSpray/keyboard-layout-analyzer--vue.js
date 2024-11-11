@@ -5,6 +5,7 @@ import DropButton from '../components/DropButton.vue'
 import ImportDialog from '../components/ImportDialog.vue'
 import Jumbotron from '../components/Jumbotron.vue'
 import Keyboard from '../components/Keyboard.vue'
+import KeyDialog from '../components/KeyDialog.vue'
 import Paginate from '../components/Paginate.vue'
 import Select from '../components/Select.vue'
 
@@ -30,6 +31,7 @@ const preset = ref('')
 const isLayoutPreset = computed
     (() => preset.value.split('.').pop() === 'kla-layout')
 
+const keyDialog = ref(null)
 const importDialog = ref(null)
 const clipboardDouble = ref('')
 
@@ -134,7 +136,8 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
   <form id="editor">
     <fieldset id="keyboard">
       <template v-for="(layout, index) of layoutsStore.layouts" :key="index">
-        <Keyboard v-show="index === vIndex" :layout />
+        <Keyboard v-show="index === vIndex" :layout
+            @click="id => keyDialog.show(id)" />
       </template>
     </fieldset>
     <fieldset>
@@ -154,6 +157,7 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
             :title="vSet.moreInfoText">More Info</a>
       </div>
     </fieldset>
+    <KeyDialog ref="keyDialog" v-model="vSet" />
   </form>
 
   <Paginate :labels="keySets.map(paginateLabel)" v-model="vIndex"

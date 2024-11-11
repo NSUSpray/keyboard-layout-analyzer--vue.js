@@ -36,6 +36,13 @@ const objectM = (method, func, obj) =>
 export const objectMap = (func, obj) => objectM('map', func, obj)
 
 /**
+ * Flip keys and values of a given object: { a: 1 } → { "1": "a" }
+ * @param {Object} obj - Processed object.
+ * @return {Object} Flipped object.
+ */
+export const objectFlip = obj => objectMap(([key, value]) => [value, key], obj)
+
+/**
  * Filter the object where a given predicate function returns “true”.
  * @param {Function} func - Predicate.
  * @param {Object} obj - Processed object.
