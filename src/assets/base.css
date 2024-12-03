@@ -42,35 +42,46 @@
   --font-family:
       Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif, 'KLA Symbol';
 
+  --blue-hue: 249;
+
   --wwhite-blue:  /* layout-switch checked */
-      oklch(95% 1% 249) /*#ECF0F1*/;
+      oklch(95% 1% var(--blue-hue)) /*#ECF0F1*/;
   --white-blue: /* input border */
-      oklch(92% 3% 249) /*#DCE4EC*/;
+      oklch(92% 3% var(--blue-hue)) /*#DCE4EC*/;
   /*--llight-light-blue:
       oklch(76% 8% 249);*/
   --light-light-blue: /* disabled button */
-      oklch(74% 9% 249) /*#99ACC1*/;
+      oklch(74% 9% var(--blue-hue)) /*#99ACC1*/;
   --light-blue: /* button:hover */
-      oklch(65% 15% 249) /*#7593B2*/;
+      oklch(65% 15% var(--blue-hue)) /*#7593B2*/;
   --bblue:  /* layout-switcher hover */
-      oklch(61% 15% 249) /*#6486A9*/;
+      oklch(61% 15% var(--blue-hue)) /*#6486A9*/;
   --blue: /* header a:hover, button */
-      oklch(57% 15% 249) /*#5D7C9B*/;
+      oklch(57% 15% var(--blue-hue)) /*#5D7C9B*/;
   --dark-blue: /* header a:focus */
-      oklch(52% 15% 249) /*#4E6D8C*/;
+      oklch(52% 15% var(--blue-hue)) /*#4E6D8C*/;
   --dark-dark-blue: /* header bg */
-      oklch(47% 15% 249) /*#3F5E7D*/;
+      oklch(47% 15% var(--blue-hue)) /*#3F5E7D*/;
   --black-blue: /* body */
-      oklch(36% 10% 249) /*#2C3E50*/;
+      oklch(36% 10% var(--blue-hue)) /*#2C3E50*/;
 
+  --warning-hue: 72;
+  --warning-oklch: 78% 39% var(--warning-hue);
   --warning-color:
-      oklch(78% 39% 72) /*#F4A425*/;
+      oklch(var(--warning-oklch)) /*#F4A425*/;
   --warning-hover-color:
-      oklch(80% 39% 72) /*#F5B043*/;
+      oklch(80% 39% var(--warning-hue)) /*#F5B043*/;
+  --warning-glow:
+      0 0 8px oklch(var(--warning-oklch) / 60%);
+
+  --danger-hue: 29;
+  --danger-oklch: 66% 44% var(--danger-hue);
   --danger-color:
-      oklch(66% 44% 29) /*#E95D4E*/;
+      oklch(var(--danger-oklch)) /*#E95D4E*/;
   --danger-hover-color:
-      oklch(70% 44% 29) /*#ED7669*/;
+      oklch(70% 44% var(--danger-hue)) /*#ED7669*/;
+  --danger-glow:
+      0 0 8px oklch(var(--danger-oklch) / 60%);
 
   --black-gray: #333;  /* a:focus outline */
   --dark-gray: #666;
@@ -78,14 +89,17 @@
   --light-gray: #DDD;  /* body bg */
   --light-light-gray: #E0E0E0;  /* footer border */
 
+  --light-bright-blue-oklch: 70% 32% var(--blue-hue);
   --light-bright-blue:
-      oklch(70% 32% 249);
+      oklch(var(--light-bright-blue-oklch));
   --light-bright-blue-translucent: /* focus border */
-      oklch(70% 32% 249 / 0.8);
+      oklch(var(--light-bright-blue-oklch) / 0.8);
+  --light-bright-blue-glow:
+      0 0 8px oklch(var(--light-bright-blue-oklch) / 60%);
   --bright-blue: /* a */
-      oklch(60% 35% 249) /*#0088CC*/ ;
+      oklch(60% 35% var(--blue-hue)) /*#0088CC*/ ;
   --dark-bright-blue: /* a:hover */
-      oklch(43% 25% 249) /*#005580*/;
+      oklch(43% 25% var(--blue-hue)) /*#005580*/;
 
   --LEFT_PINKY:   oklch( 94% 24% 175);
   --LEFT_RING:    oklch( 78% 33% 261);
@@ -113,9 +127,8 @@
       var(--thin-margin)
       var(--thin-margin)
       oklch(0 0 0 / 0.2);
-  --bright-glow:
-      0 1px 1px oklch(0 0 0 / 7.5%) inset,
-      0 0 8px oklch(70% 32% 249 / 60%);
+  --inset-shadow:
+      0 1px 1px oklch(0 0 0 / 7.5%) inset;
 
   --fast-transition-duration: 0.2s;
   --transition-duration: 0.25s;
