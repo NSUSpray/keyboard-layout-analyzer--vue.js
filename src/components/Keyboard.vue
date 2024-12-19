@@ -21,7 +21,7 @@ const editorSize = computed(() => {
 })
 
 const keyMapKeys = computed(() =>
-  filterByKey(props.layout.keyMap, ([oKey, _]) => oKey >= '0' && oKey <= '99')
+  filterByKey(props.layout.keyMap, oKey => oKey >= '0' && oKey <= '99')
 )
 
 const transform = key =>
@@ -107,10 +107,10 @@ rect,
 polygon {
   stroke: var(--black-blue);
   stroke-width: 1.25;
-}
-:hover > :is(rect, polygon) {
-  stroke: var(--dark-gray);
-  filter: brightness(93%) saturate(250%);
+  :hover > & {
+    stroke: var(--dark-gray);
+    filter: brightness(93%) saturate(250%);
+  }
 }
 
 circle {

@@ -2,7 +2,7 @@
 const selected = defineModel({ type: String })
 
 const props = defineProps({
-  options: Object, 
+  options: Object,
   isOptionDisabled: { type: Function, default: () => false },
 })
 </script>

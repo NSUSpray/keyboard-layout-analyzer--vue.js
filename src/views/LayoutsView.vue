@@ -144,7 +144,7 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
       <template v-for="(layout, index) of layoutsStore.layouts" :key="index">
         <Keyboard v-show="index === vIndex" :layout @click="showKeyDialog" />
       </template>
-      <div id="smog"></div>
+      <div id="smog" />
       <KeyDialog ref="keyDialog" v-model="vSet" />
     </fieldset>
     <fieldset>
@@ -167,7 +167,7 @@ const loadPreset = processEventHandler(async (_, filterValue='all') => {
 
   <Paginate :labels="keySets.map(paginateLabel)" v-model="vIndex"
       :max-width="118" />
-  <form></form>
+  <form />
 
   <form>
     <fieldset>

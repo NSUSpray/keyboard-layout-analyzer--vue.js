@@ -54,7 +54,7 @@ watch(useRoute(), rowFirstLastUpdate)
     </nav>
     <nav>
       <RouterLink to="/about" icon="🛈">About</RouterLink>
-    </nav>  
+    </nav>
   </header>
 
   <main><RouterView /></main>

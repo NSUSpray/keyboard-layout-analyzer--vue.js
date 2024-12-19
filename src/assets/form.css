@@ -19,7 +19,7 @@ fieldset {
     flex-grow: 1;
     &:not(:has(label)) { margin-left: var(--aside-width); }
     & > label {
-      min-width: var(--aside-width); 
+      min-width: var(--aside-width);
       padding-right: var(--wide-padding);
     }
   }
