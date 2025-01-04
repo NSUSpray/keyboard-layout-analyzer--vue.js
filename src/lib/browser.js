@@ -52,7 +52,7 @@ const transitionDuration =
  * @param {String} processClass - Class to be added. Default—“in-process”.
  * @return {Promise} Decorated event callback.
  */
-export function processEventHandler
+export function withMarkedTarget
     (func, errorHandler, processClass='in-process') {
   return async (event, ...args) => {
     const target = event.target

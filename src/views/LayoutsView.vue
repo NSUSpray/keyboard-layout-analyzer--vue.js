@@ -11,7 +11,7 @@ import Select from '../components/Select.vue'
 
 import useLayoutsStore from '@/stores/layouts.js'
 
-import { downloadJson, processEventHandler } from '../lib/browser.js'
+import { downloadJson, withMarkedTarget } from '../lib/browser.js'
 import defaultKeyMaps from '../lib/default-key-maps.js'
 import * as Kb from '../lib/keyboard.js'
 import presetOptions from '../lib/preset-options.js'
@@ -61,7 +61,7 @@ function paginateLabel(keySet, index) {
   return label + suffix
 }
 
-const copyJson = processEventHandler(async (_, fingering=false) => {
+const copyJson = withMarkedTarget(async (_, fingering=false) => {
   keyDialog.value.close()
   let keySet = vSet.value
   if (fingering) keySet = Kb.keepOnlyFingering(toRaw(keySet))
@@ -70,7 +70,7 @@ const copyJson = processEventHandler(async (_, fingering=false) => {
   clipboardDouble.value = keySetJson
 })
 
-const copyAllJson = processEventHandler(async () => {
+const copyAllJson = withMarkedTarget(async () => {
   keyDialog.value.close()
   const keySetsJson = JSON.stringify
       ({ name: '' /* TODO */, layouts: keySets }, null, 4)
@@ -133,7 +133,7 @@ function isNotSameTypeOfFingering(value) {
   return presetKeyboardType !== vType.value
 }
 
-const loadPreset = processEventHandler(async (_, filterValue='all') => {
+const loadPreset = withMarkedTarget(async (_, filterValue='all') => {
   const type = preset.value.split('.').pop()
   const object = await layoutsStore.fetchKeySet(preset.value)
   updateKeySet(type, object, filterValue)
