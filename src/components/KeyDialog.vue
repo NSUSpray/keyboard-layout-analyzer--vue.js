@@ -69,7 +69,7 @@ const closeOnClickout = event =>
     event.composedPath().includes(dialog.value)? null : close()
 
 function show(index, position) {
-  if (dialog.value.open) close()
+  close()
   const key = keySet.value.keys[index]
   for (const oKey in cValues)
       cValues[oKey].ref.value = inputRepr(key[oKey])
@@ -86,9 +86,10 @@ function show(index, position) {
 }
 
 function close() {
-  cId = undefined
+  if (!dialog.value.open) return
   dialog.value.close()
   document.removeEventListener('click', closeOnClickout)
+  cId = undefined
 }
 
 const capsToTitle = caps =>

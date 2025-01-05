@@ -36,6 +36,7 @@ const importDialog = ref(null)
 const clipboardDouble = ref('')
 
 watch(vIndex, () => {
+  keyDialog.value.close()
   if (isNotSameTypeOfFingering(preset.value)) preset.value = ''
 })
 
@@ -61,6 +62,7 @@ function paginateLabel(keySet, index) {
 }
 
 const copyJson = processEventHandler(async (_, fingering=false) => {
+  keyDialog.value.close()
   let keySet = vSet.value
   if (fingering) keySet = Kb.keepOnlyFingering(toRaw(keySet))
   const keySetJson = JSON.stringify(keySet, null, 4)
@@ -69,6 +71,7 @@ const copyJson = processEventHandler(async (_, fingering=false) => {
 })
 
 const copyAllJson = processEventHandler(async () => {
+  keyDialog.value.close()
   const keySetsJson = JSON.stringify
       ({ name: '' /* TODO */, layouts: keySets }, null, 4)
   navigator.clipboard.writeText(keySetsJson)
@@ -109,6 +112,7 @@ function onPaste(type, object, json, filterValue='all') {
 }
 
 function exportJson(_, fingering=false) {
+  keyDialog.value.close()
   let keySet = vSet.value
   const filename = `${vType.value.trim()}.${keySet.label.trim()}`
       .toLowerCase().replace(/\s/g, '-')
@@ -117,8 +121,10 @@ function exportJson(_, fingering=false) {
   downloadJson(keySet, filename)
 }
 
-const exportAllJson = () => downloadJson
-    ({ name: '' /* TODO */, layouts: keySets }, 'layouts.kla-set')
+function exportAllJson() {
+  keyDialog.value.close()
+  downloadJson({ name: '' /* TODO */, layouts: keySets }, 'layouts.kla-set')
+}
 
 function isNotSameTypeOfFingering(value) {
   const [presetKeyboardType, ...rest] = value.split('.')
