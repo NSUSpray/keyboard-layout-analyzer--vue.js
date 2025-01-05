@@ -32,8 +32,9 @@ const isBothCases = (bottom, top) =>
     typeof top === 'string' && typeof bottom === 'string'
     && (top.toLowerCase() === bottom || bottom.toUpperCase() === top)
 
-function keyData(index) {
-  let { primary, shift, altGr, shiftAltGr, finger } = keySet.value.keys[index]
+function getKeyData(index) {
+  let { primary, shift, altGr, shiftAltGr, finger, state } =
+      keySet.value.keys[index]
   ;[primary, shift, altGr, shiftAltGr] = [primary, shift, altGr, shiftAltGr]
       .map(code => code && label(code))
   const top = shift ?? primary
@@ -43,7 +44,7 @@ function keyData(index) {
   if (isBothCases(altGr, shiftAltGr))
       altGr = shiftAltGr, shiftAltGr = undefined
   const fingerClass = objectKeyByValue(Fingers, f => f === finger)
-  return { top, bottom, altGr, shiftAltGr, fingerClass }
+  return { top, bottom, altGr, shiftAltGr, fingerClass, state }
 }
 
 const points = key => key.coords
@@ -75,10 +76,22 @@ addKeyFillStyles()
 <template>
   <svg v-bind="editorSize">
     <g v-for="(key, index) of keyMapKeys" :key="index"
-        :set="{ top, bottom, altGr, shiftAltGr, fingerClass } = keyData(index)"
-        :class="fingerClass"
+        :set="keyData = getKeyData(index)"
+        :class="[keyData.fingerClass, keyData.state]"
         :transform="transform(key)"
         @click="$emit('click', index)">
+      <filter v-if="keyData.state === 'active'" id="inset-shadow">
+        <!-- Shadow blur -->
+          <feGaussianBlur stdDeviation='5' result='offset-blur' />
+        <!-- Invert drop shadow to make an inset shadow -->
+          <feComposite operator='out' in='SourceGraphic' in2='offset-blur'
+              result='inverse' />
+        <!-- Cut color inside shadow -->
+          <feFlood result='color' />
+          <feComposite operator='in' in='color' in2='inverse' result='shadow' />
+        <!-- Placing shadow over element -->
+          <feComposite operator='over' in='shadow' in2='SourceGraphic' />
+      </filter>
       <polygon v-if="key.coords" :points="points(key)" />
       <rect v-else :width="key.w" :height="key.h" />
       <template v-if="isFingerStart(index)">
@@ -87,11 +100,11 @@ addKeyFillStyles()
       </template>
       <g transform="translate(6, 15)" :set="right =
           { transform: `translate(${key.w - 12})`, 'text-anchor': 'end' }">
-        <text>{{ top }}</text>
-        <text v-bind="right">{{ shiftAltGr }}</text>
+        <text>{{ keyData.top }}</text>
+        <text v-bind="right">{{ keyData.shiftAltGr }}</text>
         <g :transform="`translate(0, ${key.h - 21})`">
-          <text>{{ bottom }}</text>
-          <text v-bind="right">{{ altGr }}</text>
+          <text>{{ keyData.bottom }}</text>
+          <text v-bind="right">{{ keyData.altGr }}</text>
         </g>
       </g>
     </g>
@@ -110,6 +123,10 @@ polygon {
   :hover > & {
     stroke: var(--dark-gray);
     filter: brightness(93%) saturate(250%);
+  }
+  .active > & {
+    filter: url(#inset-shadow);
+    pointer-events: none;
   }
 }
 

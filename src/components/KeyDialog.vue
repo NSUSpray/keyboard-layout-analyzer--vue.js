@@ -80,6 +80,7 @@ function show(index, position) {
   cPosition = position
   setTimeout(() => {  // AFTER ref values have been set
     cId = key.id  // activate watchers
+    keySet.value.keys[cId].state = 'active'
     document.addEventListener('click', closeOnClickout)
   })
   dialog.value.show()
@@ -89,6 +90,7 @@ function close() {
   if (!dialog.value.open) return
   dialog.value.close()
   document.removeEventListener('click', closeOnClickout)
+  keySet.value.keys[cId].state = undefined
   cId = undefined
 }
 
