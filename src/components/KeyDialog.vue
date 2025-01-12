@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import Fingers, { colorizeByFinger } from '../lib/fingers.js'
+import FingerSelect from './FingerSelect.vue'
+import Fingers from '../lib/fingers.js'
 import { objectFlip } from '../lib/utilities.js'
 
 defineExpose({ close, show })
@@ -94,13 +95,6 @@ function close() {
   keySet.value.keys[cId].state = undefined
   cId = undefined
 }
-
-const capsToTitle = caps =>
-    caps.replace('_', ' ').replace(/(?<=\w)./g, c => c.toLowerCase())
-
-const fingerLetter = fingerString => fingerString.match(/(?<=_)./)[0]
-
-colorizeByFinger('option.{finger}', 'background-color')
 </script>
 
 <template>
@@ -113,13 +107,7 @@ colorizeByFinger('option.{finger}', 'background-color')
       </label>
     </div>
     <label>Finger for Pressing Key:
-      <select size="2" v-model="cFinger" :disabled="isStartOfFinger">
-        <option v-for="[finger, index] of Object.entries(Fingers)"
-            :key="finger" :title="capsToTitle(finger)" :value="index"
-            :class="finger">
-          {{ fingerLetter(finger) }}
-        </option>
-      </select>
+      <FingerSelect v-model="cFinger" :disabled="isStartOfFinger" />
     </label>
     <label>
       <input type="checkbox" v-model="isStartOfFinger"
@@ -139,48 +127,6 @@ dialog {
 }
 
 label { display: block; }
-
-select {
-  --option-size: calc(1em + 2 * var(--thin-padding));
-  --group-gap: var(--thin-margin);
-  overflow: auto;
-  width: calc(10 * var(--option-size) + var(--group-gap));
-  height: calc(var(--option-size) + 0.2em);
-  padding: 0;
-  border: none;
-  cursor: default;
-  &[disabled] { pointer-events: none; }
-}
-
-option {
-  display: inline-flex;
-  width: var(--option-size);
-  height: var(--option-size);
-  justify-content: center;
-  align-items: center;
-  color: var(--black-blue);
-  border: solid 2px transparent;
-  border-radius: var(--radius);
-  cursor: pointer;
-  :not(.LEFT_THUMB) + & {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  &:has(+ :not(.RIGHT_THUMB)) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  &.LEFT_THUMB,
-  &.RIGHT_THUMB
-      { vertical-align: sub; }
-  &.LEFT_THUMB { border-color: var(--white-blue); }
-  &.RIGHT_THUMB { margin-left: var(--group-gap); }
-  &:hover { filter: brightness(93%) saturate(250%); }
-  &:checked {
-    font-weight: 900;
-    border-color: var(--dark-blue) !important;
-  }
-}
 
 
 
