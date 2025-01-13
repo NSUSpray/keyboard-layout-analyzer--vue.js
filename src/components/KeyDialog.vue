@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import Fingers from '../lib/fingers.js'
+import Fingers, { colorizeByFinger } from '../lib/fingers.js'
 import { objectFlip } from '../lib/utilities.js'
 
 defineExpose({ close, show })
@@ -99,6 +99,8 @@ const capsToTitle = caps =>
     caps.replace('_', ' ').replace(/(?<=\w)./g, c => c.toLowerCase())
 
 const fingerLetter = fingerString => fingerString.match(/(?<=_)./)[0]
+
+colorizeByFinger('option.{finger}', 'background-color')
 </script>
 
 <template>
@@ -156,6 +158,7 @@ option {
   height: var(--option-size);
   justify-content: center;
   align-items: center;
+  color: var(--black-blue);
   border: solid 2px transparent;
   border-radius: var(--radius);
   cursor: pointer;
@@ -170,7 +173,9 @@ option {
   &.LEFT_THUMB,
   &.RIGHT_THUMB
       { vertical-align: sub; }
+  &.LEFT_THUMB { border-color: var(--white-blue); }
   &.RIGHT_THUMB { margin-left: var(--group-gap); }
+  &:hover { filter: brightness(93%) saturate(250%); }
   &:checked {
     font-weight: 900;
     border-color: var(--dark-blue) !important;

@@ -1,8 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { addStyle } from '../lib/browser.js'
 import { label } from '../lib/default-key-sets'
-import Fingers from '../lib/fingers.js'
+import Fingers, { colorizeByFinger } from '../lib/fingers.js'
 import { filterByKey, objectKeyByValue } from '../lib/utilities.js'
 
 defineEmits(['click'])
@@ -63,14 +62,7 @@ const centersOf = key => Object
       cy: key[k.replace('x', 'y')] - key.y
     }))
 
-function addKeyFillStyles() {
-  const makeRule =
-      keyClass => `.${keyClass} > :not(g) { fill: var(--${keyClass}); }`
-  const style = Object.keys(Fingers).map(makeRule).join('\n')
-  addStyle(style)
-}
-
-addKeyFillStyles()
+colorizeByFinger('g.{finger} > :not(g)', 'fill')
 </script>
 
 <template>
