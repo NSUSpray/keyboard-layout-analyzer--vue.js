@@ -42,6 +42,7 @@ for (const [oKey, cValue] of Object.entries(cValues))
 watch(cFinger, newValue => {
   if (cId === undefined) return  // ignore on show
   keySet.value.keys[cId].finger = newValue
+  lastStartOfFinger = keySet.value.fingerStart[newValue]
 })
 
 watch(isStartOfFinger, isStart => {
@@ -108,9 +109,9 @@ const capsToTitle = caps =>
       </label>
     </div>
     <label>Finger for Pressing Key:
-      <select v-model="cFinger">
+      <select v-model="cFinger" :disabled="isStartOfFinger">
         <option v-for="[finger, index] of Object.entries(Fingers)"
-            :value="index">
+            :key="finger" :value="index">
           {{ capsToTitle(finger) }}
         </option>
       </select>
