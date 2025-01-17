@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import FingerSelect from './FingerSelect.vue'
 import Fingers from '../lib/fingers.js'
 import { objectFlip } from '../lib/utilities.js'
@@ -33,6 +33,11 @@ let cPosition
 const wasStartOfFinger = ref(false)
 let lastStartOfFinger, cId
 
+let inputs
+onMounted(() =>
+  inputs = Array.from(dialog.value.querySelectorAll('input[type="text"]'))
+)
+
 for (const [oKey, cValue] of Object.entries(cValues))
     watch(cValue.ref, () => {
       if (cId === undefined) return  // ignore on show
@@ -60,11 +65,12 @@ const reprFor = objectFlip(codeFor)
 
 function inputRepr(code) {
   if (code === undefined) return ''
-  return reprFor[code] ?? String.fromCharCode(code)
+  const repr = reprFor[code]
+  return repr? '#' + repr : String.fromCharCode(code)
 }
 
-const keySetCode = repr =>
-    (repr.length === 1)? repr.charCodeAt() : codeFor[repr]
+const keySetCode = repr => (repr.length === 1)?
+    repr.charCodeAt() : codeFor[repr.replace(/^#(\S+)$/, '$1')]
 
 
 const closeOnClickout = event =>
@@ -84,6 +90,8 @@ function show(index, position) {
     cId = key.id  // activate watchers
     keySet.value.keys[cId].state = 'active'
     document.addEventListener('click', closeOnClickout)
+    const primaryInput = document.activeElement
+    primaryInput.select()
   })
   dialog.value.show()
 }
@@ -95,6 +103,13 @@ function close() {
   keySet.value.keys[cId].state = undefined
   cId = undefined
 }
+
+function focusOnClosestInput(event) {
+  const value = event.target.value.trim()
+  if (value.startsWith('#')) return
+  const index = inputs.indexOf(event.target)
+  inputs[index + (value === ''? -1 : 1)]?.focus()
+}
 </script>
 
 <template>
@@ -103,7 +118,8 @@ function close() {
       <label v-for="[key, cValue] of Object.entries(cValues)" :key>
         {{ cValue.label }}:
         <input type="text" v-model="cValue.ref.value"
-            :class="{ danger: !cValue.isValid.value }" />
+            :class="{ danger: !cValue.isValid.value }"
+            @input="focusOnClosestInput" @focus="e => e.target.select()" />
       </label>
     </div>
     <label>Finger for Pressing Key:
