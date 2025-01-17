@@ -114,7 +114,7 @@ function onPaste(type, object, json, filterValue='all') {
 function exportJson(_, fingering=false) {
   keyDialog.value.close()
   let keySet = vSet.value
-  const filename = `${vType.value.trim()}.${keySet.label.trim()}`
+  const filename = `${vType.value}.${keySet.label}`
       .toLowerCase().replace(/\s/g, '-')
       + '.kla-' + (fingering? 'fingering' : 'layout')
   if (fingering) keySet = Kb.keepOnlyFingering(toRaw(keySet))
@@ -156,7 +156,7 @@ const loadPreset = withMarkedTarget(async (_, filterValue='all') => {
     <fieldset>
       <label>Name</label>
       <div class="controls">
-        <input type="text" id="name" v-model="vSet.label" />
+        <input type="text" id="name" v-model.trim="vSet.label" />
         <Select v-model="vType" :options="Kb.keyMapTypes"
             title="Change to convert keyboard type" @change="onChangeType" />
       </div>

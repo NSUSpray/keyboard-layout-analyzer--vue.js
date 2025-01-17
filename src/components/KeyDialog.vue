@@ -117,7 +117,7 @@ function focusOnClosestInput(event) {
     <div class="labels">
       <label v-for="[key, cValue] of Object.entries(cValues)" :key>
         {{ cValue.label }}:
-        <input type="text" v-model="cValue.ref.value"
+        <input type="text" v-model.trim="cValue.ref.value"
             :class="{ danger: !cValue.isValid.value }"
             @input="focusOnClosestInput" @focus="e => e.target.select()" />
       </label>

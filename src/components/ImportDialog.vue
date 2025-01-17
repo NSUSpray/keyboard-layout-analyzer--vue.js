@@ -68,10 +68,9 @@ function verifyAndEmit(filterValue='all') {
 }
 
 
-function close(event) {
+function close() {
   isClosed.value = true
   setTimeout(() => dialog.value.close(), transitionDuration)
-  event?.preventDefault()  // prevent immediate dialog.value.close()
 }
 
 function onPaste() {
@@ -84,7 +83,7 @@ function onPaste() {
 </script>
 
 <template>
-  <dialog ref="dialog" :class="{ closed: isClosed }" @cancel="close">
+  <dialog ref="dialog" :class="{ closed: isClosed }" @cancel.prevent="close">
     <div class="backdrop" @click="close" /><div class="background-fixer" />
     <h3>Import Layouts</h3>
     <button type="button" title="Close" @click="close"
