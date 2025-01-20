@@ -90,13 +90,13 @@ textarea {
   transition-duration: var(--fast-transition-duration);
 
   &:focus {
-    border-color: var(--light-bright-blue-translucent);
+    border-color: var(--light-bright-blue-translucent) !important;
     box-shadow: var(--inset-shadow), var(--light-bright-blue-glow);
     outline: 0;
   }
 
   &.danger {
-    border-color: var(--danger-color);
+    border-color: var(--danger-color) !important;
     &:focus { box-shadow: var(--inset-shadow), var(--danger-glow); }
     &:hover,
     &:focus,

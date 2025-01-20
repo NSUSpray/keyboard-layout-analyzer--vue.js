@@ -114,7 +114,7 @@ function focusOnClosestInput(event) {
 
 <template>
   <dialog ref="dialog" :class="cPosition" @cancel="close">
-    <div>
+    <div class="labels">
       <label v-for="[key, cValue] of Object.entries(cValues)" :key>
         {{ cValue.label }}:
         <input type="text" v-model="cValue.ref.value"
@@ -122,14 +122,16 @@ function focusOnClosestInput(event) {
             @input="focusOnClosestInput" @focus="e => e.target.select()" />
       </label>
     </div>
-    <label>Finger for Pressing Key:
-      <FingerSelect v-model="cFinger" :disabled="isStartOfFinger" />
-    </label>
-    <label>
-      <input type="checkbox" v-model="isStartOfFinger"
-          :disabled="wasStartOfFinger" />
-      Is Starting Position of Finger
-    </label>
+    <div>
+      <label>Finger for Pressing Key:
+        <FingerSelect v-model="cFinger" :disabled="isStartOfFinger" />
+      </label>
+      <label>
+        <input type="checkbox" v-model="isStartOfFinger"
+            :disabled="wasStartOfFinger" />
+        Is Starting Position of Finger
+      </label>
+    </div>
   </dialog>
 </template>
 
@@ -138,11 +140,46 @@ dialog {
   /* TODO? delete --huge-radius */
   --border-radius: var(--large-radius);
   top: calc(100% + var(--narrow-margin) * 0.75);
+  width: min-content;
   border-radius: var(--border-radius);
   &::before /* shadow */ { box-shadow: var(--shadow); }
 }
 
-label { display: block; }
+.labels {
+  display: grid;
+  grid-auto-columns: 1fr;
+  padding-bottom: 0;
+
+  & label {
+    --shift: var(--wide-margin);
+    padding: var(--radius);
+    padding-top: 0;
+    border-radius: var(--radius);
+
+    &:nth-child(odd) {  /* Primary, Alt Gr */
+      grid-row: 2;
+      margin-right: var(--shift);
+      border-top-right-radius: 0;
+      & input { border-color: var(--light-light-blue); }
+    }
+
+    &:nth-child(even) {  /* Shift, Shift + Alt Gr */
+      grid-row: 1;
+      margin-left: var(--shift);
+      border-bottom-left-radius: 0;
+    }
+
+    &:nth-child(-n+2)  /* Alt Gr, Shift + Alt Gr */
+        { background-color: var(--wwhite-blue); }
+
+    & input {
+      width: 100%;
+      text-align: center;
+    }
+
+  }
+
+}
 
 
 
